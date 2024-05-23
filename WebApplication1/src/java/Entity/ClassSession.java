@@ -9,19 +9,22 @@ package Entity;
  * @author admin
  */
 public class ClassSession {
+
     private int csid;
     private Class classID;
     private SchoolYear yid;
     private Session sid;
+    private Room rid;
 
     public ClassSession() {
     }
 
-    public ClassSession(int csid, Class classID, SchoolYear yid, Session sid) {
+    public ClassSession(int csid, Class classID, SchoolYear yid, Session sid, Room rid) {
         this.csid = csid;
         this.classID = classID;
         this.yid = yid;
         this.sid = sid;
+        this.rid = rid;
     }
 
     public int getCsid() {
@@ -55,6 +58,13 @@ public class ClassSession {
     public void setSid(Session sid) {
         this.sid = sid;
     }
-    
-    
+
+    public void setRid(Room rid) {
+        this.rid = rid;
+    }
+
+    public Room getRid() {
+        return rid;
+    }
+
 }

@@ -11,7 +11,6 @@ package Entity;
 public class Class {
     private int classid;
     private String clname;
-    private Room rid;
 
     public Class() {
     }
@@ -19,7 +18,6 @@ public class Class {
     public Class(int classid, String clname, Room rid) {
         this.classid = classid;
         this.clname = clname;
-        this.rid = rid;
     }
 
     
@@ -38,14 +36,6 @@ public class Class {
 
     public void setClname(String clname) {
         this.clname = clname;
-    }
-
-    public void setRid(Room rid) {
-        this.rid = rid;
-    }
-
-    public Room getRid() {
-        return rid;
     }
 
     @Override

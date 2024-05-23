@@ -88,4 +88,24 @@ public class ParentDBContext extends DBContext {
         }
         return null;
     }
+       public void updateParent(Parent parent) {
+    try {
+        String sql = "UPDATE [Parent] SET pname = ?, gender = ?, dob = ?, phoneNumber = ?, IDcard = ?, Address = ?, Email = ?, NickName = ? WHERE pid = ?";
+        PreparedStatement stm = connection.prepareStatement(sql);
+
+        stm.setString(1, parent.getPname());
+        stm.setBoolean(2, parent.isGender());
+        stm.setString(3, parent.getDob());
+        stm.setString(4, parent.getPhoneNumber());
+        stm.setString(5, parent.getIDcard());
+        stm.setString(6, parent.getAddress());
+        stm.setString(7, parent.getEmail());
+        stm.setString(8, parent.getNickname());
+        stm.setInt(9, parent.getPid());
+
+        stm.executeUpdate();
+    } catch (SQLException ex) {
+        Logger.getLogger(ParentDBContext.class.getName()).log(Level.SEVERE, null, ex);
+    }
+}
 }

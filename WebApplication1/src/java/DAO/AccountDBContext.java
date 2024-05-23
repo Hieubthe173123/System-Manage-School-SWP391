@@ -29,6 +29,19 @@ public class AccountDBContext extends DBContext {
 
         return list;
     }
+    
+       //change password
+    public void changePass(int id, String newPass) {
+        try {
+            String sql = "UPDATE Account SET password = ? WHERE pid = ?";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setString(1, newPass);
+            stm.setInt(2, id);
+            stm.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(AccountDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 
     public Account getByUsernamePassword(String username, String password) {
         try {

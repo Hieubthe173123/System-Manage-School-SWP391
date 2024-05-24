@@ -116,11 +116,37 @@
             .create-account-link a:hover {
                 color: #005bb5;
             }
+
+            /* Back to Homepage Button */
+            .back-to-home {
+                margin-top: 20px;
+            }
+
+            .back-to-home a {
+                color: #0066cc;
+                text-decoration: none;
+                font-size: 14px;
+                transition: color 0.3s ease;
+                display: flex;
+                align-items: center;
+            }
+
+            .back-to-home a:hover {
+                color: #005bb5;
+            }
+
+            .back-to-home a .fa-arrow-left {
+                margin-right: 5px;
+            }
         </style>
     </head>
     <body>
         <div class="login-container">
             <div class="login-box">
+                <div class="back-to-home">
+                    <button><a href="FE_Parent/HomePage.jsp" class="btn btn-primary">Back to Homepage</a></button>
+                    
+                </div>
                 <h1>Welcome to Sakura Preschool</h1>
                 <form action="login" method="POST">
                     <div class="input-group">
@@ -146,3 +172,4 @@
         </div>
     </body>
 </html>
+

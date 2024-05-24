@@ -40,9 +40,8 @@ public class ParentProfile extends HttpServlet {
               HttpSession session = request.getSession();
         String pid = request.getParameter("pid");
         Account acc = (Account) session.getAttribute("account");
-
-     
-            ParentDBContext parentDB = new ParentDBContext();
+        if(acc!=null) {
+        ParentDBContext parentDB = new ParentDBContext();
             Parent pa = parentDB.getParentByid(Integer.parseInt(pid));
             request.setAttribute("pa", pa);
 
@@ -54,7 +53,12 @@ public class ParentProfile extends HttpServlet {
             }
             request.setAttribute("stu", stu);
 
-            request.getRequestDispatcher("FE_Parent/ParentProfile.jsp").forward(request, response);    } 
+            request.getRequestDispatcher("FE_Parent/ParentProfile.jsp").forward(request, response);   }
+        else {
+            response.sendRedirect("login");
+        }
+     
+             } 
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /** 

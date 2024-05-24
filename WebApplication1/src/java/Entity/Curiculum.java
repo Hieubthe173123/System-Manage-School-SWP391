@@ -10,7 +10,8 @@ package Entity;
  */
 public class Curiculum {
     private int curID;
-    private ActivityTime atid;
+    private String timeStart;
+    private String timeEnd;
     private String nameAct;
     private SessionDetails sdid;
     private boolean isFix;
@@ -18,13 +19,16 @@ public class Curiculum {
     public Curiculum() {
     }
 
-    public Curiculum(int curID, ActivityTime atid, String nameAct, SessionDetails sdid, boolean isFix) {
+    public Curiculum(int curID, String timeStart, String timeEnd, String nameAct, SessionDetails sdid, boolean isFix) {
         this.curID = curID;
-        this.atid = atid;
+        this.timeStart = timeStart;
+        this.timeEnd = timeEnd;
         this.nameAct = nameAct;
         this.sdid = sdid;
         this.isFix = isFix;
     }
+
+    
 
     public int getCurID() {
         return curID;
@@ -34,13 +38,23 @@ public class Curiculum {
         this.curID = curID;
     }
 
-    public ActivityTime getAtid() {
-        return atid;
+    public String getTimeEnd() {
+        return timeEnd;
     }
 
-    public void setAtid(ActivityTime atid) {
-        this.atid = atid;
+    public void setTimeEnd(String timeEnd) {
+        this.timeEnd = timeEnd;
     }
+
+    public String getTimeStart() {
+        return timeStart;
+    }
+
+    public void setTimeStart(String timeStart) {
+        this.timeStart = timeStart;
+    }
+
+   
 
     public String getNameAct() {
         return nameAct;

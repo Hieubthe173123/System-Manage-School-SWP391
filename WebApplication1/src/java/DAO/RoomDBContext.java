@@ -16,7 +16,7 @@ import java.util.logging.Logger;
  * @author admin
  */
 public class RoomDBContext extends DBContext{
-    public Room getRoomByRid(String rid) {
+    public Room getRoomByRid(int rid) {
         try {
             String sql = "SELECT [rid]\n"
                     + "      ,[rname]\n"
@@ -24,7 +24,7 @@ public class RoomDBContext extends DBContext{
                     + "  Where rid = ?";
             
             PreparedStatement stm = connection.prepareStatement(sql);
-            stm.setString(1, rid);
+            stm.setInt(1, rid);
 
             ResultSet rs = stm.executeQuery();
             if (rs.next()) {

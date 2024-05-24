@@ -35,14 +35,18 @@ public class Login extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String user_raw = request.getParameter("username");
+       String user_raw = request.getParameter("username");
         String pass_raw = request.getParameter("password");
         AccountDBContext db = new AccountDBContext();
         StudentDBContext stu = new StudentDBContext();
 
         Account acc = db.getByUsernamePassword(user_raw, pass_raw);
 
+        // Inside your login servlet or controller
         HttpSession session = request.getSession();
+        Account account = new Account();
+// Assume account is populated with user data after login validation
+        session.setAttribute("account", acc);
         if (acc != null) {
             if (acc.getRole() == 1) {
                 List<Student> list = stu.getStudentByPid(acc.getPid());

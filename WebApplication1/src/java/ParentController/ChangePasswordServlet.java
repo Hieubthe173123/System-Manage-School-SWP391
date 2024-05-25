@@ -18,7 +18,7 @@ import jakarta.servlet.http.HttpServletResponse;
  *
  * @author NGUYEN THI KHANH VI
  */
-@WebServlet(name = "ChangePasswordServlet", urlPatterns = {"/change"})
+@WebServlet(name = "ChangePassWordServlet", urlPatterns = {"/change"})
 public class ChangePasswordServlet extends HttpServlet {
 
     /**
@@ -59,7 +59,7 @@ public class ChangePasswordServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+     request.getRequestDispatcher("/FE_Parent/ChangePassWord.jsp").forward(request, response);
     }
 
     /**
@@ -78,10 +78,7 @@ public class ChangePasswordServlet extends HttpServlet {
         String confirmPass = request.getParameter("confirm-password");
 
         Account ac = (Account) request.getSession().getAttribute("account");
-        if (ac == null) {
-            response.sendRedirect(request.getContextPath() + "/login");
-            return;
-        }
+        
         if (oldPass == null || !oldPass.equals(ac.getPassword())) {
             request.setAttribute("mess", "Old password did not match!");
             
@@ -95,7 +92,7 @@ public class ChangePasswordServlet extends HttpServlet {
             acc.changePass(ac.getPid(), newPass);
             request.getSession().setAttribute("account", ac);
         }
-        request.getRequestDispatcher("/FE_Parent/ChangePassword.jsp").forward(request, response);
+        request.getRequestDispatcher("/FE_Parent/ChangePassWord.jsp").forward(request, response);
     }
 
     @Override

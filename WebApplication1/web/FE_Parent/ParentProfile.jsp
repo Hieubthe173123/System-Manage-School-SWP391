@@ -146,7 +146,7 @@
                     <img class="icons8-user-48-1" alt="" src="icons8-user-48 1.png">
                     <div class="phng-anh-tun">${pa.nickname}</div>
                     <div class="component-10-inner"></div>
-                    <a href="FE_Parent/ChangePassword.jsp" class="change-password">Change password</a>
+                    <a href="change" class="change-password">Change password</a>
                     <div class="rectangle-div"></div>
                     <a href="update-profile" class="update-profile">Update profile</a>
                 </div>

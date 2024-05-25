@@ -104,15 +104,15 @@
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav ml-auto">
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Home Page</a>
+                            <a class="nav-link" href="">Home Page</a>
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link" href="#">About Us</a>
+                            <a class="nav-link" href="#section_1">About Us</a>
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Contact</a>
+                            <a class="nav-link" href="#section_2">Contact</a>
                         </li>
 
                         <li class="nav-item">
@@ -130,7 +130,7 @@
             </div>
         </header>
 
-        <section class="content-section bg-light">
+        <section class="content-section bg-light" id ="section_1">
             <div class="container">
                 <div class="row">
                     <div class="col-md-6" data-aos="fade-right">
@@ -200,7 +200,7 @@
             </div>
         </section>
 
-        <section class="registration-section text-center">
+        <section class="registration-section text-center" id ="section_2">
             <div class="container" data-aos="fade-up">
                 <h2>Đăng Ký Nhập Học</h2>
                 <p>Vui lòng điền vào mẫu dưới đây để đăng ký nhập học cho con em của bạn.</p>

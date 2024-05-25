@@ -1,15 +1,8 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
- */
-
 package ParentController;
 
 import DAO.ParentDBContext;
 import Entity.Account;
 import Entity.Parent;
-import java.io.IOException;
-import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -17,16 +10,27 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
-/**
- *
- * @author admin
- */
+import java.io.IOException;
+
 @WebServlet(name = "UpdateProfile", urlPatterns = {"/update-profile"})
 public class UpdateProfile extends HttpServlet {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-      
+        HttpSession session = request.getSession();
+        Account acc = (Account) session.getAttribute("account");
+
+        if (acc != null) {
+            ParentDBContext parentDB = new ParentDBContext();
+            Parent pa = parentDB.getParentByid(acc.getPid());
+            request.setAttribute("pa", pa);
+
+            // Forward to the JSP with the parent data
+            request.getRequestDispatcher("FE_Parent/UpdateProfileParent.jsp").forward(request, response);
+        } else {
+            // Redirect to login if the user is not authenticated
+            response.sendRedirect("login");
+        }
     }
 
     @Override
@@ -38,7 +42,7 @@ public class UpdateProfile extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-         HttpSession session = request.getSession();
+        HttpSession session = request.getSession();
         Account acc = (Account) session.getAttribute("account");
 
         if (acc != null) {
@@ -70,7 +74,7 @@ public class UpdateProfile extends HttpServlet {
             parentDB.updateParent(parent);
 
             // Redirect to the parent profile page after update
-           request.getRequestDispatcher("UpdateProfileParent.jsp").forward(request, response);
+            response.sendRedirect("parent-profile");
         } else {
             // Redirect to the login page if the user is not authenticated
             response.sendRedirect("login");

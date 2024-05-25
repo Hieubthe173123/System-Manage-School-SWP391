@@ -42,7 +42,7 @@ public class ParentProfile extends HttpServlet {
         Account acc = (Account) session.getAttribute("account");
         if(acc!=null) {
         ParentDBContext parentDB = new ParentDBContext();
-            Parent pa = parentDB.getParentByid(Integer.parseInt(pid));
+            Parent pa = parentDB.getParentByid(acc.getPid());
             request.setAttribute("pa", pa);
 
             StudentDBContext studentDB = new StudentDBContext();

@@ -14,7 +14,7 @@ import java.sql.SQLException;
  * @author admin
  */
 public class Class_SessionDBContext extends DBContext {
-
+    
     public ClassSession getClassSessionById(int id) {
         ClassSession claSes = new ClassSession();
         try {
@@ -22,6 +22,7 @@ public class Class_SessionDBContext extends DBContext {
                     + "      ,[classID]\n"
                     + "      ,[yid]\n"
                     + "      ,[sid]\n"
+                    + "      ,[rid]\n"
                     + "  FROM [SchoolManagement].[dbo].[Class_Session] Where csid = ?";
             PreparedStatement stm = connection.prepareStatement(sql);
             stm.setInt(1, id);
@@ -30,11 +31,13 @@ public class Class_SessionDBContext extends DBContext {
                 SchoolYearDBContext scho = new SchoolYearDBContext();
                 ClassDBContext cla = new ClassDBContext();
                 SessionDBContext ses = new SessionDBContext();
+                RoomDBContext r = new RoomDBContext();
                 AgeDBContext age = new AgeDBContext();
                 claSes.setCsid(rs.getInt("csid"));
                 claSes.setClassID(cla.getClassById(rs.getInt("classID")));
                 claSes.setYid(scho.getSchoolYearById(rs.getInt("yid")));
                 claSes.setSid(ses.getSessionById(rs.getInt("sid")));
+                claSes.setRid(r.getRoomByRid(rs.getInt("rid")));
                 return claSes;
             }
         } catch (SQLException e) {

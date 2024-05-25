@@ -5,7 +5,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Preschool Login</title>
+        <title>Preschool Create Account</title>
         <link rel="stylesheet" href="../CSS/Login.css">
         <style>
             /* General Styles */
@@ -20,8 +20,8 @@
                 height: 100vh;
             }
 
-            /* Login Container */
-            .login-container {
+            /* Create Account Container */
+            .create-account-container {
                 display: flex;
                 justify-content: center;
                 align-items: center;
@@ -29,8 +29,8 @@
                 width: 100%;
             }
 
-            /* Login Box */
-            .login-box {
+            /* Create Account Box */
+            .create-account-box {
                 background-color: #ffffff;
                 border-radius: 10px;
                 box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
@@ -41,7 +41,7 @@
                 box-sizing: border-box;
             }
 
-            .login-box h1 {
+            .create-account-box h1 {
                 margin-bottom: 30px;
                 font-size: 24px;
                 color: #333;
@@ -84,92 +84,41 @@
             .input-group input[type="submit"]:hover {
                 background-color: #45a049;
             }
-
-            /* Forgot Password Link */
-            .forgot-link {
-                margin-top: 10px;
-            }
-
-            .forgot-link a {
-                color: #0066cc;
-                text-decoration: none;
-                font-size: 14px;
-                transition: color 0.3s ease;
-            }
-
-            .forgot-link a:hover {
-                color: #005bb5;
-            }
-
-            /* Create Account Link */
-            .create-account-link {
-                margin-top: 20px;
-            }
-
-            .create-account-link a {
-                color: #0066cc;
-                text-decoration: none;
-                font-size: 14px;
-                transition: color 0.3s ease;
-            }
-
-            .create-account-link a:hover {
-                color: #005bb5;
-            }
-
-            /* Back to Homepage Button */
-            .back-to-home {
-                margin-top: 20px;
-            }
-
-            .back-to-home a {
-                color: #0066cc;
-                text-decoration: none;
-                font-size: 14px;
-                transition: color 0.3s ease;
-                display: flex;
-                align-items: center;
-            }
-
-            .back-to-home a:hover {
-                color: #005bb5;
-            }
-
-            .back-to-home a .fa-arrow-left {
-                margin-right: 5px;
-            }
         </style>
     </head>
     <body>
-        <div class="login-container">
-            <div class="login-box">
-                <div class="back-to-home">
-                    <button><a href="FE_Parent/HomePage.jsp" class="btn btn-primary">Back to Homepage</a></button>
-                    
-                </div>
-                <h1>Welcome to Sakura Preschool</h1>
-                <form action="login" method="POST">
+        <div class="create-account-container">
+            <div class="create-account-box">
+                <h1>Create Account</h1>
+                <form action="createAccount" method="POST">
                     <div class="input-group">
-                        <label for="username">Username</label>
+                        <label for="username">Tài khoản.</label>
                         <input type="text" name="username" required>
                     </div>
                     <div class="input-group">
-                        <label for="password">Password</label>
+                        <label for="password">Mật khẩu</label>
                         <input type="password" name="password" required>
                     </div>
+                    
                     <div class="input-group">
-                        <input type="submit" value="Login">
-                        <h3 style="color: red">${requestScope.err}</h3>
+                        <label for="email">Chức năng của tài khoản.</label>
+                        <select name="roleS">
+                            <option value="1">Parent</option>       
+                            <option value="2">Teacher</option>     
+                            <option value="3">Admin</option>     
+                    </select>
                     </div>
-                    <div class="forgot-link">
-                        <a href="${pageContext.request.contextPath}/forgot">Forgot Password?</a>
+                    <div class="input-group">
+                        <label for="password">ID của người sở hữu tài khoản</label>
+                        <input type="number" name="idParent" required>
                     </div>
-                    <div class="create-account-link">
-                        <a href="${pageContext.request.contextPath}/createAccount">Create Account</a>
+                    <div class="input-group">
+                        <input type="submit" value="Create Account">
                     </div>
                 </form>
+                
+                <h3 style="color: red">${requestScope.mess}</h3>
             </div>
         </div>
     </body>
 </html>
-

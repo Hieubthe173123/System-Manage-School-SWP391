@@ -37,7 +37,7 @@
             }
             .component-10-child {
                 position: absolute;
-                height: 100%;
+                height: 150%;
                 width: 79.55%;
                 top: 0%;
                 right: 20.45%;
@@ -135,6 +135,9 @@
                 color: var(--color-black);
                 font-family: var(--font-poppins);
             }
+            .col-md-12{
+                margin-top: 20px;
+            }
         </style>
     </head>
     <body>
@@ -153,7 +156,7 @@
             </div>
             <div class="container mt-3">
                 <div class="row">
-                    <div class="col-md-5">
+                    <div class="col-md-12">
                         <div class="card">
                             <div class="card-header">
                                 <h2>Thông tin cá nhân của phụ huynh</h2>
@@ -193,7 +196,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-5">
+                    <div class="col-md-12">
                         <c:forEach var="student" items="${stu}">
                             <div class="card mb-3">
                                 <div class="card-header">

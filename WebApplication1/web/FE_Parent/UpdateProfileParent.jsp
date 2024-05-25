@@ -1,49 +1,85 @@
-<%-- 
-    Document   : UpdateProfile
-    Created on : May 16, 2024, 9:55:36 PM
-    Author     : DELL
---%>
-
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
     <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
-        <link rel="stylesheet" href="../CSS/UpdateProfileParent.css"/>
+        <meta charset="UTF-8">
+        <title>Update Parent Profile</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+        <link rel="stylesheet" href="styles.css">
+        <style>
+            body {
+                background-color: #b3d9ff;
+            }
+            .form-group label {
+                font-weight: bold;
+                color: #333;
+            }
+            .card {
+                border-radius: 10px;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            }
+            .card-header {
+                background-color: #f0f9ff;
+                padding: 1rem;
+                border-radius: 10px 10px 0 0;
+            }
+            .card-body {
+                padding: 2rem;
+            }
+        </style>
     </head>
     <body>
+        <div class="container mt-3">
+            <div class="row">
+                <div class="col-md-6 offset-md-3">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2>Update Parent Profile</h2>
+                        </div>
+                        <div class="card-body">
+                            <form action="update-profile" method="post">
+                                <div class="form-group">
+                                    <label for="pname">Họ và tên</label>
+                                    <input type="text" class="form-control" id="pname" name="pname" value="${pa.pname}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="gender">Giới tính</label>
+                                    <select class="form-control" id="gender" name="gender" required>
+                                        <option value="true" ${pa.gender ? 'selected' : ''}>Nam</option>
+                                        <option value="false" ${!pa.gender ? 'selected' : ''}>Nữ</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="dob">Ngày sinh</label>
+                                    <input type="date" class="form-control" id="dob" name="dob" value="${pa.dob}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="address">Địa chỉ</label>
+                                    <input type="text" class="form-control" id="address" name="address" value="${pa.address}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="phoneNumber">Số điện thoại</label>
+                                    <input type="text" class="form-control" id="phoneNumber" name="phoneNumber" value="${pa.phoneNumber}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="email">Email</label>
+                                    <input type="email" class="form-control" id="email" name="email" value="${pa.email}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="IDcard">Căn cước công dân</label>
+                                    <input type="text" class="form-control" id="IDcard" name="IDcard" value="${pa.IDcard}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="nickname">Nickname</label>
+                                    <input type="text" class="form-control" id="nickname" name="nickname" value="${pa.nickname}" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Update</button>
+                            </form>
 
-<div class="Update-profile">
-            <div class="div">
-                <div class="overlap-10">
-                    <div class="rectangle-13"></div>
-                    <div class="rectangle-14"></div>
-                    <img class="user" src="img/icons8-user-48-1.png"/>
-                    <div class="text-wrapper-23">PHÙNG ANH TUẤN</div>
-                    <div class="rectangle-4"></div>
-                    <div class="rectangle-5"></div>
-                    <div class="text-wrapper-24">Change password</div>
-                    <div class="text-wrapper-25">Log out</div>
-                    <div class="rectangle-6"></div>
-                    <div class="text-wrapper-26">Update profile</div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        <div>
-                <img class="icons-user" src="img/icons8-user-48-2.png" />
-                <div class="text-wrapper-5">Họ và tên</div>
-                <div class="overlap"><div class="text-wrapper-6">Phùng Anh Tuấn</div></div>
-                <div class="div-wrapper"><div class="text-wrapper-7">8/8/1990</div></div>
-                <div class="overlap-2"><div class="text-wrapper-8">phunganhtuan9@gmail.com</div></div>
-                <div class="overlap-3"><div class="text-wrapper-9">0377 174 172</div></div>
-                <div class="text-wrapper-10">Email</div>
-                <div class="text-wrapper-11">Ngày sinh</div>
-                <div class="text-wrapper-12">Số điện thoại</div>
-                <div class="overlap-4"><div class="text-wrapper-13">Save</div></div>
-                <div class="edit-wrapper"><img class="edit" src="img/edit.svg" /></div>
-                <img class="edit-2" src="img/edit-2.svg" />
-                <img class="edit-3" src="img/edit-4.svg" />
-                <img class="edit-4" src="img/edit-3.svg" />
             </div>
         </div>
     </body>

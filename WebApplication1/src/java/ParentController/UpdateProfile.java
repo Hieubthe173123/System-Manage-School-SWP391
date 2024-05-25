@@ -21,22 +21,28 @@ import jakarta.servlet.http.HttpSession;
  *
  * @author admin
  */
-@WebServlet(name="UpdateProfile", urlPatterns={"/update-profile"})
+@WebServlet(name = "UpdateProfile", urlPatterns = {"/update-profile"})
 public class UpdateProfile extends HttpServlet {
-   
-    /** 
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
+
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
-       HttpSession session = request.getSession();
+            throws ServletException, IOException {
+      
+    }
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        processRequest(request, response);
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+         HttpSession session = request.getSession();
         Account acc = (Account) session.getAttribute("account");
 
         if (acc != null) {
+            // Retrieve parameters from the request
             int pid = acc.getPid();
             String pname = request.getParameter("pname");
             boolean gender = Boolean.parseBoolean(request.getParameter("gender"));
@@ -47,6 +53,7 @@ public class UpdateProfile extends HttpServlet {
             String IDcard = request.getParameter("IDcard");
             String nickname = request.getParameter("nickname");
 
+            // Create a new Parent object and set its properties
             Parent parent = new Parent();
             parent.setPid(pid);
             parent.setPname(pname);
@@ -58,49 +65,20 @@ public class UpdateProfile extends HttpServlet {
             parent.setIDcard(IDcard);
             parent.setNickname(nickname);
 
+            // Update the parent information in the database
             ParentDBContext parentDB = new ParentDBContext();
             parentDB.updateParent(parent);
 
-            response.sendRedirect("parentProfile"); // Redirect to the parent profile page after update
+            // Redirect to the parent profile page after update
+           request.getRequestDispatcher("UpdateProfileParent.jsp").forward(request, response);
         } else {
+            // Redirect to the login page if the user is not authenticated
             response.sendRedirect("login");
         }
-    } 
-
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /** 
-     * Handles the HTTP <code>GET</code> method.
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
-        processRequest(request, response);
-    } 
-
-    /** 
-     * Handles the HTTP <code>POST</code> method.
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
-        processRequest(request, response);
     }
 
-    /** 
-     * Returns a short description of the servlet.
-     * @return a String containing servlet description
-     */
     @Override
     public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
-
+        return "UpdateProfile Servlet";
+    }
 }

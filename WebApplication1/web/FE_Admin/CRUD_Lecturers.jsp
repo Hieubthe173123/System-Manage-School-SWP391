@@ -71,8 +71,10 @@
                     <tr>
                         <th>LecturerID</th>
                         <th>Lecturer Name</th>
+                        <th>IDCard</th>
                         <th>DOB</th>
                         <th>Gender</th>
+                        <th>Phone Number</th>
                         <th>Class Name</th>
                         <th>Actions</th>
                     </tr>
@@ -82,13 +84,19 @@
                         <tr>
                             <td>${lecturer.lid.lid}</td>
                             <td>${lecturer.lid.lname}</td>
+                            <td>${lecturer.lid.IDcard}</td>
                             <td>${lecturer.lid.dob}</td>
                             <td>${lecturer.lid.gender ? 'Male' : 'Female'}</td>
+                            <td>${lecturer.lid.phoneNumber}</td>
                             <td>${lecturer.csid.classID.clname}</td>
                             <td>
                                 <button class="btn btn-warning btn-sm" onclick="editLecturer(${lecturer.lid})">Update</button>
-                                <button class="btn btn-danger btn-sm" onclick="deleteLecturer(${lecturer.lid})">Delete</button>
+                                <form action="delete-lecturer" method="POST" style="display:inline;">
+                                    <input type="hidden" name="lid" value="${lecturer.lid.lid}" />
+                                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                </form>
                             </td>
+
                         </tr>
                     </c:forEach>
 
@@ -110,12 +118,12 @@
                     <div class="modal-body">
                         <form id="lecturerForm">
                             <div class="form-group">
-                                <label for="lecturerId">LecturerID</label>
-                                <input type="text" class="form-control" id="lecturerId" required>
-                            </div>
-                            <div class="form-group">
                                 <label for="lecturerName">Lecturer Name</label>
                                 <input type="text" class="form-control" id="lecturerName" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="idcard">IDCard</label>
+                                <input type="text" class="form-control" id="idcard" required>
                             </div>
                             <div class="form-group">
                                 <label for="lecturerDob">Date of Birth</label>
@@ -125,9 +133,12 @@
                                 <label for="lecturerGender">Gender</label>
                                 <select class="form-control" id="lecturerGender" required>
                                     <option>Male</option>
-                                    <option>Female</option>
-                                    <option>Other</option>
+                                    <option>Female</option>         
                                 </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="phoneNumber">Phone Number</label>
+                                <input type="text" class="form-control" id="phoneNumber" required>
                             </div>
                             <div class="form-group">
                                 <label for="lecturerClassName">Class Name</label>
@@ -153,10 +164,6 @@
                     <div class="modal-body">
                         <form id="updateLecturerForm">
                             <div class="form-group">
-                                <label for="updateLecturerId">LecturerID</label>
-                                <input type="text" class="form-control" id="updateLecturerId" required>
-                            </div>
-                            <div class="form-group">
                                 <label for="updateLecturerName">Lecturer Name</label>
                                 <input type="text" class="form-control" id="updateLecturerName" required>
                             </div>
@@ -169,7 +176,7 @@
                                 <select class="form-control" id="updateLecturerGender" required>
                                     <option>Male</option>
                                     <option>Female</option>
-                                    <option>Other</option>
+                                    <option></option>
                                 </select>
                             </div>
                             <div class="form-group">

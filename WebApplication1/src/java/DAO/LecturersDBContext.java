@@ -6,6 +6,7 @@ package DAO;
 
 import Entity.Lecturers;
 import Entity.Class;
+import Entity.Lecturers_Class_Session;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -92,5 +93,48 @@ public class LecturersDBContext extends DBContext {
         return null;
     }
 
+     public void deleteLecturers(String lid) {
+        try {
+            connection.setAutoCommit(false); // Bắt đầu transaction
 
+            // Xóa các bản ghi liên quan trong bảng Lecturers_Class_Session
+            String sql1 = "DELETE FROM Lecturers_Class_Session WHERE lid = ?";
+            PreparedStatement stm1 = connection.prepareStatement(sql1);
+            stm1.setString(1, lid);
+            stm1.executeUpdate();
+
+            // Xóa các bản ghi liên quan trong bảng Account
+            String sql2 = "DELETE FROM Account WHERE lid = ?";
+            PreparedStatement stm2 = connection.prepareStatement(sql2);
+            stm2.setString(1, lid);
+            stm2.executeUpdate();
+
+            // Xóa bản ghi trong bảng Lecturers
+            String sql3 = "DELETE FROM lecturers WHERE lid = ?";
+            PreparedStatement stm3 = connection.prepareStatement(sql3);
+            stm3.setString(1, lid);
+            stm3.executeUpdate();
+
+            connection.commit(); // Commit transaction
+        } catch (SQLException ex) {
+            try {
+                connection.rollback(); // Rollback transaction nếu có lỗi xảy ra
+            } catch (SQLException rollbackEx) {
+                Logger.getLogger(LecturersDBContext.class.getName()).log(Level.SEVERE, null, rollbackEx);
+            }
+            Logger.getLogger(LecturersDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                connection.setAutoCommit(true); // Khôi phục lại chế độ tự động commit
+            } catch (SQLException ex) {
+                Logger.getLogger(LecturersDBContext.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
 }
+
+
+   
+  
+
+

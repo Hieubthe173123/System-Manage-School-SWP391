@@ -4,6 +4,8 @@
  */
 package DAO;
 
+import Entity.Lecturers;
+import Entity.Student;
 import Entity.StudentClassSession;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -16,11 +18,13 @@ import java.util.List;
  * @author Admin
  */
 public class StudentClassSessionDBContext extends DBContext {
+
     public static void main(String[] args) {
         StudentClassSessionDBContext d = new StudentClassSessionDBContext();
-        List<StudentClassSession> l = d.getStudentClassSessionByStuid(1);
-        System.out.println(l.size());
+        List<Student> l = d.getStudentsForClassSession(1);
+        System.out.println(l);
     }
+
     public List<StudentClassSession> getStudentClassSessionById(int id) {
         List<StudentClassSession> stu = new ArrayList();
         try {
@@ -38,7 +42,7 @@ public class StudentClassSessionDBContext extends DBContext {
                 student.setScid(rs.getInt("scid"));
                 student.setCsid(classSess.getClassSessionById(rs.getInt("csid")));
                 student.setStuid(stud.getStudentById(rs.getInt("stuid")));
-                
+
                 stu.add(student);
             }
         } catch (SQLException e) {
@@ -46,7 +50,7 @@ public class StudentClassSessionDBContext extends DBContext {
         }
         return stu;
     }
-    
+
     public List<StudentClassSession> getStudentClassSessionByStuid(int id) {
         List<StudentClassSession> stu = new ArrayList();
         try {
@@ -64,7 +68,7 @@ public class StudentClassSessionDBContext extends DBContext {
                 student.setScid(rs.getInt("scid"));
                 student.setCsid(classSess.getClassSessionById(rs.getInt("csid")));
                 student.setStuid(stud.getStudentById(rs.getInt("stuid")));
-                
+
                 stu.add(student);
             }
         } catch (SQLException e) {
@@ -72,6 +76,44 @@ public class StudentClassSessionDBContext extends DBContext {
         }
         return stu;
     }
-    
+
+    public ArrayList<Lecturers> getLecturersForClassSession(int csid) {
+        ArrayList<Lecturers> lecturers = new ArrayList<>();
+        try {
+            String sql = "SELECT L.lid, L.lname FROM Lecturers L INNER JOIN Lecturers_Class_Session LCS ON L.lid = LCS.lid WHERE LCS.csid = ?";
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, csid);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Lecturers lecturer = new Lecturers();
+                lecturer.setLid(rs.getInt("lid"));
+                lecturer.setLname(rs.getString("lname"));
+                lecturers.add(lecturer);
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return lecturers;
+    }
+
+    public ArrayList<Student> getStudentsForClassSession(int csid) {
+        ArrayList<Student> students = new ArrayList<>();
+        try {
+            String sql = "SELECT S.stuid, S.sname FROM Student S INNER JOIN Student_Class_Session SCS ON S.stuid = SCS.stuid WHERE SCS.csid = ?";
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, csid);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Student student = new Student();
+                student.setStuid(rs.getInt("stuid"));
+                student.setSname(rs.getString("sname"));
+                students.add(student);
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return students;
+    }
     
 }
+

@@ -45,6 +45,11 @@ public class Lecturers_Class_Session {
     public void setCsid(ClassSession csid) {
         this.csid = csid;
     }
+
+    @Override
+    public String toString() {
+        return "Lecturers_Class_Session{" + "lclassID=" + lclassID + ", lid=" + lid + ", csid=" + csid + '}';
+    }
     
     
     

@@ -67,4 +67,9 @@ public class ClassSession {
         return rid;
     }
 
+    @Override
+    public String toString() {
+        return "ClassSession{" + "csid=" + csid + ", classID=" + classID + ", yid=" + yid + ", sid=" + sid + ", rid=" + rid + '}';
+    }
+
 }

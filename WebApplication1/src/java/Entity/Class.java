@@ -40,8 +40,10 @@ public class Class {
 
     @Override
     public String toString() {
-        return super.toString(); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
+        return "Class{" + "classid=" + classid + ", clname=" + clname + '}';
     }
+
+
 
     
     

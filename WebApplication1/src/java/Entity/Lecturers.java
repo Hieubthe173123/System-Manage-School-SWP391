@@ -105,6 +105,11 @@ public class Lecturers {
     public void setNickname(String nickname) {
         this.nickname = nickname;
     }
+
+    @Override
+    public String toString() {
+        return "Lecturers{" + "lid=" + lid + ", lname=" + lname + ", gender=" + gender + ", dob=" + dob + ", phoneNumber=" + phoneNumber + ", IDcard=" + IDcard + ", address=" + address + ", email=" + email + ", nickname=" + nickname + '}';
+    }
     
     
 }

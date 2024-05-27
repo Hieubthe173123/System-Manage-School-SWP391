@@ -4,10 +4,12 @@
  */
 package DAO;
 
+import Entity.ClassSession;
 import Entity.SchoolYear;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 /**
  *
@@ -40,4 +42,67 @@ public class SchoolYearDBContext extends DBContext {
         }
         return null;
     }
+    
+    public ArrayList<SchoolYear> getSchoolYearById(String id) {
+        ArrayList<SchoolYear> list = new ArrayList<>();
+        try {
+            String sql = "SELECT [yid]\n"
+                    + "      ,[dateStart]\n"
+                    + "      ,[dateEnd]\n"
+                    + "  FROM [SchoolManagement].[dbo].[SchoolYear]\n"
+                    + "  WHERE yid = ?";
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, id);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                SchoolYear year = new SchoolYear();
+                year.setYid(rs.getInt("yid"));
+                year.setDateStart(rs.getDate("dateStart"));
+                year.setDateEnd(rs.getDate("dateEnd"));
+                list.add(year);
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex);
+        }
+        return list;
+    }
+    
+    public ArrayList<ClassSession> getClassSessionByYid(String id) {
+        ArrayList<ClassSession> list = new ArrayList<>();
+        try {
+            String sql = "SELECT [csid]\n"
+                    + "      ,[classID]\n"
+                    + "      ,[yid]\n"
+                    + "      ,[sid]\n"
+                    + "      ,[rid]\n"
+                    + "  FROM [SchoolManagement].[dbo].[Class_Session]\n"
+                    + "  WHERE yid = ?";
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, id);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                ClassSession cls = new ClassSession();
+                ClassDBContext cldb = new ClassDBContext();
+                RoomDBContext rdb = new RoomDBContext();
+                SessionDBContext sedb = new SessionDBContext();
+                SchoolYearDBContext yearDB = new SchoolYearDBContext();
+
+                StudentClassSessionDBContext stuDB = new StudentClassSessionDBContext();
+                LecturerClassSession lecDB = new LecturerClassSession();
+
+                cls.setCsid(rs.getInt("csid"));
+                cls.setClassID(cldb.getClassById(rs.getInt("classID")));
+                cls.setRid(rdb.getRoomByRid(rs.getInt("rid")));
+                cls.setSid(sedb.getSessionById(rs.getInt("sid")));
+                cls.setYid(yearDB.getSchoolYearById(rs.getInt("yid")));
+
+                list.add(cls);
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex);
+        }
+        return list;
+
+    }
+
 }

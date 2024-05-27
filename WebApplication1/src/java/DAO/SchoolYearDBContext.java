@@ -4,18 +4,30 @@
  */
 package DAO;
 
-import Entity.ClassSession;
+import Entity.Lecturers_Class_Session;
 import Entity.SchoolYear;
+import Entity.Class;
+import Entity.ClassSession;
+import Entity.Lecturers;
+import Entity.Room;
+import Entity.Session;
+import Entity.Student;
+import Entity.StudentClassSession;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author admin
  */
 public class SchoolYearDBContext extends DBContext {
+
+    
 
     public SchoolYear getSchoolYearById(int id) {
         SchoolYear school = new SchoolYear();
@@ -26,13 +38,10 @@ public class SchoolYearDBContext extends DBContext {
                     + "  FROM [SchoolManagement].[dbo].[SchoolYear] Where yid = ?";
             PreparedStatement stm = connection.prepareStatement(sql);
             stm.setInt(1, id);
- 
             ResultSet rs = stm.executeQuery();
+
             if (rs.next()) {
-                FoodDBContext food = new FoodDBContext();
-                MealTimeDBContext meal = new MealTimeDBContext();
-                AgeDBContext age = new AgeDBContext();
-                school.setYid(rs.getInt("mid"));
+                school.setYid(rs.getInt("yid"));
                 school.setDateStart(rs.getDate("dateStart"));
                 school.setDateEnd(rs.getDate("dateEnd"));
                 return school;
@@ -42,8 +51,8 @@ public class SchoolYearDBContext extends DBContext {
         }
         return null;
     }
-    
-     public ArrayList<SchoolYear> getAllSchoolYear() {
+
+    public ArrayList<SchoolYear> getAllSchoolYear() {
         ArrayList<SchoolYear> list = new ArrayList<>();
         try {
             String sql = "SELECT [yid]\n"
@@ -60,7 +69,7 @@ public class SchoolYearDBContext extends DBContext {
                 list.add(year);
             }
         } catch (SQLException ex) {
-            System.out.println(ex);
+            Logger.getLogger(SchoolYearDBContext.class.getName()).log(Level.SEVERE, null, ex);
         }
         return list;
     }
@@ -97,11 +106,13 @@ public class SchoolYearDBContext extends DBContext {
                 list.add(cls);
             }
         } catch (SQLException ex) {
-            System.out.println(ex);
+            Logger.getLogger(SchoolYearDBContext.class.getName()).log(Level.SEVERE, null, ex);
         }
         return list;
 
     }
 
-
+    
 }
+
+

@@ -20,28 +20,7 @@ import java.util.logging.Logger;
  *
  * @author Admin
  */
-public class LecturerClassSessionDBContext extends DBContext {
-
-    public ArrayList<Lecturers> getLecturersByClassSessionId(int csid) {
-        ArrayList<Lecturers> lecturers = new ArrayList<>();
-        try {
-            String sql = "SELECT L.lid, L.lname FROM Lecturers L\n"
-                    + "	JOIN Lecturers_Class_Session LCS ON L.lid = LCS.lid\n"
-                    + "	WHERE LCS.csid = ?";
-            PreparedStatement ps = connection.prepareStatement(sql);
-            ps.setInt(1, csid);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                Lecturers l = new Lecturers();
-                l.setLid(rs.getInt("lid"));
-                l.setLname(rs.getString("lname"));
-                lecturers.add(l);
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(Lecturers.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return lecturers;
-    }
+public class LecturerClassSession extends DBContext {
 
     public Lecturers_Class_Session getLecturerByCsidById(int id) {
         Lecturers_Class_Session lec = new Lecturers_Class_Session();
@@ -56,10 +35,9 @@ public class LecturerClassSessionDBContext extends DBContext {
             if (rs.next()) {
                 Class_SessionDBContext classSess = new Class_SessionDBContext();
                 LecturersDBContext lectu = new LecturersDBContext();
-                lec.setLclassID(rs.getInt("lclassID"));
-                lec.setLid(lectu.getLecturerByid(rs.getInt("lid")));
+                lec.setLclassID(rs.getInt("scid"));
                 lec.setCsid(classSess.getClassSessionById(rs.getInt("csid")));
-
+                lec.setLid(lectu.getLecturerByid(rs.getInt("csid")));
                 return lec;
             }
         } catch (SQLException e) {
@@ -68,31 +46,35 @@ public class LecturerClassSessionDBContext extends DBContext {
         return null;
     }
 
-    public List<LecturerClassSessionDBContext> getAllLecturerClassSessions() {
-        List<LecturerClassSessionDBContext> list = new ArrayList<>();
+    public List<Lecturers_Class_Session> getAllLecturerClassSessions() {
+        List<Lecturers_Class_Session> list = new ArrayList<>();
 
         try {
             String sql = "SELECT\n"
-                    + "Lecturers.lid,\n"
-                    + "                  Lecturers.lname,\n"
-                    + "                    Lecturers.dob,\n"
-                    + "                     Lecturers.gender,\n"
-                    + "                    Lecturers.phoneNumber,\n"
-                    + "                   Lecturers.IDcard,\n"
-                    + "                 Lecturers.[Address],\n"
-                    + "                     Lecturers.NickName,\n"
-                    + "                   Lecturers.Email,\n"
-                    + "                    Class.classID,\n"
-                    + "                     Class.clname\n"
-                    + "                    FROM Lecturers\n"
-                    + "                  INNER JOIN Lecturers_Class_Session ON Lecturers.lid = Lecturers_Class_Session.lid\n"
-                    + "                    INNER JOIN Class_Session ON Lecturers_Class_Session.csid = Class_Session.csid\n"
-                    + "                     INNER JOIN Class ON Class_Session.classID = Class.classID";
+                    + "    L.lid,\n"
+                    + "    L.lname,\n"
+                    + "    L.dob,\n"
+                    + "    L.gender,\n"
+                    + "    L.phoneNumber,\n"
+                    + "    L.IDcard,\n"
+                    + "    L.[Address],\n"
+                    + "    L.NickName,\n"
+                    + "    L.Email,\n"
+                    + "    C.classID,\n"
+                    + "    C.clname\n"
+                    + "FROM\n"
+                    + "    Lecturers L\n"
+                    + "INNER JOIN\n"
+                    + "    Lecturers_Class_Session LCS ON L.lid = LCS.lid\n"
+                    + "INNER JOIN\n"
+                    + "    Class_Session CS ON LCS.csid = CS.csid\n"
+                    + "INNER JOIN\n"
+                    + "    Class C ON CS.classID = C.classID;";
             PreparedStatement stm = connection.prepareStatement(sql);
             ResultSet rs = stm.executeQuery();
 
             while (rs.next()) {
-                LecturerClassSessionDBContext lecturerClassSession = new LecturerClassSessionDBContext();
+                LecturerClassSession lecturerClassSession = new LecturerClassSession();
 
                 Lecturers lecturer = new Lecturers();
                 lecturer.setLid(rs.getInt("lid"));
@@ -109,13 +91,14 @@ public class LecturerClassSessionDBContext extends DBContext {
                 cl.setClassid(rs.getInt("classID"));
                 cl.setClname(rs.getString("clname"));
 
-                Lecturers_Class_Session lecClass = new Lecturers_Class_Session();
-                lecClass.setLid(lecturer);
                 ClassSession cs = new ClassSession();
-                lecClass.setCsid(cs);
                 cs.setClassID(cl);
 
-                list.add(lecturerClassSession);
+                Lecturers_Class_Session lecClass = new Lecturers_Class_Session();
+                lecClass.setLid(lecturer);
+                lecClass.setCsid(cs);
+                list.add(lecClass);
+
             }
         } catch (SQLException ex) {
             Logger.getLogger(RoomDBContext.class.getName()).log(Level.SEVERE, null, ex);
@@ -124,8 +107,8 @@ public class LecturerClassSessionDBContext extends DBContext {
     }
 
     public static void main(String[] args) {
-        LecturerClassSessionDBContext lcs = new LecturerClassSessionDBContext();
-        ArrayList<Lecturers> list = lcs.getLecturersByClassSessionId(1);
+        LecturerClassSession lcs = new LecturerClassSession();
+        List<Lecturers_Class_Session> list = lcs.getAllLecturerClassSessions();
         System.out.println(list);
     }
 }

@@ -151,10 +151,9 @@
                     <div class="component-10-inner"></div>
                     <a href="change" class="change-password">Change password</a>
                     <div class="rectangle-div"></div>
-                    <a href="update-profile" class="update-profile">Update profile</a>                   
+                    <a href="update-profile" class="update-profile">Update profile</a>
                 </div>
             </div>
-                    <a href="FE_Parent/Login.jsp" >Logout</a>
             <div class="container mt-3">
                 <div class="row">
                     <div class="col-md-12">
@@ -216,8 +215,12 @@
                                             </p>
                                         </div>
                                         <div class="info-group">
-                                            <label>Ngày sinh</label>
-                                            <p>${student.dob}</p>
+                                            <label>Tuổi</label>
+                                            <p>${student.age}</p>
+                                    </div>
+                                    <div class="info-group">
+                                        <label>Ngày sinh</label>
+                                        <p>${student.dob}</p>
                                     </div>
                                     <div class="info-group">
                                         <label>Địa chỉ</label>

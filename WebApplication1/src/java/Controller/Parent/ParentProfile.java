@@ -3,7 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
 
-package ParentController;
+package Controller.Parent;
 
 import DAO.ParentDBContext;
 import DAO.StudentDBContext;

@@ -11,7 +11,6 @@ package Entity;
 public class Student {
      private int stuid;
     private String sname;
-    private int age;
     private boolean gender;
     private String dob;
     private String address;
@@ -20,10 +19,9 @@ public class Student {
     public Student() {
     }
 
-    public Student(int stuid, String sname, int age, boolean gender, String dob, String address, Parent pid) {
+    public Student(int stuid, String sname, boolean gender, String dob, String address, Parent pid) {
         this.stuid = stuid;
         this.sname = sname;
-        this.age = age;
         this.gender = gender;
         this.dob = dob;
         this.address = address;
@@ -45,15 +43,6 @@ public class Student {
     public void setSname(String sname) {
         this.sname = sname;
     }
-
-    public int getAge() {
-        return age;
-    }
-
-    public void setAge(int age) {
-        this.age = age;
-    }
-
     public boolean isGender() {
         return gender;
     }

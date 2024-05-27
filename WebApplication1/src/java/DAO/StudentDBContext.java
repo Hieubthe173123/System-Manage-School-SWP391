@@ -10,8 +10,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -25,7 +23,6 @@ public class StudentDBContext extends DBContext {
         try {
             String sql = "SELECT [stuid]\n"
                     + "      ,[sname]\n"
-                    + "      ,[age]\n"
                     + "      ,[dob]\n"
                     + "      ,[gender]\n"
                     + "      ,[Address]\n"
@@ -37,7 +34,7 @@ public class StudentDBContext extends DBContext {
                 Student student = new Student();
                 student.setStuid(rs.getInt("stuid"));
                 student.setSname(rs.getString("sname"));
-                student.setAge(rs.getInt("age"));
+               
                 student.setDob(rs.getString("dob"));
                 student.setGender(rs.getBoolean("gender"));
                 student.setAddress(rs.getString("Address"));
@@ -55,7 +52,6 @@ public class StudentDBContext extends DBContext {
         try {
             String sql = "SELECT [stuid]\n"
                     + "      ,[sname]\n"
-                    + "      ,[age]\n"
                     + "      ,[dob]\n"
                     + "      ,[gender]\n"
                     + "      ,[Address]\n"
@@ -68,7 +64,7 @@ public class StudentDBContext extends DBContext {
                 Student student = new Student();
                 student.setStuid(rs.getInt("stuid"));
                 student.setSname(rs.getString("sname"));
-                student.setAge(rs.getInt("age"));
+
                 student.setDob(rs.getString("dob"));
                 student.setGender(rs.getBoolean("gender"));
                 student.setAddress(rs.getString("Address"));
@@ -87,7 +83,6 @@ public class StudentDBContext extends DBContext {
         try {
             String sql = "SELECT [stuid]\n"
                     + "      ,[sname]\n"
-                    + "      ,[age]\n"
                     + "      ,[dob]\n"
                     + "      ,[gender]\n"
                     + "      ,[Address]\n"
@@ -100,7 +95,7 @@ public class StudentDBContext extends DBContext {
                 Student student = new Student();
                 student.setStuid(rs.getInt("stuid"));
                 student.setSname(rs.getString("sname"));
-                student.setAge(rs.getInt("age"));
+
                 student.setDob(rs.getString("dob"));
                 student.setGender(rs.getBoolean("gender"));
                 student.setAddress(rs.getString("Address"));
@@ -112,14 +107,13 @@ public class StudentDBContext extends DBContext {
         }
         return students;  // Trả về danh sách sinh viên
     }
-    
+
     public List<Student> getStudentByPid(int id) {
-          List<Student> list = new ArrayList<>();
+        List<Student> list = new ArrayList<>();
         ParentDBContext parent = new ParentDBContext();
         try {
             String sql = "SELECT [stuid]\n"
                     + "      ,[sname]\n"
-                    + "      ,[age]\n"
                     + "      ,[dob]\n"
                     + "      ,[gender]\n"
                     + "      ,[Address]\n"
@@ -132,7 +126,7 @@ public class StudentDBContext extends DBContext {
                 Student student = new Student();
                 student.setStuid(rs.getInt("stuid"));
                 student.setSname(rs.getString("sname"));
-                student.setAge(rs.getInt("age"));
+
                 student.setDob(rs.getString("dob"));
                 student.setGender(rs.getBoolean("gender"));
                 student.setAddress(rs.getString("Address"));

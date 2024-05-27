@@ -8,6 +8,7 @@ package Controller.Admin;
 import DAO.LecturerClassSession;
 import DAO.LecturersDBContext;
 import Entity.Lecturers;
+import Entity.Lecturers_Class_Session;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -35,7 +36,7 @@ public class LecturersController extends HttpServlet {
     throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         LecturerClassSession lcs = new LecturerClassSession();
-        List<LecturerClassSession> list = lcs.getAllLecturerClassSessions(); 
+        List<Lecturers_Class_Session> list = lcs.getAllLecturerClassSessions(); 
         request.setAttribute("list", list);
         request.getRequestDispatcher("FE_Admin/CRUD_Lecturers.jsp").forward(request, response);
     } 

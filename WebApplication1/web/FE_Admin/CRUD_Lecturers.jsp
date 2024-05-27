@@ -80,11 +80,11 @@
                 <tbody id="lecturerTableBody">
                     <c:forEach var="lecturer" items="${requestScope.list}">
                         <tr>
-                            <td>${lecturer.lid}</td>
-                            <td>${lecturer.lname}</td>
-                            <td>${lecturer.dob}</td>
-                            <td>${lecturer.gender ? 'Male' : 'Female'}</td>
-                             <td>${lecturer.cl.clname}</td>
+                            <td>${lecturer.lid.lid}</td>
+                            <td>${lecturer.lid.lname}</td>
+                            <td>${lecturer.lid.dob}</td>
+                            <td>${lecturer.lid.gender ? 'Male' : 'Female'}</td>
+                            <td>${lecturer.csid.classID.clname}</td>
                             <td>
                                 <button class="btn btn-warning btn-sm" onclick="editLecturer(${lecturer.lid})">Update</button>
                                 <button class="btn btn-danger btn-sm" onclick="deleteLecturer(${lecturer.lid})">Delete</button>

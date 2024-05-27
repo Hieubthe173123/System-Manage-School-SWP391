@@ -215,12 +215,8 @@
                                             </p>
                                         </div>
                                         <div class="info-group">
-                                            <label>Tuổi</label>
-                                            <p>${student.age}</p>
-                                    </div>
-                                    <div class="info-group">
-                                        <label>Ngày sinh</label>
-                                        <p>${student.dob}</p>
+                                            <label>Ngày sinh</label>
+                                            <p>${student.dob}</p>
                                     </div>
                                     <div class="info-group">
                                         <label>Địa chỉ</label>

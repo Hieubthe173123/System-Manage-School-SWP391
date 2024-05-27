@@ -1,4 +1,4 @@
-package ParentController;
+package Controller.Parent;
 
 import DAO.ParentDBContext;
 import Entity.Account;

@@ -162,9 +162,74 @@ public class LecturerClassSession extends DBContext {
         return list;
     }
 
+    public List<Lecturers_Class_Session> getAllLecturerBySchoolYear(String timeStart, String timeEnd) {
+        List<Lecturers_Class_Session> list = new ArrayList<>();
+
+        try {
+            String sql = "SELECT\n"
+                    + "    L.lid,\n"
+                    + "    L.lname,\n"
+                    + "    L.dob,\n"
+                    + "    L.gender,\n"
+                    + "    L.phoneNumber,\n"
+                    + "    L.IDcard,\n"
+                    + "    L.[Address],\n"
+                    + "    L.NickName,\n"
+                    + "    L.Email,\n"
+                    + "    C.classID,\n"
+                    + "    C.clname\n"
+                    + "FROM\n"
+                    + "    Lecturers L\n"
+                    + "LEFT JOIN\n"
+                    + "    Lecturers_Class_Session LCS ON L.lid = LCS.lid\n"
+                    + "LEFT JOIN\n"
+                    + "    Class_Session CS ON LCS.csid = CS.csid\n"
+                    + "LEFT JOIN\n"
+                    + "    Class C ON C.classID = CS.classID\n"
+                    + "LEFT JOIN\n"
+                    + "    SchoolYear sy ON CS.yid = sy.yid\n"
+                    + "WHERE\n"
+                    + "    sy.dateStart LIKE ? AND sy.dateEnd LIKE ?";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setString(1, timeStart + "%");
+            stm.setString(2, timeEnd + "%");
+            ResultSet rs = stm.executeQuery();
+
+            while (rs.next()) {
+                LecturerClassSession lecturerClassSession = new LecturerClassSession();
+
+                Lecturers lecturer = new Lecturers();
+                lecturer.setLid(rs.getInt("lid"));
+                lecturer.setLname(rs.getString("lname"));
+                lecturer.setGender(rs.getBoolean("gender"));
+                lecturer.setDob(rs.getString("dob"));
+                lecturer.setPhoneNumber(rs.getString("phoneNumber"));
+                lecturer.setIDcard(rs.getString("IDcard"));
+                lecturer.setEmail(rs.getString("Email"));
+                lecturer.setAddress(rs.getString("Address"));
+                lecturer.setNickname(rs.getString("NickName"));
+
+                Class cl = new Class();
+                cl.setClassid(rs.getInt("classID"));
+                cl.setClname(rs.getString("clname"));
+
+                ClassSession cs = new ClassSession();
+                cs.setClassID(cl);
+
+                Lecturers_Class_Session lecClass = new Lecturers_Class_Session();
+                lecClass.setLid(lecturer);
+                lecClass.setCsid(cs);
+                list.add(lecClass);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(RoomDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
+    }
+
     public static void main(String[] args) {
         LecturerClassSession lcs = new LecturerClassSession();
-        List<Lecturers_Class_Session> list = lcs.pagingLecturers(3);
+        List<Lecturers_Class_Session> list = lcs.getAllLecturerBySchoolYear("2023", "2024");
         System.out.println(list);
     }
 }

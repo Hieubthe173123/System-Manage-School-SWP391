@@ -149,11 +149,32 @@ public class LecturersDBContext extends DBContext {
 
     }
 
- 
+   public int getTotalLecturersBySchoolYear(String timeStart, String timeEnd) {
+    String sql = "SELECT COUNT(*) FROM Lecturers " +
+                 "INNER JOIN Lecturers_Class_Session ON Lecturers.lid = Lecturers_Class_Session.lid " +
+                 "INNER JOIN Class_Session ON Lecturers_Class_Session.csid = Class_Session.csid " +
+                 "INNER JOIN SchoolYear ON Class_Session.yid = SchoolYear.yid " +
+                 "WHERE SchoolYear.dateStart LIKE ? AND SchoolYear.dateEnd LIKE ?";
+    try {
+        PreparedStatement stm = connection.prepareStatement(sql);
+        stm.setString(1, timeStart + "%");
+        stm.setString(2, timeEnd + "%");
+        ResultSet rs = stm.executeQuery();
+        if (rs.next()) {
+            return rs.getInt(1);
+        }
+    } catch (SQLException ex) {
+        Logger.getLogger(LecturersDBContext.class.getName()).log(Level.SEVERE, null, ex);
+    }
+    return 0;
+}
+
 
     public static void main(String[] args) {
         LecturersDBContext ldb = new LecturersDBContext();
-        int count = ldb.getTotalLecturers();
+        int count = ldb.getTotalLecturersBySchoolYear("2023","2024");
         System.out.println(count);
     }
 }
+
+

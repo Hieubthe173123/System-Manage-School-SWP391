@@ -93,9 +93,9 @@ public class LecturersDBContext extends DBContext {
         return null;
     }
 
-     public void deleteLecturers(String lid) {
+    public void deleteLecturers(String lid) {
         try {
-            connection.setAutoCommit(false); // Bắt đầu transaction
+            connection.setAutoCommit(false);
 
             // Xóa các bản ghi liên quan trong bảng Lecturers_Class_Session
             String sql1 = "DELETE FROM Lecturers_Class_Session WHERE lid = ?";
@@ -115,26 +115,45 @@ public class LecturersDBContext extends DBContext {
             stm3.setString(1, lid);
             stm3.executeUpdate();
 
-            connection.commit(); // Commit transaction
+            connection.commit();
         } catch (SQLException ex) {
             try {
-                connection.rollback(); // Rollback transaction nếu có lỗi xảy ra
+                connection.rollback();
             } catch (SQLException rollbackEx) {
                 Logger.getLogger(LecturersDBContext.class.getName()).log(Level.SEVERE, null, rollbackEx);
             }
             Logger.getLogger(LecturersDBContext.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
-                connection.setAutoCommit(true); // Khôi phục lại chế độ tự động commit
+                connection.setAutoCommit(true);
             } catch (SQLException ex) {
                 Logger.getLogger(LecturersDBContext.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
+
+    // dem so luonng giao vien trong database 
+    public int getTotalLecturers() {
+        try {
+            String sql = "select count (*) from Lecturers";
+
+            PreparedStatement stm = connection.prepareStatement(sql);
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(RoomDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return 0;
+
+    }
+
+ 
+
+    public static void main(String[] args) {
+        LecturersDBContext ldb = new LecturersDBContext();
+        int count = ldb.getTotalLecturers();
+        System.out.println(count);
+    }
 }
-
-
-   
-  
-
-

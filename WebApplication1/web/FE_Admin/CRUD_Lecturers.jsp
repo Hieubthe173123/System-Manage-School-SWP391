@@ -1,13 +1,11 @@
-
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Lecturers Management</title>
         <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-        <link rel="stylesheet" href="styles.css">
         <style>
             body {
                 background-color: #f8f9fa;
@@ -22,32 +20,28 @@
                 vertical-align: middle;
             }
 
-            .modal-header {
+            .Endpage {
+                display: flex;
+                justify-content: center;
+                margin-top: 20px;
+            }
+
+            .Endpage .page-btn {
                 background-color: #007bff;
                 color: white;
+                border: none;
+                padding: 5px 10px;
+                margin: 0 5px;
+                border-radius: 5px;
+                cursor: pointer;
             }
 
-            .btn-primary {
-                background-color: #007bff;
-                border-color: #007bff;
-            }
-
-            .btn-primary:hover {
+            .Endpage .page-btn:hover {
                 background-color: #0056b3;
-                border-color: #004085;
             }
 
-            .btn-secondary {
-                background-color: #6c757d;
-                border-color: #6c757d;
-            }
-
-            .btn-danger {
-                background-color: #dc3545;
-                border-color: #dc3545;
-            }
-
-            .form-group label {
+            .Endpage .page-btn.active {
+                background-color: #0056b3;
                 font-weight: bold;
             }
         </style>
@@ -61,6 +55,16 @@
                         <input class="form-control mr-sm-2" type="search" placeholder="Search">
                         <button class="btn btn-success my-2 my-sm-0" type="submit">Search</button>
                     </form>
+                    <select onchange="this.options[this.selectedIndex].value && (window.location = this.options[this.selectedIndex].value)">
+                        <option value="">Select Year School</option>
+                        <c:forEach var="SchoolYear" items="${listB}">
+                            <option value="lecturers?timeStart=${SchoolYear.dateStart}&timeEnd=${SchoolYear.dateEnd}" 
+                                    <c:if test="${param.timeStart == SchoolYear.dateStart && param.timeEnd == SchoolYear.dateEnd}">selected</c:if>>
+                                ${SchoolYear.dateStart} - ${SchoolYear.dateEnd}
+                            </option>
+                        </c:forEach>
+                    </select>
+
                 </div>
                 <div class="col-md-4">
                     <button class="btn btn-primary" id="addNewLecturerBtn" data-toggle="modal" data-target="#lecturerModal">Add New Lecturer</button>
@@ -79,31 +83,61 @@
                         <th>Actions</th>
                     </tr>
                 </thead>
-                <tbody id="lecturerTableBody">
-                    <c:forEach var="lecturer" items="${requestScope.list}">
-                        <tr>
-                            <td>${lecturer.lid.lid}</td>
-                            <td>${lecturer.lid.lname}</td>
-                            <td>${lecturer.lid.IDcard}</td>
-                            <td>${lecturer.lid.dob}</td>
-                            <td>${lecturer.lid.gender ? 'Male' : 'Female'}</td>
-                            <td>${lecturer.lid.phoneNumber}</td>
-                            <td>${lecturer.csid.classID.clname}</td>
-                            <td>
-                                <button class="btn btn-warning btn-sm" onclick="editLecturer(${lecturer.lid})">Update</button>
-                                <form action="delete-lecturer" method="POST" style="display:inline;">
-                                    <input type="hidden" name="lid" value="${lecturer.lid.lid}" />
-                                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                                </form>
-                            </td>
-
-                        </tr>
-                    </c:forEach>
-
-
+                <tbody>
+                    <c:choose>
+                        <c:when test="${not empty listC}">
+                            <c:forEach var="lecturer" items="${listC}">
+                                <tr>
+                                    <td>${lecturer.lid.lid}</td>
+                                    <td>${lecturer.lid.lname}</td>
+                                    <td>${lecturer.lid.IDcard}</td>
+                                    <td>${lecturer.lid.dob}</td>
+                                    <td>${lecturer.lid.gender ? 'Male' : 'Female'}</td>
+                                    <td>${lecturer.lid.phoneNumber}</td>
+                                    <td>
+                                        <c:choose>
+                                            <c:when test="${lecturer.csid.classID != null}">
+                                                ${lecturer.csid.classID.clname}
+                                            </c:when>
+                                            <c:otherwise>-</c:otherwise>
+                                        </c:choose>
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-warning btn-sm" onclick="editLecturer(${lecturer.lid.lid})">Update</button>
+                                        <button type="button" class="btn btn-danger btn-sm" onclick="showDeleteModal(${lecturer.lid.lid})">Delete</button>
+                                    </td>
+                                </tr>
+                            </c:forEach>
+                        </c:when>
+                        <c:otherwise>
+                            <c:forEach var="lecturer" items="${listA}">
+                                <tr>
+                                    <td>${lecturer.lid.lid}</td>
+                                    <td>${lecturer.lid.lname}</td>
+                                    <td>${lecturer.lid.IDcard}</td>
+                                    <td>${lecturer.lid.dob}</td>
+                                    <td>${lecturer.lid.gender ? 'Male' : 'Female'}</td>
+                                    <td>${lecturer.lid.phoneNumber}</td>
+                                    <td>
+                                        <c:choose>
+                                            <c:when test="${lecturer.csid.classID != null}">
+                                                ${lecturer.csid.classID.clname}
+                                            </c:when>
+                                            <c:otherwise>-</c:otherwise>
+                                        </c:choose>
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-warning btn-sm" onclick="editLecturer(${lecturer.lid.lid})">Update</button>
+                                        <button type="button" class="btn btn-danger btn-sm" onclick="showDeleteModal(${lecturer.lid.lid})">Delete</button>
+                                    </td>
+                                </tr>
+                            </c:forEach>
+                        </c:otherwise>
+                    </c:choose>
                 </tbody>
             </table>
         </div>
+
 
         <!-- Add Lecturer Modal -->
         <div class="modal fade" id="lecturerModal" tabindex="-1" aria-labelledby="lecturerModalLabel" aria-hidden="true">
@@ -209,7 +243,44 @@
             </div>
         </div>
 
+        <!-- Pagination -->
+        <div class="Endpage">
+            <c:if test="${index > 1}">
+                <button class="page-btn" onclick="window.location.href = 'lecturers?index=${index - 1}'">Previous</button>
+            </c:if>
+            <c:forEach begin="1" end="${endPage}" var="i">
+                <button class="page-btn ${i == index ? 'active' : ''}" onclick="window.location.href = 'lecturers?index=${i}'">${i}</button>
+            </c:forEach>
+            <c:if test="${index < endPage}">
+                <button class="page-btn" onclick="window.location.href = 'lecturers?index=${index + 1}'">Next</button>
+            </c:if>
+        </div>
+
+        <!-- Scripts -->
         <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+        <script>
+                    let deleteLecturerId;
+
+                    function showDeleteModal(lid) {
+                        deleteLecturerId = lid;
+                        $('#deleteLecturerModal').modal('show');
+                    }
+
+                    document.getElementById('confirmDeleteBtn').addEventListener('click', function () {
+                        const form = document.createElement('form');
+                        form.method = 'POST';
+                        form.action = 'delete-lecturer';
+
+                        const input = document.createElement('input');
+                        input.type = 'hidden';
+                        input.name = 'lid';
+                        input.value = deleteLecturerId;
+
+                        form.appendChild(input);
+                        document.body.appendChild(form);
+                        form.submit();
+                    });
+        </script>
     </body>
 </html>

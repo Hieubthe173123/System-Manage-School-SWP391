@@ -68,7 +68,11 @@ public class Session {
 
     @Override
     public String toString() {
-        return super.toString(); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
+        return "Session{" + "sid=" + sid + ", sname=" + sname + ", sessionDescription=" + sessionDescription + ", totalSession=" + totalSession + ", age=" + age + '}';
     }
+
+    
+    
+    
     
 }

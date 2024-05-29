@@ -1,80 +1,70 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
- */
-
 package Controller.Admin;
 
 import DAO.LecturerClassSession;
 import DAO.LecturersDBContext;
-import Entity.Lecturers;
+import DAO.SchoolYearDBContext;
 import Entity.Lecturers_Class_Session;
+import Entity.SchoolYear;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.util.List;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.util.List;
 
-/**
- *
- * @author admin
- */
-@WebServlet(name="LecturersController", urlPatterns={"/lecturers"})
+@WebServlet(name = "LecturersController", urlPatterns = {"/lecturers"})
 public class LecturersController extends HttpServlet {
-   
-    /** 
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        LecturerClassSession lcs = new LecturerClassSession();
-        List<Lecturers_Class_Session> list = lcs.getAllLecturerClassSessions(); 
-        request.setAttribute("list", list);
-        request.getRequestDispatcher("FE_Admin/CRUD_Lecturers.jsp").forward(request, response);
-    } 
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /** 
-     * Handles the HTTP <code>GET</code> method.
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        SchoolYearDBContext sy = new SchoolYearDBContext();
+        LecturerClassSession lcs = new LecturerClassSession();
+        LecturersDBContext ldb = new LecturersDBContext();
+        String timeStart = request.getParameter("timeStart");
+        String timeEnd = request.getParameter("timeEnd");
+        String indexPage = request.getParameter("index");
+        if (indexPage == null) {
+            indexPage = "1";
+        }
+        int index = Integer.parseInt(indexPage);
+        int count = ldb.getTotalLecturers();
+        int endPage = count / 10; 
+        if (count % 10 != 0) {
+            endPage++;
+        }
+
+        if (timeStart != null && timeEnd != null) {
+            List<Lecturers_Class_Session> list3 = lcs.getAllLecturerBySchoolYear(timeStart, timeEnd);
+            request.setAttribute("listC",list3);
+        }else {
+        List<Lecturers_Class_Session> list1 = lcs.pagingLecturers(index);
+        request.setAttribute("listA", list1);
+        }
+        List<SchoolYear> list2 = sy.getAllSchoolYear();
+        
+        request.setAttribute("listB", list2);
+        
+        request.setAttribute("endPage", endPage);
+        request.setAttribute("index", index);
+        request.getRequestDispatcher("FE_Admin/CRUD_Lecturers.jsp").forward(request, response);
+    }
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
-        processRequest(request, response);
-    } 
-
-    /** 
-     * Handles the HTTP <code>POST</code> method.
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+            throws ServletException, IOException {
         processRequest(request, response);
     }
 
-    /** 
-     * Returns a short description of the servlet.
-     * @return a String containing servlet description
-     */
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        processRequest(request, response);
+    }
+
     @Override
     public String getServletInfo() {
         return "Short description";
-    }// </editor-fold>
-
+    }
 }

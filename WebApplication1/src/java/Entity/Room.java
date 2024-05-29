@@ -35,6 +35,12 @@ public class Room {
     public void setRname(String rname) {
         this.rname = rname;
     }
+
+    @Override
+    public String toString() {
+        return "Room{" + "rid=" + rid + ", rname=" + rname + '}';
+    }
+    
     
     
 }

@@ -244,6 +244,22 @@
         </div>
 
         <!-- Pagination -->
+   <!-- Pagination -->
+<c:choose>
+    <c:when test="${not empty listC}">
+        <div class="Endpage">
+            <c:if test="${index > 1}">
+                <button class="page-btn" onclick="window.location.href = 'lecturers?timeStart=${param.timeStart}&timeEnd=${param.timeEnd}&index=${index - 1}'">Previous</button>
+            </c:if>
+            <c:forEach begin="1" end="${endPage}" var="i">
+                <button class="page-btn ${i == index ? 'active' : ''}" onclick="window.location.href = 'lecturers?timeStart=${param.timeStart}&timeEnd=${param.timeEnd}&index=${i}'">${i}</button>
+            </c:forEach>
+            <c:if test="${index < endPage}">
+                <button class="page-btn" onclick="window.location.href = 'lecturers?timeStart=${param.timeStart}&timeEnd=${param.timeEnd}&index=${index + 1}'">Next</button>
+            </c:if>
+        </div>
+    </c:when>
+    <c:otherwise>
         <div class="Endpage">
             <c:if test="${index > 1}">
                 <button class="page-btn" onclick="window.location.href = 'lecturers?index=${index - 1}'">Previous</button>
@@ -255,6 +271,10 @@
                 <button class="page-btn" onclick="window.location.href = 'lecturers?index=${index + 1}'">Next</button>
             </c:if>
         </div>
+    </c:otherwise>
+</c:choose>
+
+        
 
         <!-- Scripts -->
         <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>

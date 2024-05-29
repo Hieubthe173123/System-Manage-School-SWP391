@@ -27,6 +27,16 @@
             .card-body {
                 padding: 2rem;
             }
+            input[type=number]::-webkit-outer-spin-button,
+            input[type=number]::-webkit-inner-spin-button {
+                -webkit-appearance: none;
+                margin: 0;
+            }
+
+            /* Hides the up and down arrows on input with type="number" for Firefox */
+            input[type=number] {
+                -moz-appearance: textfield;
+            }
         </style>
     </head>
     <body>
@@ -60,7 +70,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="phoneNumber">Số điện thoại</label>
-                                    <input type="text" class="form-control" id="phoneNumber" name="phoneNumber" value="${pa.phoneNumber}" required>
+                                    <input type="number" class="form-control" id="phoneNumber" name="phoneNumber" value="${pa.phoneNumber}" required>
                                 </div>
                                 <div class="form-group">
                                     <label for="email">Email</label>
@@ -68,7 +78,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="IDcard">Căn cước công dân</label>
-                                    <input type="text" class="form-control" id="IDcard" name="IDcard" value="${pa.IDcard}" required>
+                                    <input type="number" class="form-control" id="IDcard" name="IDcard" value="${pa.IDcard}" required>
                                 </div>
                                 <div class="form-group">
                                     <label for="nickname">Nickname</label>

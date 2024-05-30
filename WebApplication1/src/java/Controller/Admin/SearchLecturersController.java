@@ -6,6 +6,8 @@
 package Controller.Admin;
 
 import DAO.LecturerClassSession;
+import DAO.LecturersDBContext;
+import Entity.Lecturers;
 import Entity.Lecturers_Class_Session;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -39,14 +41,14 @@ public class SearchLecturersController extends HttpServlet {
     String searchInput = request.getParameter("searchInput");
     
     // Gọi phương thức tìm kiếm theo id
-    LecturerClassSession lcs = new LecturerClassSession();
-    List<Lecturers_Class_Session> searchResultsById = lcs.getLecturerByid(searchInput);
+    LecturersDBContext lcs = new LecturersDBContext();
+    List<Lecturers> searchResultsById = lcs.getLecturerByID(searchInput);
     
     // Gọi phương thức tìm kiếm theo tên
-    List<Lecturers_Class_Session> searchResultsByName = lcs.getLecturerByName(searchInput);
+    List<Lecturers> searchResultsByName = lcs.getLecturerByName(searchInput);
     
     // Kết hợp kết quả từ cả hai phương thức tìm kiếm
-    List<Lecturers_Class_Session> combinedResults = new ArrayList<>();
+    List<Lecturers> combinedResults = new ArrayList<>();
     combinedResults.addAll(searchResultsById);
     combinedResults.addAll(searchResultsByName);
     

@@ -52,7 +52,7 @@
             <div class="row w-100 mb-3">
                 <div class="col-sm-6 mb-3 d-flex justify-content-between">
 
- 
+
                     <form class="form-inline" action="search-lecturers" method="GET">
                         <input class="form-control mr-sm-2" type="search" name="searchInput" placeholder="Search" required>
                         <button class="btn btn-success my-2 my-sm-0" type="submit">Search</button>
@@ -74,40 +74,50 @@
             </div>
             <table class="table table-bordered">
                 <thead>
-                    <tr>
-                        <th>LecturerID</th>
-                        <th>Lecturer Name</th>
-                        <th>IDCard</th>
-                        <th>DOB</th>
-                        <th>Gender</th>
-                        <th>Phone Number</th>
-                        <th>Class Name</th>
-                        <th>Actions</th>
-                    </tr>
+                    <c:choose>
+                        <c:when test="${not empty listC}">
+                            <tr>
+                            <th>LecturerID</th>
+                            <th>Lecturer Name</th>
+                            <th>IDCard</th>
+                            <th>DOB</th>
+                            <th>Gender</th>
+                            <th>Phone Number</th>
+                            <th>Class Name</th>
+                            <th>Actions</th>
+                        </tr>
+                        </c:when>
+                        <c:otherwise>
+                            <tr>
+                            <th>LecturerID</th>
+                            <th>Lecturer Name</th>
+                            <th>IDCard</th>
+                            <th>DOB</th>
+                            <th>Gender</th>
+                            <th>Phone Number</th>     
+                            <th>Actions</th>
+                        </tr>
+                        </c:otherwise>
+                    </c:choose>
+
                 </thead>
                 <tbody>
                     <c:forEach var="lecturer" items="${searchResults}">
                         <tr>
-                            <td>${lecturer.lid.lid}</td>
-                            <td>${lecturer.lid.lname}</td>
-                            <td>${lecturer.lid.IDcard}</td>
-                            <td>${lecturer.lid.dob}</td>
-                            <td>${lecturer.lid.gender ? 'Male' : 'Female'}</td>
-                            <td>${lecturer.lid.phoneNumber}</td>
+                            <td>${lecturer.lid}</td>
+                            <td>${lecturer.lname}</td>
+                            <td>${lecturer.IDcard}</td>
+                            <td>${lecturer.dob}</td>
+                            <td>${lecturer.gender ? 'Male' : 'Female'}</td>
+                            <td>${lecturer.phoneNumber}</td>
                             <td>
-                                <c:choose>
-                                    <c:when test="${lecturer.csid.classID != null}">
-                                        ${lecturer.csid.classID.clname}
-                                    </c:when>
-                                    <c:otherwise>-</c:otherwise>
-                                </c:choose>
-                            </td>
-                            <td>
-                                <button class="btn btn-warning btn-sm" onclick="editLecturer(${lecturer.lid.lid})">Update</button>
-                                <button type="button" class="btn btn-danger btn-sm" onclick="showDeleteModal(${lecturer.lid.lid})">Delete</button>
+                                <button class="btn btn-warning btn-sm" onclick="editLecturer(${lecturer.lid})">Update</button>
+                                <button type="button" class="btn btn-danger btn-sm" onclick="showDeleteModal(${lecturer.lid})">Delete</button>
                             </td>
                         </tr>
                     </c:forEach>
+                        
+
                     <c:choose>
                         <c:when test="${not empty listC}">
                             <c:forEach var="lecturer" items="${listC}">
@@ -133,26 +143,20 @@
                                 </tr>
                             </c:forEach>
                         </c:when>
+                                
                         <c:otherwise>
                             <c:forEach var="lecturer" items="${listA}">
                                 <tr>
-                                    <td>${lecturer.lid.lid}</td>
-                                    <td>${lecturer.lid.lname}</td>
-                                    <td>${lecturer.lid.IDcard}</td>
-                                    <td>${lecturer.lid.dob}</td>
-                                    <td>${lecturer.lid.gender ? 'Male' : 'Female'}</td>
-                                    <td>${lecturer.lid.phoneNumber}</td>
+                                    <td>${lecturer.lid}</td>
+                                    <td>${lecturer.lname}</td>
+                                    <td>${lecturer.IDcard}</td>
+                                    <td>${lecturer.dob}</td>
+                                    <td>${lecturer.gender ? 'Male' : 'Female'}</td>
+                                    <td>${lecturer.phoneNumber}</td>
+
                                     <td>
-                                        <c:choose>
-                                            <c:when test="${lecturer.csid.classID != null}">
-                                                ${lecturer.csid.classID.clname}
-                                            </c:when>
-                                            <c:otherwise>-</c:otherwise>
-                                        </c:choose>
-                                    </td>
-                                    <td>
-                                        <button class="btn btn-warning btn-sm" onclick="editLecturer(${lecturer.lid.lid})">Update</button>
-                                        <button type="button" class="btn btn-danger btn-sm" onclick="showDeleteModal(${lecturer.lid.lid})">Delete</button>
+                                        <button class="btn btn-warning btn-sm" onclick="editLecturer(${lecturer.lid})">Update</button>
+                                        <button type="button" class="btn btn-danger btn-sm" onclick="showDeleteModal(${lecturer.lid})">Delete</button>
                                     </td>
                                 </tr>
                             </c:forEach>

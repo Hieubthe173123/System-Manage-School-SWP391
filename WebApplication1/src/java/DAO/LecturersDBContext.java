@@ -4,12 +4,15 @@
  */
 package DAO;
 
+import Entity.ClassSession;
 import Entity.Lecturers;
+import Entity.Lecturers_Class_Session;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -148,33 +151,127 @@ public class LecturersDBContext extends DBContext {
 
     }
 
-   public int getTotalLecturersBySchoolYear(String timeStart, String timeEnd) {
-    String sql = "SELECT COUNT(*) FROM Lecturers " +
-                 "INNER JOIN Lecturers_Class_Session ON Lecturers.lid = Lecturers_Class_Session.lid " +
-                 "INNER JOIN Class_Session ON Lecturers_Class_Session.csid = Class_Session.csid " +
-                 "INNER JOIN SchoolYear ON Class_Session.yid = SchoolYear.yid " +
-                 "WHERE SchoolYear.dateStart LIKE ? AND SchoolYear.dateEnd LIKE ?";
-    try {
-        PreparedStatement stm = connection.prepareStatement(sql);
-        stm.setString(1, timeStart + "%");
-        stm.setString(2, timeEnd + "%");
-        ResultSet rs = stm.executeQuery();
-        if (rs.next()) {
-            return rs.getInt(1);
-        }
-    } catch (SQLException ex) {
-        Logger.getLogger(LecturersDBContext.class.getName()).log(Level.SEVERE, null, ex);
-    }
-    return 0;
-}
- 
+    public List<Lecturers> pagingLecturers(int index) {
+        List<Lecturers> list = new ArrayList<>();
+        try {
+            String sql = "SELECT \n"
+                    + "Lecturers.lid,\n"
+                    + "Lecturers.lname,\n"
+                    + "Lecturers.gender,\n"
+                    + "Lecturers.dob,\n"
+                    + "Lecturers.phoneNumber,\n"
+                    + "Lecturers.IDcard,\n"
+                    + "Lecturers.Email,\n"
+                    + "Lecturers.Address\n"
+                    + "FROM Lecturers\n"
+                    + "\n"
+                    + "ORDER BY Lecturers.lid \n"
+                    + "OFFSET ? ROWS FETCH NEXT 10 ROWS ONLY;";
 
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setInt(1, (index - 1) * 10);  // Calculate the correct offset
+            ResultSet rs = stm.executeQuery();
+             while (rs.next()) {
+            Lecturers lecturer = new Lecturers();
+            lecturer.setLid(rs.getInt("lid"));
+            lecturer.setLname(rs.getString("lname"));
+            lecturer.setGender(rs.getBoolean("gender"));
+            lecturer.setDob(rs.getString("dob"));
+            lecturer.setPhoneNumber(rs.getString("phoneNumber"));
+            lecturer.setIDcard(rs.getString("IDcard"));
+            lecturer.setEmail(rs.getString("Email"));
+            lecturer.setAddress(rs.getString("Address"));
+            list.add(lecturer);
+        }
+        } catch (SQLException ex) {
+            Logger.getLogger(RoomDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return list;
+    }
+
+    public int getTotalLecturersBySchoolYear(String timeStart, String timeEnd) {
+        String sql = "SELECT COUNT(*) FROM Lecturers "
+                + "INNER JOIN Lecturers_Class_Session ON Lecturers.lid = Lecturers_Class_Session.lid "
+                + "INNER JOIN Class_Session ON Lecturers_Class_Session.csid = Class_Session.csid "
+                + "INNER JOIN SchoolYear ON Class_Session.yid = SchoolYear.yid "
+                + "WHERE SchoolYear.dateStart LIKE ? AND SchoolYear.dateEnd LIKE ?";
+        try {
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setString(1, timeStart + "%");
+            stm.setString(2, timeEnd + "%");
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(LecturersDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return 0;
+    }
+    
+       public List<Lecturers> getLecturerByID(String lid) {
+        List<Lecturers> list = new ArrayList<>();
+        try {
+            String sql = "select * from Lecturers where lid = ?";
+
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setString(1, lid);
+
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                Lecturers lecturer = new Lecturers();
+                lecturer.setLid(rs.getInt("lid"));
+                lecturer.setLname(rs.getString("lname"));
+                lecturer.setGender(rs.getBoolean("gender"));
+                lecturer.setDob(rs.getDate("dob").toString()); // assuming dob is of type Date
+                lecturer.setPhoneNumber(rs.getString("phoneNumber"));
+                lecturer.setIDcard(rs.getString("IDcard"));
+                lecturer.setEmail(rs.getString("Email"));
+                lecturer.setAddress(rs.getString("Address"));
+                lecturer.setNickname(rs.getString("NickName"));
+
+                
+                list.add(lecturer);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(RoomDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
+    }
+       public List<Lecturers> getLecturerByName(String lname) {
+        List<Lecturers> list = new ArrayList<>();
+        try {
+            String sql = "select * from Lecturers where lname like ?;";
+
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setString(1, "%" + lname + "%"); // Adding wildcard characters here
+
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                Lecturers lecturer = new Lecturers();
+                lecturer.setLid(rs.getInt("lid"));
+                lecturer.setLname(rs.getString("lname"));
+                lecturer.setGender(rs.getBoolean("gender"));
+                lecturer.setDob(rs.getDate("dob").toString()); // assuming dob is of type Date
+                lecturer.setPhoneNumber(rs.getString("phoneNumber"));
+                lecturer.setIDcard(rs.getString("IDcard"));
+                lecturer.setEmail(rs.getString("Email"));
+                lecturer.setAddress(rs.getString("Address"));
+                lecturer.setNickname(rs.getString("NickName"));
+
+                list.add(lecturer);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(LecturerClassSession.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
+    }
 
     public static void main(String[] args) {
         LecturersDBContext ldb = new LecturersDBContext();
-        int count = ldb.getTotalLecturersBySchoolYear("2023","2024");
-        System.out.println(count);
+        List<Lecturers> list = ldb.getLecturerByName("Thảo");
+       
+        System.out.println(list);
     }
 }
-
-

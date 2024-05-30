@@ -3,6 +3,7 @@ package Controller.Admin;
 import DAO.LecturerClassSession;
 import DAO.LecturersDBContext;
 import DAO.SchoolYearDBContext;
+import Entity.Lecturers;
 import Entity.Lecturers_Class_Session;
 import Entity.SchoolYear;
 import java.io.IOException;
@@ -51,7 +52,7 @@ public class LecturersController extends HttpServlet {
         if (count % 10 != 0) {
             endPage++;
         }
-        List<Lecturers_Class_Session> list1 = lcs.pagingLecturers(index);
+        List<Lecturers> list1 = ldb.pagingLecturers(index);
         request.setAttribute("listA", list1);
         request.setAttribute("index", index);
         request.setAttribute("endPage", endPage);

@@ -25,7 +25,6 @@ public class LecturersController extends HttpServlet {
     String timeStart = request.getParameter("timeStart");
     String timeEnd = request.getParameter("timeEnd");
 
-    // Lấy index từ tham số truy vấn
     String indexPage = request.getParameter("index");
 
     if (timeStart != null && timeEnd != null) {

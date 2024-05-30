@@ -284,9 +284,129 @@ public class LecturerClassSession extends DBContext {
         return list;
     }
 
+    public List<Lecturers_Class_Session> getLecturerByid(String lid) {
+        List<Lecturers_Class_Session> list = new ArrayList<>();
+        try {
+            String sql = "SELECT\n"
+                    + "L.lid,\n"
+                    + "L.lname,\n"
+                    + "L.dob,\n"
+                    + "L.gender,\n"
+                    + "L.phoneNumber,\n"
+                    + "L.IDcard,\n"
+                    + "L.[Address],\n"
+                    + "L.NickName,\n"
+                    + "L.Email,\n"
+                    + "C.classID,\n"
+                    + "C.clname\n"
+                    + "FROM\n"
+                    + "Lecturers L\n"
+                    + "LEFT JOIN\n"
+                    + "Lecturers_Class_Session LCS ON L.lid = LCS.lid\n"
+                    + "LEFT JOIN\n"
+                    + "Class_Session CS ON LCS.csid = CS.csid\n"
+                    + "LEFT JOIN\n"
+                    + "Class C ON CS.classID = C.classID\n"
+                    + "where L.lid = ?";
+
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setString(1, lid);
+
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                Lecturers lecturer = new Lecturers();
+                lecturer.setLid(rs.getInt("lid"));
+                lecturer.setLname(rs.getString("lname"));
+                lecturer.setGender(rs.getBoolean("gender"));
+                lecturer.setDob(rs.getDate("dob").toString()); // assuming dob is of type Date
+                lecturer.setPhoneNumber(rs.getString("phoneNumber"));
+                lecturer.setIDcard(rs.getString("IDcard"));
+                lecturer.setEmail(rs.getString("Email"));
+                lecturer.setAddress(rs.getString("Address"));
+                lecturer.setNickname(rs.getString("NickName"));
+
+                Class cl = new Class();
+                cl.setClassid(rs.getInt("classID"));
+                cl.setClname(rs.getString("clname"));
+
+                ClassSession cs = new ClassSession();
+                cs.setClassID(cl);
+
+                Lecturers_Class_Session lecClass = new Lecturers_Class_Session();
+                lecClass.setLid(lecturer);
+                lecClass.setCsid(cs);
+                list.add(lecClass);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(RoomDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
+    }
+
+    public List<Lecturers_Class_Session> getLecturerByName(String lname) {
+        List<Lecturers_Class_Session> list = new ArrayList<>();
+        try {
+            String sql = "SELECT\n"
+                    + "    L.lid,\n"
+                    + "    L.lname,\n"
+                    + "    L.dob,\n"
+                    + "    L.gender,\n"
+                    + "    L.phoneNumber,\n"
+                    + "    L.IDcard,\n"
+                    + "    L.[Address],\n"
+                    + "    L.NickName,\n"
+                    + "    L.Email,\n"
+                    + "    C.classID,\n"
+                    + "    C.clname\n"
+                    + "FROM\n"
+                    + "    Lecturers L\n"
+                    + "LEFT JOIN\n"
+                    + "    Lecturers_Class_Session LCS ON L.lid = LCS.lid\n"
+                    + "LEFT JOIN\n"
+                    + "    Class_Session CS ON LCS.csid = CS.csid\n"
+                    + "LEFT JOIN\n"
+                    + "    Class C ON CS.classID = C.classID\n"
+                    + "WHERE\n"
+                    + "    L.lname LIKE ?;";
+
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setString(1, "%" + lname + "%"); // Adding wildcard characters here
+
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                Lecturers lecturer = new Lecturers();
+                lecturer.setLid(rs.getInt("lid"));
+                lecturer.setLname(rs.getString("lname"));
+                lecturer.setGender(rs.getBoolean("gender"));
+                lecturer.setDob(rs.getDate("dob").toString()); // assuming dob is of type Date
+                lecturer.setPhoneNumber(rs.getString("phoneNumber"));
+                lecturer.setIDcard(rs.getString("IDcard"));
+                lecturer.setEmail(rs.getString("Email"));
+                lecturer.setAddress(rs.getString("Address"));
+                lecturer.setNickname(rs.getString("NickName"));
+
+                Class cl = new Class();
+                cl.setClassid(rs.getInt("classID"));
+                cl.setClname(rs.getString("clname"));
+
+                ClassSession cs = new ClassSession();
+                cs.setClassID(cl);
+
+                Lecturers_Class_Session lecClass = new Lecturers_Class_Session();
+                lecClass.setLid(lecturer);
+                lecClass.setCsid(cs);
+                list.add(lecClass);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(LecturerClassSession.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
+    }
+
     public static void main(String[] args) {
         LecturerClassSession lcs = new LecturerClassSession();
-        List<Lecturers_Class_Session> list = lcs.getLecturersBySchoolYearWithPaging("2023", "2024", 1);
+        List<Lecturers_Class_Session> list = lcs.getLecturerByName("Hiếu");
         System.out.println(list);
     }
+
 }

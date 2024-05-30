@@ -5,13 +5,12 @@
 package DAO;
 
 import Entity.Lecturers;
-import Entity.Class;
-import Entity.Lecturers_Class_Session;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -168,6 +167,7 @@ public class LecturersDBContext extends DBContext {
     }
     return 0;
 }
+ 
 
 
     public static void main(String[] args) {

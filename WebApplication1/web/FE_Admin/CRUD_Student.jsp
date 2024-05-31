@@ -4,13 +4,14 @@
     Author     : NGUYEN THI KHANH VI
 --%>
 
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>JSP Page</title>
-     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
         <link rel="stylesheet" href="styles.css">
         <style>
             body {
@@ -54,35 +55,67 @@
     <body>
         <div class="container mt-5">
             <h2 class="text-center">Student Management</h2>
-            <div class=" row w-100 ">
-                 
-                <div class="col-sm-6 mb-3 d-flex justify-content-between">
-                    <input type="text" class="form-control w-75" id="searchStudent" placeholder="Search student by name...">
-                     </div>
-                    <div class="col-sm-6 ">
 
-                        <button class="btn btn-primary mr-2" id="addNewParentBtn" data-toggle="modal" data-target="#parentModal">Add New Parent</button>
-                        <button class="btn btn-primary" id="addNewStudentBtn" data-toggle="modal" data-target="#studentModal">Add New Student</button>
-                    </div>
-               
+            <div class="row mt-3">
+                <div class="col-sm-6">
+                    <form class="form-inline" action="search-student" method="GET">
+                        <input class="form-control mr-sm-2" type="search" name="searchInput" placeholder="Search student..." required>
+                        <button class="btn btn-success my-2 my-sm-0" type="submit">Search</button>
+                    </form>
+                </div>
+                <div class="col-sm-6 text-right">
+                    <button class="btn btn-primary mr-2" id="addNewParentBtn" data-toggle="modal" data-target="#parentModal">Add New Parent</button>
+                    <button class="btn btn-primary" id="addNewStudentBtn" data-toggle="modal" data-target="#studentModal">Add New Student</button>
+                </div>
             </div>
+            <div class="row mt-3">
+                <div class="col-auto">
+                    <select class="form-control" onchange="this.options[this.selectedIndex].value && (window.location = this.options[this.selectedIndex].value)">
+                        <option value="">Select School Year</option>
+                        <c:forEach var="SchoolYear" items="${listB}">
+                            <option value="student?timeStart=${SchoolYear.dateStart}&timeEnd=${SchoolYear.dateEnd}" 
+                                    <c:if test="${param.timeStart == SchoolYear.dateStart && param.timeEnd == SchoolYear.dateEnd}">selected</c:if>>
+                                ${SchoolYear.dateStart} - ${SchoolYear.dateEnd}
+                            </option>
+                        </c:forEach>
+                    </select> <br>
+                </div>
+            </div>
+
+
+
             <table class="table table-bordered">
                 <thead>
-                    <tr>
-                        <th>No.</th>
+                    <tr> 
                         <th>Student ID</th>
                         <th>Student Name</th>
                         <th>DOB</th>
                         <th>Gender</th>
                         <th>Address</th>
                         <th>Parent ID</th>
-                        <th>Class ID</th>
+                        <th>Class Name</th>
                         <th>Active</th>
                     </tr>
                 </thead>
                 <tbody id="studentTableBody">
-                    <!-- Student list will be populated here -->
-                    
+
+                <c:forEach var="studentClass" items="${list}">
+                    <tr>
+                        <td>${studentClass.stuid.getStuid()}</td>
+                        <td>${studentClass.stuid.getSname()}</td>
+                        <td>${studentClass.stuid.getDob()}</td>
+                        <td>${studentClass.stuid.isGender() ? 'Male' : 'Female'}</td>
+                        <td>${studentClass.stuid.getAddress()}</td>
+                        <td>${studentClass.stuid.pid.getPid()}</td>
+                        <td>${studentClass.csid.getClassID().getClname()}</td>
+                        <td>
+                            <button class="btn btn-warning btn-sm" onclick="editStudent('${student.getStuid()}', '${student.getSname()}', '${student.getDob()}', '${student.getGender()}', '${student.getAddress()}', '${student.pid.getPid()}', '${student.csid.getClname()}')">Edit</button>
+                            <button class="btn btn-danger btn-sm" onclick="deleteStudent('${student.getStuid()}')">Delete</button>
+                        </td>
+
+                    </tr>
+                </c:forEach>
+
                 </tbody>
             </table>
         </div>

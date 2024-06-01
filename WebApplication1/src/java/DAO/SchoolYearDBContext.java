@@ -318,27 +318,29 @@ public class SchoolYearDBContext extends DBContext {
             }
             rs.close();
             ps.close();
-
-            // Insert new class session
-            String insertNewCsid = "INSERT INTO Class_Session (classID, yid, sid, rid) "
-                    + "SELECT cs.classID, ?, cs.sid, cs.rid "
-                    + "FROM Class_Session cs "
-                    + "WHERE cs.yid = 1 "
-                    + "AND NOT EXISTS ( "
-                    + "    SELECT 1 "
-                    + "    FROM Class_Session cs2 "
-                    + "    WHERE cs2.classID = cs.classID "
-                    + "    AND cs2.yid = ? "
-                    + ");";
-            PreparedStatement ps2 = connection.prepareStatement(insertNewCsid);
-            ps2.setInt(1, newYid);
-            ps2.setInt(2, newYid);
-            ps2.executeUpdate();
-            ps2.close();
-
+            //if newYearID insert success => Insert new information
+            if (newYid != 0) {
+                // Insert new class session
+                String insertNewCsid = "INSERT INTO Class_Session (classID, yid, sid, rid) "
+                        + "SELECT cs.classID, ?, cs.sid, cs.rid "
+                        + "FROM Class_Session cs "
+                        + "WHERE cs.yid = 1 "
+                        + "AND NOT EXISTS ( "
+                        + "    SELECT 1 "
+                        + "    FROM Class_Session cs2 "
+                        + "    WHERE cs2.classID = cs.classID "
+                        + "    AND cs2.yid = ? "
+                        + ");";
+                PreparedStatement ps2 = connection.prepareStatement(insertNewCsid);
+                ps2.setInt(1, newYid);
+                ps2.setInt(2, newYid);
+                ps2.executeUpdate();
+                ps2.close();
+            }
             // Commit transaction
             connection.commit();
             connection.setAutoCommit(true);
+
         } catch (SQLException ex) {
             Logger.getLogger(SchoolYearDBContext.class.getName()).log(Level.SEVERE, null, ex);
             try {
@@ -352,8 +354,6 @@ public class SchoolYearDBContext extends DBContext {
         }
         return newYid; // Returning the new school year ID
     }
-
-    
 
     public static void main(String[] args) {
         SchoolYearDBContext db = new SchoolYearDBContext();

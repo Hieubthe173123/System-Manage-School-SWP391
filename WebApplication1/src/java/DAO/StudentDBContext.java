@@ -18,14 +18,16 @@ import java.util.logging.Logger;
  * @author admin
  */
 public class StudentDBContext extends DBContext {
-
+    public static void main(String[] args) {
+        StudentDBContext s = new StudentDBContext();
+        System.out.println(s.getStudentByPid(1).size());
+    }
     public ArrayList<Student> getAllStudent() {
         ParentDBContext parent = new ParentDBContext();
         ArrayList<Student> students = new ArrayList<>();
         try {
             String sql = "SELECT [stuid]\n"
                     + "      ,[sname]\n"
-                    + "      ,[age]\n"
                     + "      ,[dob]\n"
                     + "      ,[gender]\n"
                     + "      ,[Address]\n"
@@ -37,7 +39,7 @@ public class StudentDBContext extends DBContext {
                 Student student = new Student();
                 student.setStuid(rs.getInt("stuid"));
                 student.setSname(rs.getString("sname"));
-                student.setAge(rs.getInt("age"));
+               
                 student.setDob(rs.getString("dob"));
                 student.setGender(rs.getBoolean("gender"));
                 student.setAddress(rs.getString("Address"));
@@ -55,7 +57,6 @@ public class StudentDBContext extends DBContext {
         try {
             String sql = "SELECT [stuid]\n"
                     + "      ,[sname]\n"
-                    + "      ,[age]\n"
                     + "      ,[dob]\n"
                     + "      ,[gender]\n"
                     + "      ,[Address]\n"
@@ -68,7 +69,6 @@ public class StudentDBContext extends DBContext {
                 Student student = new Student();
                 student.setStuid(rs.getInt("stuid"));
                 student.setSname(rs.getString("sname"));
-                student.setAge(rs.getInt("age"));
                 student.setDob(rs.getString("dob"));
                 student.setGender(rs.getBoolean("gender"));
                 student.setAddress(rs.getString("Address"));
@@ -87,7 +87,7 @@ public class StudentDBContext extends DBContext {
         try {
             String sql = "SELECT [stuid]\n"
                     + "      ,[sname]\n"
-                    + "      ,[age]\n"
+               
                     + "      ,[dob]\n"
                     + "      ,[gender]\n"
                     + "      ,[Address]\n"
@@ -100,7 +100,7 @@ public class StudentDBContext extends DBContext {
                 Student student = new Student();
                 student.setStuid(rs.getInt("stuid"));
                 student.setSname(rs.getString("sname"));
-                student.setAge(rs.getInt("age"));
+               
                 student.setDob(rs.getString("dob"));
                 student.setGender(rs.getBoolean("gender"));
                 student.setAddress(rs.getString("Address"));
@@ -119,7 +119,6 @@ public class StudentDBContext extends DBContext {
         try {
             String sql = "SELECT [stuid]\n"
                     + "      ,[sname]\n"
-                    + "      ,[age]\n"
                     + "      ,[dob]\n"
                     + "      ,[gender]\n"
                     + "      ,[Address]\n"
@@ -128,11 +127,10 @@ public class StudentDBContext extends DBContext {
             PreparedStatement stm = connection.prepareStatement(sql);
             stm.setInt(1, id);
             ResultSet rs = stm.executeQuery();
-            if (rs.next()) {
+            while (rs.next()) {
                 Student student = new Student();
                 student.setStuid(rs.getInt("stuid"));
                 student.setSname(rs.getString("sname"));
-                student.setAge(rs.getInt("age"));
                 student.setDob(rs.getString("dob"));
                 student.setGender(rs.getBoolean("gender"));
                 student.setAddress(rs.getString("Address"));

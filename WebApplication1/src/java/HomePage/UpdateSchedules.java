@@ -1,24 +1,19 @@
-package HomePage;
-
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
+package HomePage;
+
 import DAO.Class_SessionDBContext;
 import DAO.CuriculumDBContext;
-import DAO.FeedbackDBContext;
-import DAO.MenuDBContext;
 import DAO.SchedulesDBContext;
 import DAO.SchoolYearDBContext;
-import DAO.StudentClassSessionDBContext;
-import DAO.StudentDBContext;
+import DAO.SessionDetailDBContext;
+import Entity.ClassSession;
 import Entity.Curiculum;
-import Entity.Feedback;
-import Entity.Menu;
 import Entity.Schedules;
 import Entity.SchoolYear;
-import Entity.Student;
-import Entity.StudentClassSession;
+import Entity.SessionDetails;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -27,9 +22,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -37,8 +30,8 @@ import java.util.List;
  *
  * @author Admin
  */
-@WebServlet(urlPatterns = {"/timetable"})
-public class TimeTable extends HttpServlet {
+@WebServlet(name = "UpdateSchedules", urlPatterns = {"/updateSchedules"})
+public class UpdateSchedules extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -52,51 +45,39 @@ public class TimeTable extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        HttpSession session = request.getSession();
-        StudentClassSessionDBContext studen = new StudentClassSessionDBContext();
-        StudentDBContext students = new StudentDBContext();
-        SchedulesDBContext sche = new SchedulesDBContext();
-        CuriculumDBContext curiculum = new CuriculumDBContext();
-        MenuDBContext menu = new MenuDBContext();
-        Class_SessionDBContext clSes = new Class_SessionDBContext();
-        List<Curiculum> curi = new ArrayList<>();
-        int stuid = Integer.parseInt(request.getParameter("stuid"));
-
-        // String stuid = request.getParameter("stuid");
-        SchoolYearDBContext school = new SchoolYearDBContext();
         Date date = new Date();
         SimpleDateFormat dateF = new SimpleDateFormat("yyyy-MM-dd");
-        FeedbackDBContext feed = new FeedbackDBContext();
-        SchoolYear sch = school.getSchoolYearByDateNow(dateF.format(date));
-
-        StudentClassSession studID = studen.getStudentClassSessionByStuid(stuid, 1);
-
-        int role = (int) session.getAttribute("role");
-        int pid = (int) session.getAttribute("pid");
-        List<Student> listS = students.getStudentByPid(pid);
-
-        if (role == 1) {
-            int classI = studID.getCsid().getCsid();
-            // Lấy ra ngày hiện tại và lớp học
-
-            Schedules schedules = sche.getSchedulesByCsIdAndDate(classI, dateF.format(date));
-            try {
-                curi = curiculum.getCuriculumById(schedules.getSdid().getSdid());
-            } catch (Exception e) {
-            }
-
-            Feedback f = feed.getFeedbackByIdAndate(dateF.format(date), stuid);
-            List<Menu> m = menu.getMenuByAgeAndDate(clSes.getClassSessionById(classI).getSid().getAge().getAgeid(), dateF.format(date));
-            request.setAttribute("curiculum", curi);
-            request.setAttribute("feedback", f);
-            request.setAttribute("pid", pid);
-            request.setAttribute("menu", m);
-            request.setAttribute("list", listS);
-            request.setAttribute("role", role);
-            request.setAttribute("student", students.getStudentById(stuid));
-            request.getRequestDispatcher("FE_Parent/TimeTable.jsp").forward(request, response);
+        SchoolYearDBContext scDb = new SchoolYearDBContext();
+        // Lấy ra năm học hiện tại theo date
+        SchoolYear sYear = scDb.getSchoolYearByDateNow(dateF.format(date));
+        String csid = request.getParameter("csid");
+        String dateUpdate = request.getParameter("dateUpdate");
+        String sdid = request.getParameter("sdid");
+        String yid = request.getParameter("yid");
+        SchedulesDBContext sche = new SchedulesDBContext();
+        Class_SessionDBContext clasSess = new Class_SessionDBContext();
+        CuriculumDBContext cur = new CuriculumDBContext();
+        SessionDetailDBContext sesDe = new SessionDetailDBContext();
+        HttpSession session = request.getSession();
+        ClassSession s = clasSess.getClassSessionById(Integer.parseInt(csid));
+        List<SessionDetails> listSessionDetail = sesDe.getAllSessionDetailBySessionID(s.getSid().getSid());
+        List<Curiculum> curi = cur.getAllCuriculum();
+        
+        if(dateUpdate != null && !dateUpdate.isEmpty() && sdid != null && csid != null){
+            sche.update(dateUpdate, Integer.parseInt(sdid), Integer.parseInt(csid));
+        }else if(dateUpdate != null){
+            request.setAttribute("mess", "Bạn chưa nhập ngày cho việc update");
         }
+        List<Schedules> listSchedules = sche.getSchedulesByCsid(Integer.parseInt(csid));
+        request.setAttribute("listSessionDetail", listSessionDetail);
+        request.setAttribute("listCuri", curi);
+        request.setAttribute("csID", s.getCsid());
+        request.setAttribute("classSession", s);
+        request.setAttribute("listSchedules", listSchedules);
+        request.setAttribute("csID", csid);
 
+        session.setAttribute("yidRaw", sYear);
+        request.getRequestDispatcher("FE_Parent/UpdateSchedules.jsp").forward(request, response);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

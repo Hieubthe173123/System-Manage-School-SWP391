@@ -43,7 +43,7 @@ public class SessionDetailDBContext extends DBContext {
         return null;
     }
 
-    public List<SessionDetails> getAllSessionDetailBySessionID(int id) {
+        public List<SessionDetails> getAllSessionDetailBySessionID(int id) {
         List<SessionDetails> sesionDe = new ArrayList<>();
         try {
             String sql = "SELECT [sdid]\n"

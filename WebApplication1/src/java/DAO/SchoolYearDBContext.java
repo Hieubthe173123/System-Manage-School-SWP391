@@ -4,9 +4,12 @@
  */
 package DAO;
 
+import Entity.Class;
 import Entity.ClassSession;
 import Entity.Lecturers_Class_Session;
+import Entity.Room;
 import Entity.SchoolYear;
+import Entity.Session;
 import Entity.Student;
 import Entity.StudentClassSession;
 import java.sql.PreparedStatement;
@@ -22,6 +25,64 @@ import java.util.logging.Logger;
  * @author admin
  */
 public class SchoolYearDBContext extends DBContext {
+
+    public ArrayList<Session> getAllSession() {
+        ArrayList<Session> list = new ArrayList<>();
+        try {
+            String sql = "SELECT [sid], [sname], [totalSession], [ageid] FROM [SchoolManagement].[dbo].[Session]";
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Session s = new Session();
+                AgeDBContext ageDB = new AgeDBContext();
+                s.setSid(rs.getInt("sid"));
+                s.setSname(rs.getString("sname"));
+                s.setTotalSession(rs.getInt("totalSession"));
+                s.setAge(ageDB.getAgeById(rs.getInt("ageid")));
+                list.add(s);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(SchoolYearDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
+    }
+
+    public ArrayList<Room> getAllRoom() {
+        ArrayList<Room> list = new ArrayList<>();
+        try {
+            String sql = "SELECT [rid], [rname] FROM [SchoolManagement].[dbo].[Room]";
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Room room = new Room();
+                room.setRid(rs.getInt("rid"));
+                room.setRname(rs.getString("rname"));
+                list.add(room);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(SchoolYearDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
+    }
+
+    public ArrayList<Class> getAllClass() {
+        ArrayList<Class> list = new ArrayList<>();
+        try {
+            String sql = "SELECT [classID], [clname] FROM [SchoolManagement].[dbo].[Class]";
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Class cls = new Class();
+                cls.setClassid(rs.getInt("classID"));
+                cls.setClname(rs.getString("clname"));
+                list.add(cls);
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(SchoolYearDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
+    }
 
     public SchoolYear getSchoolYearById(int id) {
         SchoolYear school = new SchoolYear();
@@ -236,10 +297,67 @@ public class SchoolYearDBContext extends DBContext {
         return lecturers;
     }
 
+    //Create New SchoolYear
+    public int insertNewSchoolYearForClassSession(String dateStart, String dateEnd) {
+        int newYid = 0;
+        try {
+            // Start transaction
+            connection.setAutoCommit(false);
+
+            // Insert new school year
+            String insertNewYear = "INSERT INTO SchoolYear (dateStart, dateEnd) VALUES (?, ?);";
+            PreparedStatement ps = connection.prepareStatement(insertNewYear, PreparedStatement.RETURN_GENERATED_KEYS);
+            ps.setString(1, dateStart);
+            ps.setString(2, dateEnd);
+            ps.executeUpdate();
+
+            // Retrieve the generated key
+            ResultSet rs = ps.getGeneratedKeys();
+            if (rs.next()) {
+                newYid = rs.getInt(1);
+            }
+            rs.close();
+            ps.close();
+
+            // Insert new class session
+            String insertNewCsid = "INSERT INTO Class_Session (classID, yid, sid, rid) "
+                    + "SELECT cs.classID, ?, cs.sid, cs.rid "
+                    + "FROM Class_Session cs "
+                    + "WHERE cs.yid = 1 "
+                    + "AND NOT EXISTS ( "
+                    + "    SELECT 1 "
+                    + "    FROM Class_Session cs2 "
+                    + "    WHERE cs2.classID = cs.classID "
+                    + "    AND cs2.yid = ? "
+                    + ");";
+            PreparedStatement ps2 = connection.prepareStatement(insertNewCsid);
+            ps2.setInt(1, newYid);
+            ps2.setInt(2, newYid);
+            ps2.executeUpdate();
+            ps2.close();
+
+            // Commit transaction
+            connection.commit();
+            connection.setAutoCommit(true);
+        } catch (SQLException ex) {
+            Logger.getLogger(SchoolYearDBContext.class.getName()).log(Level.SEVERE, null, ex);
+            try {
+                // Rollback transaction in case of error
+                connection.rollback();
+                connection.setAutoCommit(true);
+            } catch (SQLException rollbackEx) {
+                Logger.getLogger(SchoolYearDBContext.class.getName()).log(Level.SEVERE, null, rollbackEx);
+            }
+            return 0; // Returning 0 in case of an error
+        }
+        return newYid; // Returning the new school year ID
+    }
+
+    
+
     public static void main(String[] args) {
         SchoolYearDBContext db = new SchoolYearDBContext();
-        Lecturers_Class_Session lec = db.getLecturerByCsid(5);
-        System.out.println(lec.getLid().getLname());
+        //db.insertNewSchoolYearForClassSession("2024-08-01", "2025-09-01");
     }
 
 }

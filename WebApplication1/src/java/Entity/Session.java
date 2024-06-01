@@ -11,17 +11,15 @@ package Entity;
 public class Session {
     private int sid;
     private String sname;
-    private String sessionDescription;
     private int totalSession;
     private AgeCategory age;
 
     public Session() {
     }
 
-    public Session(int sid, String sname, String sessionDescription, int totalSession, AgeCategory age) {
+    public Session(int sid, String sname, int totalSession, AgeCategory age) {
         this.sid = sid;
         this.sname = sname;
-        this.sessionDescription = sessionDescription;
         this.totalSession = totalSession;
         this.age = age;
     }
@@ -42,13 +40,6 @@ public class Session {
         this.sname = sname;
     }
 
-    public String getSessionDescription() {
-        return sessionDescription;
-    }
-
-    public void setSessionDescription(String sessionDescription) {
-        this.sessionDescription = sessionDescription;
-    }
 
     public int getTotalSession() {
         return totalSession;
@@ -68,8 +59,10 @@ public class Session {
 
     @Override
     public String toString() {
-        return "Session{" + "sid=" + sid + ", sname=" + sname + ", sessionDescription=" + sessionDescription + ", totalSession=" + totalSession + ", age=" + age + '}';
+        return "Session{" + "sid=" + sid + ", sname=" + sname + ", totalSession=" + totalSession + ", age=" + age + '}';
     }
+
+    
 
     
     

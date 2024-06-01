@@ -23,7 +23,6 @@ public class SessionDBContext extends DBContext {
         try {
             String sql = "SELECT [sid]\n"
                     + "      ,[sname]\n"
-                    + "      ,[sesionDescription]\n"
                     + "      ,[totalSession]\n"
                     + "      ,[ageid]\n"
                     + "  FROM [SchoolManagement].[dbo].[Session]"
@@ -35,7 +34,6 @@ public class SessionDBContext extends DBContext {
                 AgeDBContext age = new AgeDBContext();
                 session.setSid(rs.getInt("sid"));
                 session.setSname(rs.getString("sname"));
-                session.setSessionDescription(rs.getString("sesionDescription"));
                 session.setTotalSession(rs.getInt("totalSession"));
                 session.setAge(age.getAgeById(rs.getInt("ageid")));
                 return session;

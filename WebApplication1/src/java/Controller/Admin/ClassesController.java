@@ -2,7 +2,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-
 package Controller.Admin;
 
 import DAO.SchoolYearDBContext;
@@ -23,61 +22,62 @@ import java.util.ArrayList;
  *
  * @author DELL
  */
-@WebServlet(name="ClassesController", urlPatterns={"/classController"})
+@WebServlet(name = "ClassesController", urlPatterns = {"/classController"})
 public class ClassesController extends HttpServlet {
-   
-    
+
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         SchoolYearDBContext yearDB = new SchoolYearDBContext();
         ArrayList<SchoolYear> listYear = yearDB.getAllSchoolYear();
-        
+
         String yid = request.getParameter("yid");
         String csid = request.getParameter("csid");
-        
-        if (yid != null && !yid.isEmpty()) {
-            
-            ArrayList<SchoolYear> selectedYear = yearDB.getSchoolYearById(yid);
-            request.setAttribute("selectedYear", selectedYear);
-            
-            ArrayList<ClassSession> listClassSession = yearDB.getClassSessionByYid(yid);
-            request.setAttribute("listClassSession", listClassSession);
-            
+        try {
+            if (yid != null && !yid.isEmpty()) {
+
+                ArrayList<SchoolYear> selectedYear = yearDB.getSchoolYearById(yid);
+                request.setAttribute("selectedYear", selectedYear);
+
+                ArrayList<ClassSession> listClassSession = yearDB.getClassSessionByYid(yid);
+                request.setAttribute("listClassSession", listClassSession);
+
+            }
+
+            if (csid != null && !csid.isEmpty()) {
+
+                ArrayList<Lecturers_Class_Session> lecClassSessionbyCsid2 = yearDB.getLecturersByCsid(Integer.parseInt(csid));
+                request.setAttribute("lecClassSessionbyCsid2", lecClassSessionbyCsid2);
+
+                Lecturers_Class_Session lecClassSessionbyCsid = yearDB.getLecturerByCsid(Integer.parseInt(csid));
+                request.setAttribute("lecClassSessionbyCsid", lecClassSessionbyCsid);
+
+                ArrayList<StudentClassSession> studentClassSessionbyCsid = yearDB.getStudentClassSessionbyCsid(Integer.parseInt(csid));
+                request.setAttribute("studentClassSessionbyCsid", studentClassSessionbyCsid);
+
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+            response.sendRedirect("Error/404.jsp");
+            return;
         }
-        
-        if (csid != null && !csid.isEmpty()) {
-            
-            ArrayList<Lecturers_Class_Session> lecClassSessionbyCsid2 = yearDB.getLecturersByCsid(Integer.parseInt(csid));
-            request.setAttribute("lecClassSessionbyCsid2", lecClassSessionbyCsid2);
-            
-            Lecturers_Class_Session lecClassSessionbyCsid = yearDB.getLecturerByCsid(Integer.parseInt(csid));
-            request.setAttribute("lecClassSessionbyCsid", lecClassSessionbyCsid);
-            
-            ArrayList<StudentClassSession> studentClassSessionbyCsid = yearDB.getStudentClassSessionbyCsid(Integer.parseInt(csid));
-            request.setAttribute("studentClassSessionbyCsid", studentClassSessionbyCsid);
-            
-        }
-        
+
         request.setAttribute("yid", yid);
         request.setAttribute("listYear", listYear);
         request.getRequestDispatcher("FE_Admin/Classes_function.jsp").forward(request, response);
-    } 
+    }
 
-    
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
-        processRequest(request, response);
-    } 
-
-    
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+            throws ServletException, IOException {
         processRequest(request, response);
     }
 
-    
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        processRequest(request, response);
+    }
+
     @Override
     public String getServletInfo() {
         return "Short description";

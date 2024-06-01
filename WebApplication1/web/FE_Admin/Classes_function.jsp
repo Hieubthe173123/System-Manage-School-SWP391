@@ -82,40 +82,51 @@
                     </div>
                 </div>
                 <div class="col-md-10">
-                    
-                        <table class="table table-bordered">
-                            <thead class="thead-dark">
-                                <tr>
-                                    <th>Student ID</th>
-                                    <th>Student Name</th>
-                                    <th>Date Of Birth</th>
-                                    <th>Age</th>
-                                    <th>Room Name</th>
-                                    <th>Session Name</th>
-                                    <th>Lecturers</th>
-                                    <th>Group Name</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <c:if test="${not empty requestScope.studentClassSessionbyCsid}">
-                                    <c:forEach var="s" items="${requestScope.studentClassSessionbyCsid}">
-                                        <c:forEach var="l" items="${requestScope.lecClassSessionbyCsid2}">
-                                            <tr>
-                                                <td>${s.stuid.stuid}</td>
-                                                <td>${s.stuid.sname}</td>
-                                                <td>${s.stuid.dob}</td>
-                                                <td></td>
-                                                <td>${s.csid.rid.rname}</td>
-                                                <td>${s.csid.sid.sname}</td>
-                                                <td>${l.lid.lname}</td>
-                                                <td>${s.csid.classID.clname}</td>
-                                            </tr>
-                                        </c:forEach>
-                                    </c:forEach>
-                                </c:if>
-                            </tbody>
-                        </table>
-                    
+
+                    <table class="table table-bordered">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>Student ID</th>
+                                <th>Student Name</th>
+                                <th>Date Of Birth</th>
+                                <th>Age</th>
+                                <th>Room Name</th>
+                                <th>Session Name</th>
+                                <th>Lecturers</th>
+                                <th>Group Name</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <c:if test="${not empty requestScope.studentClassSessionbyCsid}">
+                                <c:forEach var="s" items="${requestScope.studentClassSessionbyCsid}">
+
+                                    <tr>
+                                        <td>${s.stuid.stuid}</td>
+                                        <td>${s.stuid.sname}</td>
+                                        <td>${s.stuid.dob}</td>
+                                        <td></td>
+                                        <td>${s.csid.rid.rname}</td>
+                                        <td>${s.csid.sid.sname}</td>
+                                        <td>
+                                            <c:choose>
+                                                <c:when test="${not empty requestScope.lecClassSessionbyCsid2}">
+                                                    <c:forEach var="lec" items="${requestScope.lecClassSessionbyCsid2}">
+                                                        ${lec.lid.lname}
+                                                    </c:forEach>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </td>
+                                        <td>${s.csid.classID.clname}</td>
+                                    </tr>
+
+                                </c:forEach>
+                            </c:if>
+                        </tbody>
+                    </table>
+
                 </div>
             </div>
         </div>

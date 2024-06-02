@@ -134,7 +134,7 @@ public class StudentClassSessionDBContext extends DBContext {
         List<StudentClassSession> list = new ArrayList<>();
         try {
             String sql = 
-                    "SELECT S.stuid, S.sname, S.dob, S.gender, S.[Address], P.pid, C.clname "
+                    "SELECT S.stuid, S.sname, S.dob, S.gender, S.[Address], p.pid, cl.clname "
                     + "FROM Student S "
                     + "Inner join Student_Class_Session scs ON S.stuid = scs.scid "
                     + "Inner join  Class_Session cs ON scs.scid = cs.csid "
@@ -184,7 +184,7 @@ public class StudentClassSessionDBContext extends DBContext {
         List<StudentClassSession> list = new ArrayList<>();
         try {
             String sql = 
-                    "SELECT S.stuid, S.sname, S.dob, S.gender, S.[Address], P.pid, C.clname "
+                    "SELECT S.stuid, S.sname, S.dob, S.gender, S.[Address], p.pid, cl.classID cl.clname "
                     + "FROM Student S "
                     + "Inner join Student_Class_Session scs ON S.stuid = scs.scid "
                     + "Inner join  Class_Session cs ON scs.scid = cs.csid "
@@ -235,7 +235,7 @@ public class StudentClassSessionDBContext extends DBContext {
         List<StudentClassSession> list = new ArrayList<>();
         try {
             String sql = 
-                    "SELECT S.stuid, S.sname, S.dob, S.gender, S.[Address], P.pid, C.clname "
+                    "SELECT S.stuid, S.sname, S.dob, S.gender, S.[Address], p.pid, cl.classID, cl.clname "
                     + "FROM Student S "
                     + "Inner join Student_Class_Session scs ON S.stuid = scs.scid "
                     + "Inner join  Class_Session cs ON scs.scid = cs.csid "
@@ -281,13 +281,13 @@ public class StudentClassSessionDBContext extends DBContext {
         List<StudentClassSession> list = new ArrayList<>();
         try {
             String sql = 
-                    "SELECT S.stuid, S.sname, S.dob, S.gender, S.[Address], P.pid, C.clname "
+                    "SELECT S.stuid, S.sname, S.dob, S.gender, S.[Address], p.pid, cl.classID, cl.clname "
                     + "FROM Student S "
                     + "Inner join Student_Class_Session scs ON S.stuid = scs.scid "
                     + "Inner join  Class_Session cs ON scs.scid = cs.csid "
                     + "Inner join Parent p ON s.stuid = p.pid "
                     + "Inner join class cl ON cs.csid = cl.classID "
-                    + "Where S.stuid LIKE ?;" ;
+                    + "Where S.stuid = ?";
                     
             PreparedStatement stm = connection.prepareStatement(sql);
               stm.setString(1, stuid);

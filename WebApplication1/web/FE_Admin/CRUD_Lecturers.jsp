@@ -1,5 +1,6 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page contentType="text/html; charset=UTF-8" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -77,26 +78,22 @@
                     <c:choose>
                         <c:when test="${not empty listC}">
                             <tr>
-                            <th>LecturerID</th>
-                            <th>Lecturer Name</th>
-                            <th>IDCard</th>
-                            <th>DOB</th>
-                            <th>Gender</th>
-                            <th>Phone Number</th>
-                            <th>Class Name</th>
-                            <th>Actions</th>
-                        </tr>
+                                <th>LecturerID</th>
+                                <th>Lecturer Name</th>
+                                <th>Class Name</th>
+                                <th>Actions</th>
+                            </tr>
                         </c:when>
                         <c:otherwise>
                             <tr>
-                            <th>LecturerID</th>
-                            <th>Lecturer Name</th>
-                            <th>IDCard</th>
-                            <th>DOB</th>
-                            <th>Gender</th>
-                            <th>Phone Number</th>     
-                            <th>Actions</th>
-                        </tr>
+                                <th>LecturerID</th>
+                                <th>Lecturer Name</th>
+                                <th>IDCard</th>
+                                <th>DOB</th>
+                                <th>Gender</th>
+                                <th>Phone Number</th>     
+                                <th>Actions</th>
+                            </tr>
                         </c:otherwise>
                     </c:choose>
 
@@ -116,7 +113,7 @@
                             </td>
                         </tr>
                     </c:forEach>
-                        
+
 
                     <c:choose>
                         <c:when test="${not empty listC}">
@@ -124,10 +121,6 @@
                                 <tr>
                                     <td>${lecturer.lid.lid}</td>
                                     <td>${lecturer.lid.lname}</td>
-                                    <td>${lecturer.lid.IDcard}</td>
-                                    <td>${lecturer.lid.dob}</td>
-                                    <td>${lecturer.lid.gender ? 'Male' : 'Female'}</td>
-                                    <td>${lecturer.lid.phoneNumber}</td>
                                     <td>
                                         <c:choose>
                                             <c:when test="${lecturer.csid.classID != null}">
@@ -143,7 +136,7 @@
                                 </tr>
                             </c:forEach>
                         </c:when>
-                                
+
                         <c:otherwise>
                             <c:forEach var="lecturer" items="${listA}">
                                 <tr>
@@ -155,7 +148,10 @@
                                     <td>${lecturer.phoneNumber}</td>
 
                                     <td>
-                                        <button class="btn btn-warning btn-sm" onclick="editLecturer(${lecturer.lid})">Update</button>
+                                       <button class="btn btn-warning btn-sm" id="addNewLecturerBtn" data-toggle="modal" 
+                                               onclick="window.location.href = 'update-lecturers?lid=${lecturer.lid}'">Update</button>
+
+
                                         <button type="button" class="btn btn-danger btn-sm" onclick="showDeleteModal(${lecturer.lid})">Delete</button>
                                     </td>
                                 </tr>
@@ -167,90 +163,8 @@
         </div>
 
 
-        <!-- Add Lecturer Modal -->
-        <div class="modal fade" id="lecturerModal" tabindex="-1" aria-labelledby="lecturerModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="lecturerModalLabel">Add New Lecturer</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <form id="lecturerForm">
-                            <div class="form-group">
-                                <label for="lecturerName">Lecturer Name</label>
-                                <input type="text" class="form-control" id="lecturerName" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="idcard">IDCard</label>
-                                <input type="text" class="form-control" id="idcard" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="lecturerDob">Date of Birth</label>
-                                <input type="date" class="form-control" id="lecturerDob" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="lecturerGender">Gender</label>
-                                <select class="form-control" id="lecturerGender" required>
-                                    <option>Male</option>
-                                    <option>Female</option>         
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="phoneNumber">Phone Number</label>
-                                <input type="text" class="form-control" id="phoneNumber" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="lecturerClassName">Class Name</label>
-                                <input type="text" class="form-control" id="lecturerClassName" required>
-                            </div>
-                            <button type="submit" class="btn btn-primary mt-3">Submit</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
+   
 
-        <!-- Update Lecturer Modal -->
-        <div class="modal fade" id="updateLecturerModal" tabindex="-1" aria-labelledby="updateLecturerModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="updateLecturerModalLabel">Update Lecturer</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <form id="updateLecturerForm">
-                            <div class="form-group">
-                                <label for="updateLecturerName">Lecturer Name</label>
-                                <input type="text" class="form-control" id="updateLecturerName" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="updateLecturerDob">Date of Birth</label>
-                                <input type="date" class="form-control" id="updateLecturerDob" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="updateLecturerGender">Gender</label>
-                                <select class="form-control" id="updateLecturerGender" required>
-                                    <option>Male</option>
-                                    <option>Female</option>
-                                    <option></option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="updateLecturerClassName">Class Name</label>
-                                <input type="text" class="form-control" id="updateLecturerClassName" required>
-                            </div>
-                            <button type="submit" class="btn btn-primary mt-3">Submit</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
 
         <!-- Delete Lecturer Modal -->
         <div class="modal fade" id="deleteLecturerModal" tabindex="-1" aria-labelledby="deleteLecturerModalLabel" aria-hidden="true">
@@ -329,6 +243,8 @@
                                 document.body.appendChild(form);
                                 form.submit();
                             });
+
+
         </script>
     </body>
 </html>

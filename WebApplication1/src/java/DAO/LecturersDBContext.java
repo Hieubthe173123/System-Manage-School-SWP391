@@ -171,18 +171,18 @@ public class LecturersDBContext extends DBContext {
             PreparedStatement stm = connection.prepareStatement(sql);
             stm.setInt(1, (index - 1) * 10);  // Calculate the correct offset
             ResultSet rs = stm.executeQuery();
-             while (rs.next()) {
-            Lecturers lecturer = new Lecturers();
-            lecturer.setLid(rs.getInt("lid"));
-            lecturer.setLname(rs.getString("lname"));
-            lecturer.setGender(rs.getBoolean("gender"));
-            lecturer.setDob(rs.getString("dob"));
-            lecturer.setPhoneNumber(rs.getString("phoneNumber"));
-            lecturer.setIDcard(rs.getString("IDcard"));
-            lecturer.setEmail(rs.getString("Email"));
-            lecturer.setAddress(rs.getString("Address"));
-            list.add(lecturer);
-        }
+            while (rs.next()) {
+                Lecturers lecturer = new Lecturers();
+                lecturer.setLid(rs.getInt("lid"));
+                lecturer.setLname(rs.getString("lname"));
+                lecturer.setGender(rs.getBoolean("gender"));
+                lecturer.setDob(rs.getString("dob"));
+                lecturer.setPhoneNumber(rs.getString("phoneNumber"));
+                lecturer.setIDcard(rs.getString("IDcard"));
+                lecturer.setEmail(rs.getString("Email"));
+                lecturer.setAddress(rs.getString("Address"));
+                list.add(lecturer);
+            }
         } catch (SQLException ex) {
             Logger.getLogger(RoomDBContext.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -209,8 +209,8 @@ public class LecturersDBContext extends DBContext {
         }
         return 0;
     }
-    
-       public List<Lecturers> getLecturerByID(String lid) {
+
+    public List<Lecturers> getLecturerByID(String lid) {
         List<Lecturers> list = new ArrayList<>();
         try {
             String sql = "select * from Lecturers where lid = ?";
@@ -231,7 +231,6 @@ public class LecturersDBContext extends DBContext {
                 lecturer.setAddress(rs.getString("Address"));
                 lecturer.setNickname(rs.getString("NickName"));
 
-                
                 list.add(lecturer);
             }
         } catch (SQLException ex) {
@@ -239,7 +238,8 @@ public class LecturersDBContext extends DBContext {
         }
         return list;
     }
-       public List<Lecturers> getLecturerByName(String lname) {
+
+    public List<Lecturers> getLecturerByName(String lname) {
         List<Lecturers> list = new ArrayList<>();
         try {
             String sql = "select * from Lecturers where lname like ?;";
@@ -268,10 +268,69 @@ public class LecturersDBContext extends DBContext {
         return list;
     }
 
+    public Lecturers getLecturerById(String lid) {
+        try {
+            String sql = "SELECT [lid], [lname], [gender], [dob], [phoneNumber], [IDcard], [Address], [Email], [NickName] "
+                    + "FROM [SchoolManagement].[dbo].[Lecturers] WHERE [lid] = ?";
+
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setString(1, lid);
+
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                Lecturers lec = new Lecturers();
+                lec.setLid(rs.getInt("lid"));
+                lec.setLname(rs.getString("lname"));
+                lec.setGender(rs.getBoolean("gender"));
+                lec.setDob(rs.getString("dob"));
+                lec.setPhoneNumber(rs.getString("phoneNumber"));
+                lec.setIDcard(rs.getString("IDcard"));
+                lec.setEmail(rs.getString("Email"));
+                lec.setAddress(rs.getString("Address"));
+                lec.setNickname(rs.getString("NickName"));
+                return lec;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(LecturersDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+
+    public void updateLecturers(Lecturers lecturers) {
+        try {
+            // Assuming 'connection' is initialized somewhere in your class
+            String sql = "UPDATE [dbo].[Lecturers]\n"
+                    + "   SET [lname] = ?,\n"
+                    + "      [gender] = ?,\n"
+                    + "      [dob] = ?,\n"
+                    + "      [phoneNumber] = ?,\n"
+                    + "      [IDcard] = ?,\n"
+                    + "      [Address] = ?,\n"
+                    + "      [Email] = ?\n" // Remove the comma here
+                    + "      WHERE lid = ?";
+
+            PreparedStatement stm = connection.prepareStatement(sql);
+
+            stm.setString(1, lecturers.getLname());
+            stm.setBoolean(2, lecturers.isGender());
+            stm.setString(3, lecturers.getDob());
+            stm.setString(4, lecturers.getPhoneNumber());
+            stm.setString(5, lecturers.getIDcard());
+            stm.setString(6, lecturers.getAddress());
+            stm.setString(7, lecturers.getEmail());
+            stm.setInt(8, lecturers.getLid());
+
+            stm.executeUpdate();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(LecturersDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
     public static void main(String[] args) {
         LecturersDBContext ldb = new LecturersDBContext();
-        List<Lecturers> list = ldb.getLecturerByName("Thảo");
-       
-        System.out.println(list);
+        Lecturers le = ldb.getLecturerById("1");
+
+        System.out.println(le);
     }
 }

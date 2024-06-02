@@ -155,7 +155,8 @@
                                     <td>${lecturer.phoneNumber}</td>
 
                                     <td>
-                                        <button class="btn btn-warning btn-sm" onclick="editLecturer(${lecturer.lid})">Update</button>
+                                            <button class="btn btn-warning btn-sm" id="addNewLecturerBtn" data-toggle="modal" 
+                                               onclick="window.location.href = 'update-lecturers?lid=${lecturer.lid}'">Update</button>
                                         <button type="button" class="btn btn-danger btn-sm" onclick="showDeleteModal(${lecturer.lid})">Delete</button>
                                     </td>
                                 </tr>
@@ -165,93 +166,6 @@
                 </tbody>
             </table>
         </div>
-
-
-        <!-- Add Lecturer Modal -->
-        <div class="modal fade" id="lecturerModal" tabindex="-1" aria-labelledby="lecturerModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="lecturerModalLabel">Add New Lecturer</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <form id="lecturerForm">
-                            <div class="form-group">
-                                <label for="lecturerName">Lecturer Name</label>
-                                <input type="text" class="form-control" id="lecturerName" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="idcard">IDCard</label>
-                                <input type="text" class="form-control" id="idcard" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="lecturerDob">Date of Birth</label>
-                                <input type="date" class="form-control" id="lecturerDob" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="lecturerGender">Gender</label>
-                                <select class="form-control" id="lecturerGender" required>
-                                    <option>Male</option>
-                                    <option>Female</option>         
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="phoneNumber">Phone Number</label>
-                                <input type="text" class="form-control" id="phoneNumber" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="lecturerClassName">Class Name</label>
-                                <input type="text" class="form-control" id="lecturerClassName" required>
-                            </div>
-                            <button type="submit" class="btn btn-primary mt-3">Submit</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Update Lecturer Modal -->
-        <div class="modal fade" id="updateLecturerModal" tabindex="-1" aria-labelledby="updateLecturerModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="updateLecturerModalLabel">Update Lecturer</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <form id="updateLecturerForm">
-                            <div class="form-group">
-                                <label for="updateLecturerName">Lecturer Name</label>
-                                <input type="text" class="form-control" id="updateLecturerName" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="updateLecturerDob">Date of Birth</label>
-                                <input type="date" class="form-control" id="updateLecturerDob" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="updateLecturerGender">Gender</label>
-                                <select class="form-control" id="updateLecturerGender" required>
-                                    <option>Male</option>
-                                    <option>Female</option>
-                                    <option></option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="updateLecturerClassName">Class Name</label>
-                                <input type="text" class="form-control" id="updateLecturerClassName" required>
-                            </div>
-                            <button type="submit" class="btn btn-primary mt-3">Submit</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <!-- Delete Lecturer Modal -->
         <div class="modal fade" id="deleteLecturerModal" tabindex="-1" aria-labelledby="deleteLecturerModalLabel" aria-hidden="true">
             <div class="modal-dialog">

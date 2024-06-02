@@ -56,8 +56,8 @@ public class Login extends HttpServlet {
                 request.getRequestDispatcher("FE_Parent/StudentOfParent.jsp").forward(request, response);
             } else if (acc.getRole() == 2) {
 
-            } else {
-
+            } else if (acc.getRole() == 3){                                                            
+                request.getRequestDispatcher("FE_Admin/Admin_Home.jsp").forward(request, response);
             }
 
             request.setAttribute("err", "Login Success");

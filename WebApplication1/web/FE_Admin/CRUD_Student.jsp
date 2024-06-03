@@ -109,8 +109,8 @@
                             <td>${studentClass.stuid.pid.getPid()}</td>
                             <td>${studentClass.csid.getClassID().getClname()}</td>
                             <td>
-                                <button class="btn btn-warning btn-sm" onclick="editStudent('${studentClass.stuid.getStuid()}', '${studentClass.stuid.getSname()}', '${studentClass.stuid.getDob()}', '${studentClass.stuid.isGender()}', '${studentClass.stuid.getAddress()}', '${studentClass.stuid.pid.getPid()}', '${studentClass.csid.getClassID().getClname()}')">Edit</button>
-                                <button class="btn btn-danger btn-sm" onclick="deleteStudent('${studentClass.stuid.getStuid()}')">Delete</button>
+                               <button class="btn btn-warning btn-sm" onclick="editStudent('${studentClass.stuid.getStuid()}')">Edit</button>
+                               <button type="button" class="btn btn-danger btn-sm" onclick="showDeleteModal('${studentClass.stuid.getStuid()}', '${studentClass.stuid.pid.getPid()}')">Delete</button>
                             </td>
                         </tr>
                     </c:forEach>
@@ -135,9 +135,8 @@
                                         </c:choose>
                                     </td>
                                     <td>
-                                        <button class="btn btn-warning btn-sm" onclick="editStudent('${studentClass.stuid.getStuid()}', '${studentClass.stuid.getSname()}', '${studentClass.stuid.getDob()}', '${studentClass.stuid.isGender()}', '${studentClass.stuid.getAddress()}', '${studentClass.stuid.pid.getPid()}', '${studentClass.csid.getClassID().getClname()}')">Edit</button>
-                                        <button class="btn btn-danger btn-sm" onclick="deleteStudent('${studentClass.stuid.getStuid()}')">Delete</button>
-
+                                         <button class="btn btn-warning btn-sm" onclick="editStudent('${studentClass.stuid.getStuid()}')">Edit</button>
+                                        <button type="button" class="btn btn-danger btn-sm" onclick="showDeleteModal('${studentClass.stuid.getStuid()}', '${studentClass.stuid.pid.getPid()}')">Delete</button>
                                     </td>
                                 </tr>
                             </c:forEach>
@@ -154,8 +153,8 @@
                                     <td>${studentClass.stuid.pid.getPid()}</td>
                                     <td>${studentClass.csid.getClassID().getClname()}</td>
                                     <td>
-                                        <button class="btn btn-warning btn-sm" onclick="editStudent('${studentClass.stuid.getStuid()}', '${studentClass.stuid.getSname()}', '${studentClass.stuid.getDob()}', '${studentClass.stuid.isGender()}', '${studentClass.stuid.getAddress()}', '${studentClass.stuid.pid.getPid()}', '${studentClass.csid.getClassID().getClname()}')">Edit</button>
-                                        <button class="btn btn-danger btn-sm" onclick="deleteStudent('${studentClass.stuid.getStuid()}')">Delete</button>
+                                         <button class="btn btn-warning btn-sm" onclick="editStudent('${studentClass.stuid.getStuid()}')">Edit</button>
+                                        <button type="button" class="btn btn-danger btn-sm" onclick="showDeleteModal('${studentClass.stuid.getStuid()}', '${studentClass.stuid.pid.getPid()}')">Delete</button>
                                     </td>
                                 </tr>
                             </c:forEach>
@@ -278,6 +277,36 @@
         </div>
     </div>
 </div>
+
+
+<!-- Delete Student Modal -->
+       <div class="modal fade" id="deleteStudentModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Confirm Delete</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete this student and parent?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="button" id="confirmDeleteBtn" class="btn btn-danger">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
 <!-- paging -->
 <c:choose>
     <c:when test="${not empty listC}">
@@ -333,5 +362,38 @@
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
 <script src="script.js"></script>
+<script>
+     //Confirm deletion
+    let deleteStudentId; //Store student and parent IDs to be deleted.
+    let deleteParentId;
+
+    function showDeleteModal(stuid, pid) {
+        deleteStudentId = stuid; 
+        deleteParentId = pid;
+        $('#deleteStudentModal').modal('show'); //hiển thị modal xác nhận xóa
+    }
+
+    document.getElementById('confirmDeleteBtn').addEventListener('click', function () {
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = 'deleteStudent'; 
+
+        const stuidInput = document.createElement('input');
+        stuidInput.type = 'hidden';
+        stuidInput.name = 'stuid';
+        stuidInput.value = deleteStudentId;
+
+        const pidInput = document.createElement('input');
+        pidInput.type = 'hidden';
+        pidInput.name = 'pid';
+        pidInput.value = deleteParentId;
+
+        form.appendChild(stuidInput);
+        form.appendChild(pidInput);
+        document.body.appendChild(form);
+        form.submit();
+    });
+</script>
+
 </body>
 </html>

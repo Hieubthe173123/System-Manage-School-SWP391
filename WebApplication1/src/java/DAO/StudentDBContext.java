@@ -199,6 +199,12 @@ public class StudentDBContext extends DBContext {
             PreparedStatement stm1 = connection.prepareStatement(sql1);
             stm1.setString(1, stuid);
             stm1.executeUpdate();
+            
+            // Xóa các bản ghi liên quan trong bảng Account
+            String sql2 = "DELETE FROM Account WHERE pid = ?";
+            PreparedStatement stm2 = connection.prepareStatement(sql2);
+            stm2.setString(1, pid);
+            stm2.executeUpdate();
 
             // Xóa bản ghi trong bảng Student
             String sql3 = "DELETE FROM Student WHERE stuid = ?";
@@ -228,11 +234,7 @@ public class StudentDBContext extends DBContext {
             stm5.executeUpdate();
             
             }
-            // Xóa các bản ghi liên quan trong bảng Account
-            String sql2 = "DELETE FROM Account WHERE pid = ?";
-            PreparedStatement stm2 = connection.prepareStatement(sql2);
-            stm2.setString(1, pid);
-            stm2.executeUpdate();
+            
 
             connection.commit();
         } catch (SQLException ex) {
@@ -250,6 +252,13 @@ public class StudentDBContext extends DBContext {
             }
         }
     }
+     
+     public static void main(String[] args) {
+        StudentDBContext db = new StudentDBContext();
+        db.deleteStudentAndParent("3", "2");
+    }
 
-     }
-    
+}
+
+  
+

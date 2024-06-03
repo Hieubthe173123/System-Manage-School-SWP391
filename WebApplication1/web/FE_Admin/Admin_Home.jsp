@@ -127,15 +127,15 @@
             <nav>
                 <ul>
                     <li>Trang chủ</li>
-                    <a href="#">Quản lý tài khoản</a>
-                    <a href="#">Quản lý Giáo Viên</a>
-                    <a href="#">Quản lý Học Sinh</a>
-                    <a href="#">Quản lý Lớp Học</a>
-                    <a href="#">Quản Lí Năm Học</a>
-                    <a href="#">Quản lý Lịch Học</a>
-                    <a href="#">Quản lý Thực Đơn</a>
-                    <a href="#">Quản lý Chương Trình Học</a>
-                    <a href="#">Lịch Sử Năm Học</a>                   
+                    <a href="#">Quản lý tài khoản</a><br>
+                    <a href="#">Quản lý Giáo Viên</a><br>
+                    <a href="#">Quản lý Học Sinh</a><br>
+                    <a href="#">Quản lý Lớp Học</a><br>
+                    <a href="#">Quản Lí Năm Học</a><br>
+                    <a href="#">Quản lý Lịch Học</a><br>
+                    <a href="#">Quản lý Thực Đơn</a><br>
+                    <a href="#">Quản lý Chương Trình Học</a><br>
+                    <a href="#">Lịch Sử Năm Học</a><br>                 
                 </ul>
             </nav>
         </div>
@@ -148,7 +148,7 @@
                 <h1>Home</h1>
                 <div class="cards">                  
                     <div class="card blue">                                                   
-                        <h2>${total}</h2>                       
+                        <h2>${totalAccounts}</h2>                       
                         <p>Tài khoản trong hệ thống</p>
                     </div>
                     <div class="card green">

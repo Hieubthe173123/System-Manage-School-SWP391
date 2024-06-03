@@ -93,4 +93,41 @@ public class AccountDBContext extends DBContext {
             Logger.getLogger(AccountDBContext.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    public int countAccounts() {       
+        String sql = "SELECT COUNT(*)  From Account where role = 1 or role = 2";
+        try (PreparedStatement stm = connection.prepareStatement(sql)) {
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                 return rs.getInt(1);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(AccountDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return 0;
+    }
+    public int countStudents() {     
+        String sql = "SELECT COUNT(*) AS total FROM [SchoolManagement].[dbo].[Student] ";
+        try (PreparedStatement stm = connection.prepareStatement(sql)) {
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);                
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(AccountDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return 0;
+    }
+
+    public int countTeachers() {
+        String sql = "SELECT COUNT(*) AS total FROM [SchoolManagement].[dbo].[Lecturers]";
+        try (PreparedStatement stm = connection.prepareStatement(sql)) {
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);              
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(AccountDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return 0;
+    }
 }

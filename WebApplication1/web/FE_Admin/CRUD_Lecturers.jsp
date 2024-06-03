@@ -69,7 +69,8 @@
 
                 </div>
                 <div class="col-md-4">
-                    <button class="btn btn-primary" id="addNewLecturerBtn" data-toggle="modal" data-target="#lecturerModal">Add New Lecturer</button>
+                    <button class="btn btn-primary" id="addNewLecturerBtn" data-toggle="modal" 
+                            onclick="window.location.href = 'add-lecturer'" >Add New Lecturer</button>
                 </div>
             </div>
             <table class="table table-bordered">

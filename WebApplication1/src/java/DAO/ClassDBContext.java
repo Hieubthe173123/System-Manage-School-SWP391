@@ -6,6 +6,8 @@ package DAO;
 
 import java.sql.*;
 import Entity.Class;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -31,5 +33,28 @@ public class ClassDBContext extends DBContext {
             System.out.println(e);
         }
         return null;
+    }
+    public List<Class> getAllClass() {
+        List<Class> list = new ArrayList<>();
+        try {
+            String sql = "SELECT * FROM Class";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                Class cl = new Class();
+                cl.setClassid(rs.getInt("classID"));
+                cl.setClname(rs.getString("clname"));
+                list.add(cl);
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return list;
+    }
+    
+    public static void main(String[] args) {
+        ClassDBContext cl = new ClassDBContext();
+        List<Class> list = cl.getAllClass();
+        System.out.println(list);
     }
 }

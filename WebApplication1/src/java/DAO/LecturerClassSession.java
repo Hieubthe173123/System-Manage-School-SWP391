@@ -106,8 +106,6 @@ public class LecturerClassSession extends DBContext {
         return list;
     }
 
-    
-
     public List<Lecturers_Class_Session> getAllLecturerBySchoolYear(String timeStart, String timeEnd) {
         List<Lecturers_Class_Session> list = new ArrayList<>();
 
@@ -349,10 +347,52 @@ public class LecturerClassSession extends DBContext {
         return list;
     }
 
+    public void insertLecturers(String lname, String gender, String dob, String phoneNumber, String IDcard, String address, String email, String nickName, String classID) {
+        String sql = "INSERT INTO Lecturers (lname, gender, dob, phoneNumber, IDcard, [Address], Email, NickName)\n"
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?);\n"
+                + "INSERT INTO Lecturers_Class_Session (lid, csid)\n"
+                + "VALUES (\n"
+                + "    (SELECT MAX(lid) FROM Lecturers),\n"
+                + "    (SELECT csid FROM Class_Session WHERE classID = ? AND yid = (SELECT MAX(yid) FROM Class_Session))\n"
+                + ");";
+        try {
+            connection.setAutoCommit(false); // Begin transaction
+
+            // Prepare statement for inserting lecturer
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setString(1, lname);
+            stm.setString(2, gender);
+            stm.setString(3, dob);
+            stm.setString(4, phoneNumber);
+            stm.setString(5, IDcard);
+            stm.setString(6, address);
+            stm.setString(7, email);
+            stm.setString(8, nickName);
+            stm.setString(9, classID);
+
+            // Execute the insert statements
+            stm.executeUpdate();
+
+            connection.commit(); // Commit transaction
+        } catch (SQLException ex) {
+            try {
+                connection.rollback(); // Rollback transaction on error
+            } catch (SQLException e) {
+                Logger.getLogger(DBContext.class.getName()).log(Level.SEVERE, null, e);
+            }
+            Logger.getLogger(DBContext.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                connection.setAutoCommit(true); // Restore default commit behavior
+            } catch (SQLException ex) {
+                Logger.getLogger(DBContext.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+
     public static void main(String[] args) {
         LecturerClassSession lcs = new LecturerClassSession();
-        List<Lecturers_Class_Session> list = lcs.getLecturerByName("Hiếu");
-        System.out.println(list);
+        lcs.insertLecturers("Bùi Trung Hiếu","1","2003-01-12","0913339709","015203001654","Hà Nội","trunghieubui@gmail.com","bthieu","5");
     }
 
 }

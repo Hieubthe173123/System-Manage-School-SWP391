@@ -184,11 +184,11 @@ public class StudentClassSessionDBContext extends DBContext {
         List<StudentClassSession> list = new ArrayList<>();
         try {
             String sql = 
-                    "SELECT S.stuid, S.sname, S.dob, S.gender, S.[Address], p.pid, cl.classID cl.clname "
+                    "SELECT S.stuid, S.sname, S.dob, S.gender, S.[Address], p.pid, cl.classID, cl.clname "
                     + "FROM Student S "
                     + "Inner join Student_Class_Session scs ON S.stuid = scs.scid "
                     + "Inner join  Class_Session cs ON scs.scid = cs.csid "
-                    + "Inner join Parent p ON s.stuid = p.pid "
+                    + "Inner join Parent p ON S.stuid = p.pid "
                     + "Inner join class cl ON cs.csid = cl.classID "
                     + "Inner join SchoolYear sy ON cs.csid = sy.yid"
                     + "Where sy.dateStart LIKE ? AND sy.dateEnd LIKE ?" 
@@ -230,6 +230,47 @@ public class StudentClassSessionDBContext extends DBContext {
         }
         return list;
     }
+ 
+ 
+ 
+ //number of students attending a class in a particular academic year
+    public int getTotalStudentBySchoolYear(String timeStart, String timeEnd) {
+        String sql = "SELECT COUNT(*) as total FROM Student S "
+                   + "INNER JOIN Student_Class_Session scs ON S.stuid = scs.scid "
+                   + "INNER JOIN Class_Session cs ON scs.scid = cs.csid "
+                   + "INNER JOIN SchoolYear sy ON cs.csid = sy.yid "
+                   + "WHERE sy.dateStart LIKE ? AND sy.dateEnd LIKE ?";
+        try {
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setString(1, timeStart + "%");
+            stm.setString(2, timeEnd + "%");
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(StudentClassSessionDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return 0;
+    }
+    
+    //Get total number of students from database
+    public int getTotalStudent() {
+        try {
+            String sql = "select count (*) from Student";
+
+            PreparedStatement stm = connection.prepareStatement(sql);
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(RoomDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return 0;
+
+    }
+ 
  
  public List<StudentClassSession> getStudentClassSessionByName(String sname) {
         List<StudentClassSession> list = new ArrayList<>();

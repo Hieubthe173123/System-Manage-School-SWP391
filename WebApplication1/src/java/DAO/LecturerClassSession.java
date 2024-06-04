@@ -407,10 +407,22 @@ public class LecturerClassSession extends DBContext {
         }
 
     }
+    public void deleteLecturer(String lid) {
+        try{
+            String sql="delete from Lecturers_Class_Session where lid= ?";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setString(1, lid);
+            stm.executeUpdate();
+        }catch (SQLException ex) {
+            Logger.getLogger(LecturerClassSession.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }
+    
 
     public static void main(String[] args) {
         LecturerClassSession lcs = new LecturerClassSession();
-        lcs.promoteLecturer("77","4");
+        lcs.deleteLecturer("77");
     }
 
 }

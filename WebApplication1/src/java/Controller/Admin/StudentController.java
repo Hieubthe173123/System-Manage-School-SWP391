@@ -28,6 +28,7 @@ public class StudentController extends HttpServlet {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        
         response.setContentType("text/html;charset=UTF-8");
         StudentClassSessionDBContext stu = new StudentClassSessionDBContext();
         SchoolYearDBContext sy = new SchoolYearDBContext();
@@ -36,6 +37,7 @@ public class StudentController extends HttpServlet {
 
         String timeStart = request.getParameter("timeStart");
         String timeEnd = request.getParameter("timeEnd");
+        String yid = request.getParameter("yid");
         String indexPage = request.getParameter("index");
 
         if (indexPage == null) { //check index
@@ -65,43 +67,24 @@ public class StudentController extends HttpServlet {
         request.setAttribute("endPage", endPage);
 
         List<SchoolYear> list2 = sy.getAllSchoolYear();
-        request.setAttribute("listB", list2);
+        request.setAttribute("list2", list2);
         request.getRequestDispatcher("FE_Admin/CRUD_Student.jsp").forward(request, response);
     }
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
+   
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
     }
 
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
+    
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
     }
 
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
+   
     @Override
     public String getServletInfo() {
         return "Short description";

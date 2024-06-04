@@ -110,7 +110,7 @@ public class StudentClassSessionDBContext extends DBContext {
                 Parent parent = new Parent();
                 parent.setPid(rs.getInt("pid"));
                 student.setPid(parent);
-
+                
                 StudentClassSession stuClass = new StudentClassSession();
                 stuClass.setCsid(cs);
                 stuClass.setStuid(student);
@@ -122,11 +122,11 @@ public class StudentClassSessionDBContext extends DBContext {
         return list;
     }
 
-    public static void main(String[] args) {
-        StudentClassSessionDBContext stu = new StudentClassSessionDBContext();
-        List<StudentClassSession> list = stu.getAllStudentClassSession();
-        System.out.println(list);
-    }
+//    public static void main(String[] args) {
+//        StudentClassSessionDBContext stu = new StudentClassSessionDBContext();
+//        List<StudentClassSession> list = stu.getAllStudentClassSession();
+//        System.out.println(list);
+//    }
 
     
     
@@ -134,13 +134,13 @@ public class StudentClassSessionDBContext extends DBContext {
         List<StudentClassSession> list = new ArrayList<>();
         try {
             String sql = 
-                    "SELECT S.stuid, S.sname, S.dob, S.gender, S.[Address], p.pid, cl.clname "
+                    "SELECT S.stuid, S.sname, S.dob, S.gender, S.[Address], p.pid, cl.classID, cl.clname "
                     + "FROM Student S "
-                    + "Inner join Student_Class_Session scs ON S.stuid = scs.stuid "
-                    + "Inner join  Class_Session cs ON scs.csid = cs.csid "
-                    + "Inner join Parent p ON s.pid = p.pid "
-                    + "Inner join class cl ON cs.classID = cl.classID "
-                    + "Inner join SchoolYear sy ON cs.yid = sy.yid"
+                    + "LEFT join Student_Class_Session scs ON S.stuid = scs.stuid "
+                    + "LEFT join  Class_Session cs ON scs.csid = cs.csid "
+                    + "LEFT join Parent p ON s.pid = p.pid "
+                    + "LEFT join class cl ON cs.classID = cl.classID "
+                    + "LEFT join SchoolYear sy ON cs.yid = sy.yid "
                     + "Where sy.dateStart LIKE ? AND sy.dateEnd LIKE ?" ;
                     
             PreparedStatement stm = connection.prepareStatement(sql);
@@ -177,9 +177,9 @@ public class StudentClassSessionDBContext extends DBContext {
         }
         return list;
     }
+      
 
      
-
  public List<StudentClassSession> getStudentClassSessionBySchoolYearWithPaging(String timeStart, String timeEnd, int index) {
         List<StudentClassSession> list = new ArrayList<>();
         try {
@@ -190,8 +190,8 @@ public class StudentClassSessionDBContext extends DBContext {
                     + "Inner join  Class_Session cs ON scs.csid = cs.csid "
                     + "Inner join Parent p ON S.pid = p.pid "
                     + "Inner join class cl ON cs.classID = cl.classID "
-                    + "Inner join SchoolYear sy ON cs.yid = sy.yid"
-                    + "Where sy.dateStart LIKE ? AND sy.dateEnd LIKE ?" 
+                    + "Inner join SchoolYear sy ON cs.yid = sy.yid "
+                    + "Where sy.dateStart LIKE ? AND sy.dateEnd LIKE ? " 
                     + "ORDER BY S.stuid OFFSET ? ROWS FETCH NEXT 10 ROWS ONLY";
                     
             PreparedStatement stm = connection.prepareStatement(sql);
@@ -242,8 +242,8 @@ public class StudentClassSessionDBContext extends DBContext {
                    + "WHERE sy.dateStart LIKE ? AND sy.dateEnd LIKE ?";
         try {
             PreparedStatement stm = connection.prepareStatement(sql);
-            stm.setString(1, timeStart + "%");
-            stm.setString(2, timeEnd + "%");
+            stm.setString(1, "%" + timeStart + "%");
+            stm.setString(2, "%" + timeEnd + "%");
             ResultSet rs = stm.executeQuery();
             if (rs.next()) {
                 return rs.getInt(1);
@@ -280,7 +280,7 @@ public class StudentClassSessionDBContext extends DBContext {
                     + "FROM Student S "
                     + "Inner join Student_Class_Session scs ON S.stuid = scs.stuid "
                     + "Inner join  Class_Session cs ON scs.csid = cs.csid "
-                    + "Inner join Parent p ON s.pid = p.pid "
+                    + "Inner join Parent p ON S.pid = p.pid "
                     + "Inner join class cl ON cs.classID = cl.classID "
                     + "Where S.sname LIKE ?;" ;
                     
@@ -326,12 +326,12 @@ public class StudentClassSessionDBContext extends DBContext {
                     + "FROM Student S "
                     + "Inner join Student_Class_Session scs ON S.stuid = scs.stuid "
                     + "Inner join  Class_Session cs ON scs.csid = cs.csid "
-                    + "Inner join Parent p ON s.pid = p.pid "
+                    + "Inner join Parent p ON S.pid = p.pid "
                     + "Inner join class cl ON cs.classID = cl.classID "
                     + "Where S.stuid = ?";
                     
             PreparedStatement stm = connection.prepareStatement(sql);
-              stm.setString(1, stuid);
+            stm.setString(1, stuid);
             ResultSet rs = stm.executeQuery();
             
              while (rs.next()) {
@@ -363,7 +363,10 @@ public class StudentClassSessionDBContext extends DBContext {
         }
         return list;
     }
+     
+     public static void main(String[] args) {
+    StudentClassSessionDBContext stu = new StudentClassSessionDBContext();
+    stu.getStudentClassSessionBySchoolYearWithPaging("2023-05-18", "2024-05-19" ,1);
+}
 
-
-    
 }

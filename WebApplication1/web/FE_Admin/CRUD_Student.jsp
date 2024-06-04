@@ -70,15 +70,17 @@
             </div>
             <div class="row mt-3">
                 <div class="col-auto">
-                    <select class="form-control" onchange="this.options[this.selectedIndex].value && (window.location = this.options[this.selectedIndex].value)">
-                        <option value="">Select School Year</option>
-                        <c:forEach var="SchoolYear" items="${listB}">
-                            <option value="student?timeStart=${SchoolYear.dateStart}&timeEnd=${SchoolYear.dateEnd}" 
-                                    <c:if test="${param.timeStart == SchoolYear.dateStart && param.timeEnd == SchoolYear.dateEnd}">selected</c:if>>
-                                ${SchoolYear.dateStart} - ${SchoolYear.dateEnd}
-                            </option>
-                        </c:forEach>
-                    </select> <br>
+                    <form action="student" method="GET" class="form-inline mb-3">
+                        <label for="yearSelect" class="mr-2">Select Year:</label>
+                        <select name="yid" id="yearSelect" class="form-control" onchange="this.form.submit()">
+                            <option value="">Select a year</option>
+                            <c:forEach var="year" items="${requestScope.list2}">
+                                <option value="${year.yid}" <c:if test="${param.yid == year.yid}">selected</c:if>>
+                                    ${year.dateStart} - ${year.dateEnd}
+                                </option>
+                            </c:forEach>
+                        </select>
+                    </form>
                 </div>
             </div>
 
@@ -109,8 +111,8 @@
                             <td>${studentClass.stuid.pid.getPid()}</td>
                             <td>${studentClass.csid.getClassID().getClname()}</td>
                             <td>
-                               <button class="btn btn-warning btn-sm" onclick="editStudent('${studentClass.stuid.getStuid()}')">Edit</button>
-                               <button type="button" class="btn btn-danger btn-sm" onclick="showDeleteModal('${studentClass.stuid.getStuid()}', '${studentClass.stuid.pid.getPid()}')">Delete</button>
+                                <button class="btn btn-warning btn-sm" onclick="editStudent('${studentClass.stuid.getStuid()}')">Edit</button>
+                                <button type="button" class="btn btn-danger btn-sm" onclick="showDeleteModal('${studentClass.stuid.getStuid()}', '${studentClass.stuid.pid.getPid()}')">Delete</button>
                             </td>
                         </tr>
                     </c:forEach>
@@ -128,14 +130,14 @@
                                     <td>${studentClass.csid.getClassID().getClname()}</td>
                                     <td>
                                         <c:choose>
-                                            <c:when test="${studentClass.csid.getclassID() != null}">
-                                                ${studentClass.csid.getclassID().getclname()}
+                                            <c:when test="${studentClass.csid.getClassID() != null}">
+                                                ${studentClass.csid.getClassID().getClname()}
                                             </c:when>
                                             <c:otherwise>-</c:otherwise>
                                         </c:choose>
                                     </td>
                                     <td>
-                                         <button class="btn btn-warning btn-sm" onclick="editStudent('${studentClass.stuid.getStuid()}')">Edit</button>
+                                        <button class="btn btn-warning btn-sm" onclick="editStudent('${studentClass.stuid.getStuid()}')">Edit</button>
                                         <button type="button" class="btn btn-danger btn-sm" onclick="showDeleteModal('${studentClass.stuid.getStuid()}', '${studentClass.stuid.pid.getPid()}')">Delete</button>
                                     </td>
                                 </tr>
@@ -153,7 +155,7 @@
                                     <td>${studentClass.stuid.pid.getPid()}</td>
                                     <td>${studentClass.csid.getClassID().getClname()}</td>
                                     <td>
-                                         <button class="btn btn-warning btn-sm" onclick="editStudent('${studentClass.stuid.getStuid()}')">Edit</button>
+                                        <button class="btn btn-warning btn-sm" onclick="editStudent('${studentClass.stuid.getStuid()}')">Edit</button>
                                         <button type="button" class="btn btn-danger btn-sm" onclick="showDeleteModal('${studentClass.stuid.getStuid()}', '${studentClass.stuid.pid.getPid()}')">Delete</button>
                                     </td>
                                 </tr>
@@ -280,7 +282,7 @@
 
 
 <!-- Delete Student Modal -->
-       <div class="modal fade" id="deleteStudentModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="deleteStudentModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -363,36 +365,36 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
 <script src="script.js"></script>
 <script>
-     //Confirm deletion
-    let deleteStudentId; //Store student and parent IDs to be deleted.
-    let deleteParentId;
+                    //Confirm deletion
+                    let deleteStudentId; //Store student and parent IDs to be deleted.
+                    let deleteParentId;
 
-    function showDeleteModal(stuid, pid) {
-        deleteStudentId = stuid; 
-        deleteParentId = pid;
-        $('#deleteStudentModal').modal('show'); //hiển thị modal xác nhận xóa
-    }
+                    function showDeleteModal(stuid, pid) {
+                        deleteStudentId = stuid;
+                        deleteParentId = pid;
+                        $('#deleteStudentModal').modal('show'); //hiển thị modal xác nhận xóa
+                    }
 
-    document.getElementById('confirmDeleteBtn').addEventListener('click', function () {
-        const form = document.createElement('form');
-        form.method = 'POST';
-        form.action = 'deleteStudent'; 
+                    document.getElementById('confirmDeleteBtn').addEventListener('click', function () {
+                        const form = document.createElement('form');
+                        form.method = 'POST';
+                        form.action = 'deleteStudent';
 
-        const stuidInput = document.createElement('input');
-        stuidInput.type = 'hidden';
-        stuidInput.name = 'stuid';
-        stuidInput.value = deleteStudentId;
+                        const stuidInput = document.createElement('input');
+                        stuidInput.type = 'hidden';
+                        stuidInput.name = 'stuid';
+                        stuidInput.value = deleteStudentId;
 
-        const pidInput = document.createElement('input');
-        pidInput.type = 'hidden';
-        pidInput.name = 'pid';
-        pidInput.value = deleteParentId;
+                        const pidInput = document.createElement('input');
+                        pidInput.type = 'hidden';
+                        pidInput.name = 'pid';
+                        pidInput.value = deleteParentId;
 
-        form.appendChild(stuidInput);
-        form.appendChild(pidInput);
-        document.body.appendChild(form);
-        form.submit();
-    });
+                        form.appendChild(stuidInput);
+                        form.appendChild(pidInput);
+                        document.body.appendChild(form);
+                        form.submit();
+                    });
 </script>
 
 </body>

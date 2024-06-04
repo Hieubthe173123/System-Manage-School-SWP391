@@ -33,8 +33,8 @@ public class SchoolYearDBContext extends DBContext {
                 MealTimeDBContext meal = new MealTimeDBContext();
                 AgeDBContext age = new AgeDBContext();
                 school.setYid(rs.getInt("mid"));
-                school.setDateStart(rs.getDate("dateStart"));
-                school.setDateEnd(rs.getDate("dateEnd"));
+                school.setDateStart(rs.getString("dateStart"));
+                school.setDateEnd(rs.getString("dateEnd"));
                 return school;
             }
         } catch (SQLException e) {
@@ -52,8 +52,8 @@ public class SchoolYearDBContext extends DBContext {
             while (rs.next()) { 
                 SchoolYear school = new SchoolYear();
                 school.setYid(rs.getInt("yid"));
-                school.setDateStart(rs.getDate("dateStart"));
-                school.setDateEnd(rs.getDate("dateEnd"));
+                school.setDateStart(rs.getString("dateStart"));
+                school.setDateEnd(rs.getString("dateEnd"));
                 list.add(school); 
             }
         } catch (SQLException e) {

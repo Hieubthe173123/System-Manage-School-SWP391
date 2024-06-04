@@ -68,10 +68,19 @@
                     </select>
 
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-2">
                     <button class="btn btn-primary" id="addNewLecturerBtn" data-toggle="modal" 
                             onclick="window.location.href = 'add-lecturer'" >Add New Lecturer</button>
                 </div>
+                <div class="col-md-2">
+                    <button class="btn btn-info" id="addNewLecturerBtn" data-toggle="modal" 
+                            onclick="window.location.href = 'promote-lecturer'" >Promote Lecturer</button>
+                </div>
+                <div class="col-md-2">
+                    <button class="btn btn-primary" id="addNewLecturerBtn" data-toggle="modal" 
+                            onclick="window.location.href = ''" >Back To Home</button>
+                </div>
+                
             </div>
             <table class="table table-bordered">
                 <thead>
@@ -80,10 +89,6 @@
                             <tr>
                             <th>LecturerID</th>
                             <th>Lecturer Name</th>
-                            <th>IDCard</th>
-                            <th>DOB</th>
-                            <th>Gender</th>
-                            <th>Phone Number</th>
                             <th>Class Name</th>
                             <th>Actions</th>
                         </tr>
@@ -125,10 +130,6 @@
                                 <tr>
                                     <td>${lecturer.lid.lid}</td>
                                     <td>${lecturer.lid.lname}</td>
-                                    <td>${lecturer.lid.IDcard}</td>
-                                    <td>${lecturer.lid.dob}</td>
-                                    <td>${lecturer.lid.gender ? 'Male' : 'Female'}</td>
-                                    <td>${lecturer.lid.phoneNumber}</td>
                                     <td>
                                         <c:choose>
                                             <c:when test="${lecturer.csid.classID != null}">

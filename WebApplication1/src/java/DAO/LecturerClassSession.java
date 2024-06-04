@@ -390,9 +390,27 @@ public class LecturerClassSession extends DBContext {
         }
     }
 
+    public void promoteLecturer(String lid, String classID) {
+        try {
+            String sql = "INSERT INTO Lecturers_Class_Session (lid, csid)\n"
+                    + "                VALUES (\n"
+                    + "                   ?,\n"
+                    + "                (SELECT csid FROM Class_Session WHERE classID = ? AND yid = (SELECT MAX(yid) FROM Class_Session)));";
+
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setString(1, lid);
+            stm.setString(2, classID);
+
+            stm.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(LecturerClassSession.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+
     public static void main(String[] args) {
         LecturerClassSession lcs = new LecturerClassSession();
-        lcs.insertLecturers("Bùi Trung Hiếu","1","2003-01-12","0913339709","015203001654","Hà Nội","trunghieubui@gmail.com","bthieu","5");
+        lcs.promoteLecturer("77","4");
     }
 
 }

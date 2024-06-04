@@ -326,11 +326,38 @@ public class LecturersDBContext extends DBContext {
             Logger.getLogger(LecturersDBContext.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    public List<Lecturers> getAllLecturers() {
+         List<Lecturers> list = new ArrayList<>();
+        try {
+            String sql = "select * from Lecturers";
+
+            PreparedStatement stm = connection.prepareStatement(sql);
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                Lecturers lecturer = new Lecturers();
+                lecturer.setLid(rs.getInt("lid"));
+                lecturer.setLname(rs.getString("lname"));
+                lecturer.setGender(rs.getBoolean("gender"));
+                lecturer.setDob(rs.getString("dob"));
+                lecturer.setPhoneNumber(rs.getString("phoneNumber"));
+                lecturer.setIDcard(rs.getString("IDcard"));
+                lecturer.setEmail(rs.getString("Email"));
+                lecturer.setAddress(rs.getString("Address"));
+                lecturer.setNickname(rs.getString("NickName"));
+
+                list.add(lecturer);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(LecturerClassSession.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
+                
+    }
 
     public static void main(String[] args) {
         LecturersDBContext ldb = new LecturersDBContext();
-        Lecturers le = ldb.getLecturerById("1");
+        List<Lecturers> list = ldb.getAllLecturers();
 
-        System.out.println(le);
+        System.out.println(list);
     }
 }

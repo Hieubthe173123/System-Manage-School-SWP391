@@ -24,7 +24,7 @@ public class NewSchoolYearController extends HttpServlet {
     
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        //Declare var dateStart, dateEnd
+        //Lấy tham số dateStart, dateEnd từ request
         String dateStart = request.getParameter("dateStart");
         String dateEnd = request.getParameter("dateEnd");
         
@@ -34,9 +34,8 @@ public class NewSchoolYearController extends HttpServlet {
         } catch (Exception e) {
             e.printStackTrace();
             response.sendRedirect("Error/404.jsp");
+            return;
         }
-        
-        
         
         request.getRequestDispatcher("FE_Admin/NewSchoolYear.jsp").forward(request, response);
         

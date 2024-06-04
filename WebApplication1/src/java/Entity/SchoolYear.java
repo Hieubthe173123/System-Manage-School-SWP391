@@ -12,13 +12,13 @@ import java.sql.Date;
  */
 public class SchoolYear {
     private int yid;
-    private Date dateStart;
-    private Date dateEnd;
+    private String dateStart;
+    private String dateEnd;
 
     public SchoolYear() {
     }
 
-    public SchoolYear(int yid, Date dateStart, Date dateEnd) {
+    public SchoolYear(int yid, String dateStart, String dateEnd) {
         this.yid = yid;
         this.dateStart = dateStart;
         this.dateEnd = dateEnd;
@@ -32,19 +32,19 @@ public class SchoolYear {
         this.yid = yid;
     }
 
-    public Date getDateStart() {
+    public String getDateStart() {
         return dateStart;
     }
 
-    public void setDateStart(Date dateStart) {
+    public void setDateStart(String dateStart) {
         this.dateStart = dateStart;
     }
 
-    public Date getDateEnd() {
+    public String getDateEnd() {
         return dateEnd;
     }
 
-    public void setDateEnd(Date dateEnd) {
+    public void setDateEnd(String dateEnd) {
         this.dateEnd = dateEnd;
     }
 
@@ -52,6 +52,9 @@ public class SchoolYear {
     public String toString() {
         return "SchoolYear{" + "yid=" + yid + ", dateStart=" + dateStart + ", dateEnd=" + dateEnd + '}';
     }
+
+  
+    
     
     
 }

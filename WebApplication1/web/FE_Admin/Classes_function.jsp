@@ -48,7 +48,9 @@
     <body class="container mt-5">
         <div class="content-wrapper">
             <div class="mb-3">
-                <button class="btn btn-campus" onclick="window.location.href = 'StudentView.jsp'">Home</button>
+                <button class="btn btn-campus" onclick="window.location.href = 'newyear'">Create New School Year</button>
+                <button class="btn btn-campus" onclick="window.location.href = 'promote'">Promote Student</button>
+                <button class="btn btn-campus" onclick="window.location.href = 'historyschoolyear'">School Year History</button>
             </div>
 
             <form action="classController" method="GET" class="form-inline mb-3">
@@ -86,6 +88,7 @@
                     <table class="table table-bordered">
                         <thead class="thead-dark">
                             <tr>
+                                <th>No.</th>
                                 <th>Student ID</th>
                                 <th>Student Name</th>
                                 <th>Date Of Birth</th>
@@ -98,13 +101,14 @@
                         </thead>
                         <tbody>
                             <c:if test="${not empty requestScope.studentClassSessionbyCsid}">
-                                <c:forEach var="s" items="${requestScope.studentClassSessionbyCsid}">
+                                <c:forEach var="s" items="${requestScope.studentClassSessionbyCsid}" varStatus="idex">
 
                                     <tr>
+                                        <td>${idex.index+1}</td>
                                         <td>${s.stuid.stuid}</td>
                                         <td>${s.stuid.sname}</td>
                                         <td>${s.stuid.dob}</td>
-                                        <td></td>
+                                        <td>${s.csid.sid.sid} tuổi</td>
                                         <td>${s.csid.rid.rname}</td>
                                         <td>${s.csid.sid.sname}</td>
                                         <td>
@@ -115,7 +119,7 @@
                                                     </c:forEach>
                                                 </c:when>
                                                 <c:otherwise>
-                                                    
+
                                                 </c:otherwise>
                                             </c:choose>
                                         </td>

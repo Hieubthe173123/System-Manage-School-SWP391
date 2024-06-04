@@ -28,21 +28,27 @@ public class ClassesController extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         SchoolYearDBContext yearDB = new SchoolYearDBContext();
+        // Lấy danh sách tất cả các năm học
         ArrayList<SchoolYear> listYear = yearDB.getAllSchoolYear();
 
+        // Lấy tham số yid và csid từ request
         String yid = request.getParameter("yid");
         String csid = request.getParameter("csid");
         try {
+            //Nếu có yid , lấy các thông tin liên quan đến năm học
             if (yid != null && !yid.isEmpty()) {
 
+                // Lấy thông tin năm học dựa theo id
                 ArrayList<SchoolYear> selectedYear = yearDB.getSchoolYearById(yid);
                 request.setAttribute("selectedYear", selectedYear);
 
+                // Lấy danh sách các lớp học trong năm học đã chọn
                 ArrayList<ClassSession> listClassSession = yearDB.getClassSessionByYid(yid);
                 request.setAttribute("listClassSession", listClassSession);
 
             }
 
+            //nếu có csid, lấy các thông tin liên quan đến lớp học
             if (csid != null && !csid.isEmpty()) {
 
                 ArrayList<Lecturers_Class_Session> lecClassSessionbyCsid2 = yearDB.getLecturersByCsid(Integer.parseInt(csid));

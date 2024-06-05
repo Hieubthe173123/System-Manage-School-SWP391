@@ -62,6 +62,8 @@ public class PromoteToNewClass extends HttpServlet {
                         db.addStudentToClass(studentClassSession);
 
                     }
+                }else{
+                    request.setAttribute("err", "you need choose Student to add !!!");
                 }
                 response.sendRedirect("promote?yid=" + yid + "&newCsid=" + newCsid);
                 return;

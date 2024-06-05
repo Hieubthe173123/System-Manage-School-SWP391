@@ -334,6 +334,63 @@ public class SchoolYearDBContext extends DBContext {
         return list;
     }
 
+    public ArrayList<StudentClassSession> getStudentsFromPreviousYears2(String currentSid, String yid) {
+        ArrayList<StudentClassSession> list = new ArrayList<>();
+        try {
+            String sql = "SELECT \n"
+                    + "scs.stuid, \n"
+                    + "stu.sname, \n"
+                    + "stu.gender, \n"
+                    + "stu.dob, \n"
+                    + "se.sid, \n"
+                    + "cls.classID,\n"
+                    + "cl.clname,\n"
+                    + "ye.yid \n"
+                    + "FROM Student_Class_Session scs\n"
+                    + "JOIN Student stu on scs.stuid = stu.stuid\n"
+                    + "JOIN Class_Session cls on scs.csid = cls.csid\n"
+                    + "JOIN Class cl on cls.classID = cl.classID\n"
+                    + "JOIN SchoolYear ye on cls.yid = ye.yid\n"
+                    + "JOIN Session se on cls.sid = se.sid\n"
+                    + "where se.sid = (select max(sid) from Session where sid < ?) and cls.yid = (SELECT MAX(yid) FROM SchoolYear WHERE yid < ?)";
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, currentSid);
+            ps.setString(2, yid);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                StudentClassSession scs = new StudentClassSession();
+                ClassSession cls = new ClassSession();
+                
+                Student stu = new Student();
+                stu.setStuid(rs.getInt("stuid"));
+                stu.setSname(rs.getString("sname"));
+                stu.setGender(rs.getBoolean("gender"));
+                stu.setDob(rs.getString("dob"));
+                scs.setStuid(stu);
+                
+                Class cla = new Class();
+                cla.setClassid(rs.getInt("classID"));
+                cla.setClname(rs.getString("clname"));
+                cls.setClassID(cla);
+                scs.setCsid(cls);
+                
+                Session se = new Session();
+                se.setSid(rs.getInt("sid"));
+                cls.setSid(se);
+                scs.setCsid(cls);
+                
+                SchoolYear year = new SchoolYear();
+                year.setYid(rs.getInt("yid"));
+                cls.setYid(year);
+                scs.setCsid(cls);
+                
+                list.add(scs);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(SchoolYearDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
+    }
 
     //Add học sinh vào lớp mới trong bảng Student_Class_Session
     public void addStudentToClass(StudentClassSession student) {
@@ -594,14 +651,14 @@ public class SchoolYearDBContext extends DBContext {
                 ps2.executeUpdate();
                 ps2.close();
             }
-            
+
             connection.commit();
             connection.setAutoCommit(true);
 
         } catch (SQLException ex) {
             Logger.getLogger(SchoolYearDBContext.class.getName()).log(Level.SEVERE, null, ex);
             try {
-                
+
                 connection.rollback();
                 connection.setAutoCommit(true);
             } catch (SQLException rollbackEx) {
@@ -614,8 +671,8 @@ public class SchoolYearDBContext extends DBContext {
 
     public static void main(String[] args) {
         SchoolYearDBContext db = new SchoolYearDBContext();
-        ArrayList<StudentClassSession> list = db.getHistorySchoolYearbyStuid("1");
-        System.out.println(list);
+        db.insertNewSchoolYearForClassSession("2026-05-06", "2027-05-07");
+        
 
     }
 }

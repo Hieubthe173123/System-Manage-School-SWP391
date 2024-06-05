@@ -7,8 +7,43 @@
         <meta charset="UTF-8">
         <title>Promote Students</title>
         <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+        <style>
+            .btn-campus {
+                background-color: #39BACD;
+                color: white;
+                border: none;
+                padding: 10px 20px;
+                text-align: center;
+                text-decoration: none;
+                display: inline-block;
+                font-size: 16px;
+                margin: 4px 2px;
+                cursor: pointer;
+                transition: all 0.3s ease;
+            }
+            .btn-campus:hover {
+                background-color: #39BACD;
+            }
+            .custom-link:active {
+                font-weight: bold;
+            }
+            .content-wrapper {
+                max-width: 1200px;
+                margin: auto;
+                padding: 20px;
+            }
+            .table-responsive {
+                max-height: 400px;
+                overflow-y: auto;
+            }
+        </style>
     </head>
     <body class="container mt-5">
+        <div class="content-wrapper">
+            <div class="mb-3">
+                <button class="btn btn-campus" onclick="window.location.href = 'classController'">Back To List</button>
+            </div>
+        </div>    
         <h1>Promote Students ( <c:out value="${selectedYear[0].dateStart} - ${selectedYear[0].dateEnd}"/> )</h1>
         <form action="promote" method="GET" class="form-inline mb-3">
             <label for="yearSelect" class="mr-2">Select Year:</label>
@@ -66,19 +101,22 @@
                     <tbody>
                         <c:if test="${not empty studentClassSessionOldYear}">
                             <c:forEach var="s" items="${studentClassSessionOldYear}" varStatus="idex">
-                                <tr>
-                                    <td>
-                                        <input type="checkbox" name="selectedStudents" value="${s.stuid.stuid}"
-                                               <c:if test="${fn:contains(assignedStudents, s.stuid.stuid)}">disabled</c:if>/>
-                                        </td>
-                                        <td>${idex.index + 1}</td>
-                                    <td>${s.stuid.stuid}</td>
-                                    <td>${s.stuid.sname}</td>
-                                    <td>${s.stuid.gender ? 'Nam' : 'Nữ'}</td>
-                                    <td>${s.stuid.dob}</td>
-                                    <td>${s.csid.sid.sid} tuổi</td>
-                                    <td>${s.csid.classID.clname}</td>
-                                </tr>
+                                <c:if test="${s.csid.sid.sid != '5'}">
+                                    <tr>
+                                        <td>
+                                            <input type="checkbox" name="selectedStudents" value="${s.stuid.stuid}"
+                                                   <c:if test="${fn:contains(assignedStudents, s.stuid.stuid)}">disabled</c:if>/>
+                                            </td>
+                                            <td>${idex.index + 1}</td>
+                                        <td>${s.stuid.stuid}</td>
+                                        <td>${s.stuid.sname}</td>
+                                        <td>${s.stuid.gender ? 'Nam' : 'Nữ'}</td>
+                                        <td>${s.stuid.dob}</td>
+                                        <td>${s.csid.sid.sid} tuổi</td>
+                                        <td>${s.csid.classID.clname}</td>
+                                    </tr>
+                                </c:if>
+
                             </c:forEach>
                         </c:if>
                     </tbody>
@@ -88,14 +126,40 @@
         </c:if>
 
         <script>
-            document.getElementById("dialog").addEventListener('click', function () {
+            // xử lý sự kiện click cho nút "Promote Selected Students"
+            function handlePromoteButtonClick(event) {
+                // Lấy danh sách các checkbox
+                var checkboxes = document.querySelectorAll('input[name="selectedStudents"]');
+                var checked = false;
+                checkboxes.forEach(function (checkbox) {
+                    if (checkbox.checked) {
+                        checked = true;
+                    }
+                });
+                // Kiểm tra nếu không có học sinh nào được chọn
+                if (!checked) {
+                    event.preventDefault(); // Ngăn chặn sự kiện submit form
+                    Swal.fire({
+                        title: "Error",
+                        text: "Please select at least one student.",
+                        icon: "error"
+                    });
+                }
+            }
+
+            // Gán sự kiện click cho nút "Promote Selected Students"
+            document.getElementById("dialog").addEventListener('click', function (event) {
+                // Hiển thị thông báo khi click nút
                 Swal.fire({
-                    title: "Add Successfull",
+                    title: "Add Successful",
                     text: "That thing is still around?",
                     icon: "success"
                 });
+                // Xử lý sự kiện click cho nút "Promote Selected Students"
+                handlePromoteButtonClick(event);
             });
         </script>
+
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     </body>
 </html>

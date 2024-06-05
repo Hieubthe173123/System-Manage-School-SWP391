@@ -111,7 +111,7 @@
                             <td>${studentClass.stuid.pid.getPid()}</td>
                             <td>${studentClass.csid.getClassID().getClname()}</td>
                             <td>
-                                <button class="btn btn-warning btn-sm" onclick="editStudent('${studentClass.stuid.getStuid()}')">Edit</button>
+                                <button class="btn btn-warning btn-sm" onclick="showEditModal('${studentClass.stuid.getStuid()}', '${studentClass.stuid.getSname()}', '${studentClass.stuid.getDob()}', '${studentClass.stuid.isGender() ? 'Male' : 'Female'}', '${studentClass.stuid.getAddress()}')">Update</button>
                                 <button type="button" class="btn btn-danger btn-sm" onclick="showDeleteModal('${studentClass.stuid.getStuid()}', '${studentClass.stuid.pid.getPid()}')">Delete</button>
                             </td>
                         </tr>
@@ -137,7 +137,7 @@
                                         </c:choose>
                                     </td>
                                     <td>
-                                        <button class="btn btn-warning btn-sm" onclick="editStudent('${studentClass.stuid.getStuid()}')">Edit</button>
+                                        <button class="btn btn-warning btn-sm" onclick="showEditModal('${studentClass.stuid.getStuid()}', '${studentClass.stuid.getSname()}', '${studentClass.stuid.getDob()}', '${studentClass.stuid.isGender() ? 'Male' : 'Female'}', '${studentClass.stuid.getAddress()}')">Update</button>
                                         <button type="button" class="btn btn-danger btn-sm" onclick="showDeleteModal('${studentClass.stuid.getStuid()}', '${studentClass.stuid.pid.getPid()}')">Delete</button>
                                     </td>
                                 </tr>
@@ -155,7 +155,7 @@
                                     <td>${studentClass.stuid.pid.getPid()}</td>
                                     <td>${studentClass.csid.getClassID().getClname()}</td>
                                     <td>
-                                        <button class="btn btn-warning btn-sm" onclick="editStudent('${studentClass.stuid.getStuid()}')">Edit</button>
+                                        <button class="btn btn-warning btn-sm" onclick="showEditModal('${studentClass.stuid.getStuid()}', '${studentClass.stuid.getSname()}', '${studentClass.stuid.getDob()}', '${studentClass.stuid.isGender() ? 'Male' : 'Female'}', '${studentClass.stuid.getAddress()}')">Update</button>
                                         <button type="button" class="btn btn-danger btn-sm" onclick="showDeleteModal('${studentClass.stuid.getStuid()}', '${studentClass.stuid.pid.getPid()}')">Delete</button>
                                     </td>
                                 </tr>
@@ -201,7 +201,7 @@
                                 <select class="form-control" id="parentGender" required>
                                     <option>Male</option>
                                     <option>Female</option>
-                                    <option>Other</option>
+                                    
                                 </select>
                             </div>
                             <div class="form-group">
@@ -253,10 +253,10 @@
                             </div>
                             <div class="form-group">
                                 <label for="studentGender">Gender</label>
-                                <select class="form-control" id="studentGender" required>
-                                    <option>Male</option>
-                                    <option>Female</option>
-                                    <option>Other</option>
+                                <select class="form-control" id="studentGender" name="gender" required>
+                                    <option value="true">Male</option>
+                                    <option value="false">Female</option>
+                                   
                                 </select>
                             </div>
                             <div class="form-group">
@@ -303,7 +303,52 @@
 </div>
 
 
+<!-- Modal for editing student -->
+<div class="modal fade" id="editStudentModal" tabindex="-1" aria-labelledby="editStudentModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editStudentModalLabel">Update Student</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="editStudentForm">
+                    <input type="hidden" id="editStudentId">
+                    <div class="form-group">
+                        <label for="editStudentName">Student Name</label>
+                        <input type="text" class="form-control" id="editStudentName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editStudentDob">Date of Birth</label>
+                        <input type="date" class="form-control" id="editStudentDob" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editStudentGender">Gender</label>
+                        <select class="form-control" id="editStudentGender" name="gender" required>
+                        <option value="true" ${student.gender ? 'selected' : ''}>Male</option>
+                        <option value="false" ${!student.gender ? 'selected' : ''}>Female</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="editStudentAddress">Address</label>
+                        <input type="text" class="form-control" id="editStudentAddress" required>
+                    </div>
+                    <!--                    <div class="form-group">
+                                            <label for="editStudentClassId">Class ID</label>
+                                            <input type="text" class="form-control" id="editStudentClassId" required>
+                                        </div>-->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <button type="button" id="confirmUpdateBtn" class="btn btn-danger">Update</button>
+                    </div>
 
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 
@@ -392,6 +437,59 @@
 
                         form.appendChild(stuidInput);
                         form.appendChild(pidInput);
+                        document.body.appendChild(form);
+                        form.submit();
+                    });
+
+                    // Xử lý hiển thị modal chỉnh sửa sinh viên
+                    function showEditModal(stuid, sname, dob, gender, address) {
+                        document.getElementById('editStudentId').value = stuid;
+                        document.getElementById('editStudentName').value = sname;
+                        document.getElementById('editStudentDob').value = dob;
+                        document.getElementById('editStudentGender').value = gender === 'Male' ? 'true' : 'false';
+                        document.getElementById('editStudentAddress').value = address;
+                        
+                        
+                        // Show the edit modal
+                        $('#editStudentModal').modal('show');
+                    }
+
+                    // Xử lý khi người dùng xác nhận cập nhật sinh viên
+                    document.getElementById('confirmUpdateBtn').addEventListener('click', function () {
+                        const form = document.createElement('form');
+                        form.method = 'POST';
+                        form.action = 'update-student'; 
+
+                        const stuidInput = document.createElement('input');
+                        stuidInput.type = 'hidden';
+                        stuidInput.name = 'stuid';
+                        stuidInput.value = document.getElementById('editStudentId').value;
+
+                        const snameInput = document.createElement('input');
+                        snameInput.type = 'hidden';
+                        snameInput.name = 'sname';
+                        snameInput.value = document.getElementById('editStudentName').value;
+
+                        const dobInput = document.createElement('input');
+                        dobInput.type = 'hidden';
+                        dobInput.name = 'dob';
+                        dobInput.value = document.getElementById('editStudentDob').value;
+
+                        const genderInput = document.createElement('input');
+                        genderInput.type = 'hidden';
+                        genderInput.name = 'gender';
+                        genderInput.value = document.getElementById('editStudentGender').value;
+
+                        const addressInput = document.createElement('input');
+                        addressInput.type = 'hidden';
+                        addressInput.name = 'address';
+                        addressInput.value = document.getElementById('editStudentAddress').value;
+
+                        form.appendChild(stuidInput);
+                        form.appendChild(snameInput);
+                        form.appendChild(dobInput);
+                        form.appendChild(genderInput);
+                        form.appendChild(addressInput);
                         document.body.appendChild(form);
                         form.submit();
                     });

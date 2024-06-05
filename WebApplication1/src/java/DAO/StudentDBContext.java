@@ -40,7 +40,7 @@ public class StudentDBContext extends DBContext {
                 Student student = new Student();
                 student.setStuid(rs.getInt("stuid"));
                 student.setSname(rs.getString("sname"));
-               
+
                 student.setDob(rs.getString("dob"));
                 student.setGender(rs.getBoolean("gender"));
                 student.setAddress(rs.getString("Address"));
@@ -144,54 +144,54 @@ public class StudentDBContext extends DBContext {
         }
         return list;
     }
-    
+
     public List<StudentClassSession> pagingStudent(int index) {
-    List<StudentClassSession> list = new ArrayList<>();
-    try {
-        String sql = "SELECT S.stuid, S.sname, S.dob, S.gender, S.[Address], P.pid, C.classID, C.clname "
-                + "FROM Student S "
-                + "INNER JOIN Student_Class_Session SCS ON S.stuid = SCS.stuid "
-                + "INNER JOIN Class_Session CS ON SCS.csid = CS.csid "
-                + "INNER JOIN Class C ON CS.classID = C.classID "
-                + "INNER JOIN Parent P ON S.pid = P.pid "
-                + "ORDER BY S.stuid OFFSET ? ROWS FETCH NEXT 10 ROWS ONLY;";
+        List<StudentClassSession> list = new ArrayList<>();
+        try {
+            String sql = "SELECT S.stuid, S.sname, S.dob, S.gender, S.[Address], P.pid, C.classID, C.clname "
+                    + "FROM Student S "
+                    + "INNER JOIN Student_Class_Session SCS ON S.stuid = SCS.stuid "
+                    + "INNER JOIN Class_Session CS ON SCS.csid = CS.csid "
+                    + "INNER JOIN Class C ON CS.classID = C.classID "
+                    + "INNER JOIN Parent P ON S.pid = P.pid "
+                    + "ORDER BY S.stuid OFFSET ? ROWS FETCH NEXT 10 ROWS ONLY;";
 
-        PreparedStatement stm = connection.prepareStatement(sql);
-        stm.setInt(1, (index - 1) * 10);  // Calculate the correct offset
-        ResultSet rs = stm.executeQuery();
-        
-        while (rs.next()) {
-            Student student = new Student();
-            student.setStuid(rs.getInt("stuid"));
-            student.setSname(rs.getString("sname"));
-            student.setGender(rs.getBoolean("gender"));
-            student.setDob(rs.getString("dob"));
-            student.setAddress(rs.getString("Address"));
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setInt(1, (index - 1) * 10);  // Calculate the correct offset
+            ResultSet rs = stm.executeQuery();
 
-            Class cl = new Class();
-            cl.setClassid(rs.getInt("classID")); 
-            cl.setClname(rs.getString("clname"));
+            while (rs.next()) {
+                Student student = new Student();
+                student.setStuid(rs.getInt("stuid"));
+                student.setSname(rs.getString("sname"));
+                student.setGender(rs.getBoolean("gender"));
+                student.setDob(rs.getString("dob"));
+                student.setAddress(rs.getString("Address"));
 
-            ClassSession cs = new ClassSession();
-            cs.setClassID(cl);
+                Class cl = new Class();
+                cl.setClassid(rs.getInt("classID"));
+                cl.setClname(rs.getString("clname"));
 
-            Parent parent = new Parent();
-            parent.setPid(rs.getInt("pid"));
-            student.setPid(parent);
+                ClassSession cs = new ClassSession();
+                cs.setClassID(cl);
 
-            StudentClassSession stuClass = new StudentClassSession();
-            stuClass.setCsid(cs);
-            stuClass.setStuid(student);
-            list.add(stuClass);
+                Parent parent = new Parent();
+                parent.setPid(rs.getInt("pid"));
+                student.setPid(parent);
+
+                StudentClassSession stuClass = new StudentClassSession();
+                stuClass.setCsid(cs);
+                stuClass.setStuid(student);
+                list.add(stuClass);
+            }
+        } catch (SQLException e) {
+            Logger.getLogger(RoomDBContext.class.getName()).log(Level.SEVERE, null, e);
         }
-    } catch (SQLException e) {
-        Logger.getLogger(RoomDBContext.class.getName()).log(Level.SEVERE, null, e);
+        return list;
     }
-    return list;
-}
-    
-     public void deleteStudentAndParent(String stuid, String pid) {
-          try {
+
+    public void deleteStudentAndParent(String stuid, String pid) {
+        try {
             connection.setAutoCommit(false);
 
             // Xóa các bản ghi liên quan trong bảng Student_Class_Session
@@ -199,7 +199,7 @@ public class StudentDBContext extends DBContext {
             PreparedStatement stm1 = connection.prepareStatement(sql1);
             stm1.setString(1, stuid);
             stm1.executeUpdate();
-            
+
             // Xóa các bản ghi liên quan trong bảng Account
             String sql2 = "DELETE FROM Account WHERE pid = ?";
             PreparedStatement stm2 = connection.prepareStatement(sql2);
@@ -211,30 +211,29 @@ public class StudentDBContext extends DBContext {
             PreparedStatement stm3 = connection.prepareStatement(sql3);
             stm3.setString(1, stuid);
             stm3.executeUpdate();
-            
-             // Xóa bản ghi trong bảng Feedback
+
+            // Xóa bản ghi trong bảng Feedback
             String sql4 = "DELETE FROM Feedback WHERE stuid = ?";
             PreparedStatement stm4 = connection.prepareStatement(sql4);
             stm4.setString(1, stuid);
             stm4.executeUpdate();
-            
-             // Kiểm tra số lượng học sinh liên kết với phụ huynh
+
+            // Kiểm tra số lượng học sinh liên kết với phụ huynh
             String sqlCheck = "SELECT COUNT(*) FROM Student WHERE pid = ?";
             PreparedStatement stmCheck = connection.prepareStatement(sqlCheck);
             stmCheck.setString(1, pid);
             ResultSet rsCheck = stmCheck.executeQuery();
             rsCheck.next();
             int studentCount = rsCheck.getInt(1);
-            
-             // Xóa các bản ghi liên quan trong bảng parent
+
+            // Xóa các bản ghi liên quan trong bảng parent
             if (studentCount == 0) {
-            String sql5 = "DELETE FROM Parent WHERE pid = ?";
-            PreparedStatement stm5 = connection.prepareStatement(sql5);
-            stm5.setString(1, pid);
-            stm5.executeUpdate();
-            
+                String sql5 = "DELETE FROM Parent WHERE pid = ?";
+                PreparedStatement stm5 = connection.prepareStatement(sql5);
+                stm5.setString(1, pid);
+                stm5.executeUpdate();
+
             }
-            
 
             connection.commit();
         } catch (SQLException ex) {
@@ -252,13 +251,34 @@ public class StudentDBContext extends DBContext {
             }
         }
     }
-     
-     public static void main(String[] args) {
-        StudentDBContext db = new StudentDBContext();
-        db.deleteStudentAndParent("3", "2");
+
+    public void updateStudent(Student student) {
+        try {
+            String sql
+                    = "UPDATE [dbo].[Student]\n"
+                    + "   SET [sname] = ?,\n"
+                    + "      [dob] = ?,\n"
+                    + "      [gender] = ?,\n"
+                    + "      [Address] = ?\n"
+                    + "      WHERE stuid = ?";
+            PreparedStatement stm = connection.prepareStatement(sql);
+
+            stm.setString(1, student.getSname());
+            stm.setString(2, student.getDob());
+            stm.setBoolean(3, student.isGender()); 
+            stm.setString(4, student.getAddress());
+            stm.setInt(5, student.getStuid());
+
+            stm.executeUpdate();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(RoomDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
+    public static void main(String[] args) {
+        StudentDBContext stu = new StudentDBContext();
+         List<StudentClassSession> list = stu.pagingStudent(5);
+         System.out.println(list);
+    }
 }
-
-  
-

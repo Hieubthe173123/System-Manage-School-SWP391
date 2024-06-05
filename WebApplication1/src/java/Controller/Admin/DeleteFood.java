@@ -5,7 +5,6 @@
 package Controller.Admin;
 
 import DAO.FoodDBContext;
-import Entity.Food;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -13,14 +12,14 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.List;
+import java.sql.SQLException;
 
 /**
  *
  * @author hidung
  */
-@WebServlet(name = "FoodController", urlPatterns = {"/food"})
-public class FoodController extends HttpServlet {
+@WebServlet(name = "DeleteFood", urlPatterns = {"/delete-food"})
+public class DeleteFood extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -39,10 +38,10 @@ public class FoodController extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet FoodController</title>");            
+            out.println("<title>Servlet DeleteFood</title>");            
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet FoodController at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet DeleteFood at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -60,12 +59,7 @@ public class FoodController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        FoodDBContext fooddb = new FoodDBContext();
-         List<Food> foodList = fooddb.getAllFood();
-        
-        // Set the food list in request scope
-        request.setAttribute("foodList", foodList);
-        request.getRequestDispatcher("FE_Admin/CRUD_Food.jsp").forward(request, response);
+        processRequest(request, response);
     }
 
     /**
@@ -79,12 +73,17 @@ public class FoodController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        int foodId = Integer.parseInt(request.getParameter("foodid"));
         FoodDBContext fooddb = new FoodDBContext();
-         List<Food> foodList = fooddb.getAllFood();
-        
-        // Set the food list in request scope
-        request.setAttribute("foodList", foodList);
-        request.getRequestDispatcher("FE_Admin/CRUD_Food.jsp").forward(request, response);
+        try {
+            boolean isDeleted = fooddb.deleteFood(foodId);
+            if (isDeleted) {
+                request.getRequestDispatcher("/food").forward(request, response);
+            } 
+        } catch (SQLException e) {
+            e.printStackTrace();
+            response.sendRedirect("error.jsp"); // Redirect to an error page
+        }
     }
 
     /**

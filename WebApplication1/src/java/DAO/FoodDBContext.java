@@ -61,4 +61,78 @@ public class FoodDBContext extends DBContext {
         }
         return food;
     }
+     public void addFood(Food food) {
+        try {
+            String sql = "INSERT INTO [SchoolManagement].[dbo].[Food] ([fname], [calo]) VALUES (?, ?)";
+            PreparedStatement stm = connection.prepareStatement(sql);
+
+            stm.setString(1, food.getFname());
+            stm.setInt(2, food.getCalo());
+            stm.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+    }
+
+    public boolean updateFood(int foodId, String foodName, int calo) throws SQLException {
+        String sql = "UPDATE Food SET fname = ?, calo = ? WHERE foodid = ?";
+        try (
+                PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setString(1, foodName);
+            pstmt.setInt(2, calo);
+            pstmt.setInt(3, foodId);
+            return pstmt.executeUpdate() > 0;
+        }
+    }
+
+    public boolean deleteFood(int foodId) throws SQLException {
+        String sql = "DELETE FROM Food WHERE foodid = ?";
+        try (
+                PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setInt(1, foodId);
+            return pstmt.executeUpdate() > 0;
+        }
+    }
+
+    public List<Food> searchFoodByID(String foodid) {
+        List<Food> list = new ArrayList<>();
+        try {
+            String sql = "select * from Food where foodid = ?";
+
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setString(1, foodid);
+
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                Food food = new Food();
+                food.setFoodid(rs.getInt("foodid"));
+                food.setFname(rs.getString("fname"));
+                food.setCalo(rs.getInt("calo"));
+                list.add(food);
+            }
+        } catch (SQLException ex) {           
+        }
+        return list;
+    }
+
+     public List<Food> searchFoodByName(String fname) {
+        List<Food> list = new ArrayList<>();
+        try {
+            String sql = "select * from Food where fname = ?";
+
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setString(1, fname);
+
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                Food food = new Food();
+                food.setFoodid(rs.getInt("foodid"));
+                food.setFname(rs.getString("fname"));
+                food.setCalo(rs.getInt("calo"));
+                list.add(food);
+            }
+        } catch (SQLException ex) {           
+        }
+        return list;
+    }
 }

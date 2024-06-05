@@ -13,14 +13,15 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.List;
 
 /**
  *
  * @author hidung
  */
-@WebServlet(name = "FoodController", urlPatterns = {"/food"})
-public class FoodController extends HttpServlet {
+@WebServlet(name = "AddFood", urlPatterns = {"/add-food"})
+public class AddFood extends HttpServlet {
+
+    private static final long serialVersionUID = 1L;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -39,10 +40,10 @@ public class FoodController extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet FoodController</title>");            
+            out.println("<title>Servlet AddFood</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet FoodController at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet AddFood at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -60,12 +61,7 @@ public class FoodController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        FoodDBContext fooddb = new FoodDBContext();
-         List<Food> foodList = fooddb.getAllFood();
-        
-        // Set the food list in request scope
-        request.setAttribute("foodList", foodList);
-        request.getRequestDispatcher("FE_Admin/CRUD_Food.jsp").forward(request, response);
+
     }
 
     /**
@@ -79,12 +75,30 @@ public class FoodController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        FoodDBContext fooddb = new FoodDBContext();
-         List<Food> foodList = fooddb.getAllFood();
-        
-        // Set the food list in request scope
-        request.setAttribute("foodList", foodList);
-        request.getRequestDispatcher("FE_Admin/CRUD_Food.jsp").forward(request, response);
+        try {           
+            String fname = request.getParameter("fname");
+            int calo = Integer.parseInt(request.getParameter("calo"));
+
+            // Tạo đối tượng food mới
+            Food newFood = new Food();            
+            newFood.setFname(fname);
+            newFood.setCalo(calo);
+
+            // Lưu đối tượng food mới vào cơ sở dữ liệu
+            FoodDBContext foodDBContext = new FoodDBContext();
+            foodDBContext.addFood(newFood);
+
+            // Chuyển hướng tới trang Admin_Food.jsp
+            request.getRequestDispatcher("/food").forward(request, response);
+        } catch (NumberFormatException e) {
+            // Xử lý lỗi khi chuyển đổi từ chuỗi thành số nguyên
+            request.setAttribute("errorMessage", "Invalid number format for calories.");
+            request.getRequestDispatcher("/food").forward(request, response);
+        } catch (Exception e) {
+            // Xử lý lỗi khác
+            request.setAttribute("errorMessage", "An error occurred while adding food.");
+            request.getRequestDispatcher("/food").forward(request, response);
+        }
     }
 
     /**

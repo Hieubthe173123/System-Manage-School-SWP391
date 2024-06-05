@@ -39,7 +39,7 @@
             <h2 class="text-center">Food Management</h2>
             <div class="row w-100 mb-3">
                 <div class="col-sm-6 mb-3 d-flex justify-content-between">
-                    <form class="form-inline" action="search-food" method="GET">
+                    <form class="form-inline" action="search-food" method="POST">
                         <input class="form-control mr-sm-2" type="search" name="searchInput" placeholder="Search" required>
                         <button class="btn btn-success my-2 my-sm-0" type="submit">Search</button>
                     </form>

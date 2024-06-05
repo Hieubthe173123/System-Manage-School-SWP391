@@ -117,7 +117,7 @@
                             <td>${lecturer.gender ? 'Male' : 'Female'}</td>
                             <td>${lecturer.phoneNumber}</td>
                             <td>
-                                <button class="btn btn-warning btn-sm" onclick="editLecturer(${lecturer.lid})">Update</button>
+                                <button class="btn btn-warning btn-sm"  onclick="window.location.href = 'update-lecturers?lid=${lecturer.lid}'">Update</button>
                                 <button type="button" class="btn btn-danger btn-sm" onclick="showDeleteModal(${lecturer.lid})">Delete</button>
                             </td>
                         </tr>

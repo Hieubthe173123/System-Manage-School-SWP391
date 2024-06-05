@@ -3,6 +3,7 @@ package Controller.Admin;
 import Entity.Class;
 import DAO.ClassDBContext;
 import DAO.LecturerClassSession;
+import Entity.Lecturers_Class_Session;
 import java.io.IOException;
 import java.util.List;
 import jakarta.servlet.ServletException;
@@ -18,7 +19,7 @@ public class AddLecturers extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         ClassDBContext cl = new ClassDBContext();
-        List<Class> list = cl.getAllClass();
+        List<Class> list = cl.getAllLecturersContain();
         request.setAttribute("listA", list);
         request.getRequestDispatcher("FE_Admin/AddLecturer.jsp").forward(request, response);
     }
@@ -30,23 +31,25 @@ public class AddLecturers extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        String lname = request.getParameter("lname");
-        String gender = request.getParameter("gender");
-        String dob = request.getParameter("dob");
-        String address = request.getParameter("address");
-        String phoneNumber = request.getParameter("phoneNumber");
-        String email = request.getParameter("email");
-        String nickname = request.getParameter("nickname");
-        String IDcard = request.getParameter("IDcard");
-        String classID = request.getParameter("classID");
+protected void doPost(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException {
+    // Lấy các thông tin từ biểu mẫu
+    String lname = request.getParameter("lname");
+    String gender = request.getParameter("gender");
+    String dob = request.getParameter("dob");
+    String address = request.getParameter("address");
+    String phoneNumber = request.getParameter("phoneNumber");
+    String email = request.getParameter("email");
+    String nickname = request.getParameter("nickname");
+    String IDcard = request.getParameter("IDcard");
+    String classIDString = request.getParameter("classID");
 
-       
-        LecturerClassSession lcs = new LecturerClassSession();
-        lcs.insertLecturers(lname, gender, dob, phoneNumber, IDcard, address, email, nickname, classID);
-        response.sendRedirect("lecturers");
-    }
+
+    LecturerClassSession lcs = new LecturerClassSession();
+    lcs.insertLecturers(lname, gender, dob, phoneNumber, IDcard, address, email, nickname, classIDString);
+    response.sendRedirect("lecturers");
+}
+
 
     @Override
     public String getServletInfo() {

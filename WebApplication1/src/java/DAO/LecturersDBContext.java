@@ -326,8 +326,9 @@ public class LecturersDBContext extends DBContext {
             Logger.getLogger(LecturersDBContext.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
     public List<Lecturers> getAllLecturers() {
-         List<Lecturers> list = new ArrayList<>();
+        List<Lecturers> list = new ArrayList<>();
         try {
             String sql = "select * from Lecturers";
 
@@ -351,12 +352,45 @@ public class LecturersDBContext extends DBContext {
             Logger.getLogger(LecturerClassSession.class.getName()).log(Level.SEVERE, null, ex);
         }
         return list;
-                
+
+    }
+
+    public List<Lecturers> getAllLecturerContain() {
+        List<Lecturers> list = new ArrayList<>();
+        try {
+            String sql = "SELECT\n"
+                    + "    L.lid,\n"
+                    + "    L.lname\n"
+                    + "FROM\n"
+                    + "    Lecturers L\n"
+                    + "LEFT JOIN\n"
+                    + "    Lecturers_Class_Session LCS ON L.lid = LCS.lid\n"
+                    + "LEFT JOIN\n"
+                    + "    Class_Session CS ON LCS.csid = CS.csid\n"
+                    + "LEFT JOIN\n"
+                    + "    SchoolYear SY ON CS.yid = SY.yid\n"
+                    + "LEFT JOIN\n"
+                    + "    Class C ON CS.classID = C.classID\n"
+                    + "WHERE\n"
+                    + "    C.classID IS NULL ";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            ResultSet rs = stm.executeQuery();
+
+            while (rs.next()) {
+                Lecturers lec = new Lecturers();
+                lec.setLid(rs.getInt("lid"));
+                lec.setLname(rs.getString("lname"));
+                list.add(lec);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(RoomDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
     }
 
     public static void main(String[] args) {
         LecturersDBContext ldb = new LecturersDBContext();
-        List<Lecturers> list = ldb.getAllLecturers();
+        List<Lecturers> list = ldb.getAllLecturerContain();
 
         System.out.println(list);
     }

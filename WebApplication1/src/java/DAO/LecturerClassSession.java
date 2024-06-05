@@ -407,22 +407,43 @@ public class LecturerClassSession extends DBContext {
         }
 
     }
+
     public void deleteLecturer(String lid) {
-        try{
-            String sql="delete from Lecturers_Class_Session where lid= ?";
+        try {
+            String sql = "delete from Lecturers_Class_Session where lid= ?";
             PreparedStatement stm = connection.prepareStatement(sql);
             stm.setString(1, lid);
             stm.executeUpdate();
-        }catch (SQLException ex) {
+        } catch (SQLException ex) {
             Logger.getLogger(LecturerClassSession.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
     }
+
+    public void updateLecturerinClass(int classID, int lid) {
+        try {
+            // Assuming 'connection' is initialized somewhere in your class
+            String sql = "UPDATE [dbo].[Lecturers_Class_Session]\n"
+                    + "   SET \n"
+                    + "      [csid] = (SELECT csid FROM Class_Session WHERE classID = ? AND yid = (SELECT MAX(yid) FROM Class_Session))\n"
+                    + " WHERE lid = ?";
+
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setInt(1, classID);
+            stm.setInt(2, lid);
+            stm.executeUpdate();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(LecturersDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
     
 
     public static void main(String[] args) {
-        LecturerClassSession lcs = new LecturerClassSession();
-        lcs.deleteLecturer("77");
+        LecturerClassSession lc = new LecturerClassSession();
+        lc.insertLecturers("Bùi Trung Lâm","1", "2003-01-02","01243","32423423","Hà Nội","Lâm@f","lam","");
+         
     }
 
 }

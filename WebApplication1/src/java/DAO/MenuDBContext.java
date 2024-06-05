@@ -15,13 +15,19 @@ import java.util.List;
  *
  * @author admin
  */
-public class MenuDBContext extends DBContext{
-    public Menu getMenuById(int id, String date) {
+public class MenuDBContext extends DBContext {
+
+    public static void main(String[] args) {
+        MenuDBContext m = new MenuDBContext();
+        m.insertMenu(1, "2024-06-04", "Cá, Sữa, Canh", 1);
+    }
+
+    public Menu getMenuByAgeidAndate(int id, String date) {
         Menu menu = new Menu();
         try {
             String sql = "SELECT [mid]\n"
                     + "      ,[date]\n"
-                    + "      ,[foodid]\n"
+                    + "      ,[menu]\n"
                     + "      ,[ageid]\n"
                     + "      ,[mealID]\n"
                     + "  FROM [SchoolManagement].[dbo].[Menu] Where ageid = ? and date = ?";
@@ -30,13 +36,12 @@ public class MenuDBContext extends DBContext{
             stm.setString(2, date);
             ResultSet rs = stm.executeQuery();
             if (rs.next()) {
-                FoodDBContext food = new FoodDBContext();
                 MealTimeDBContext meal = new MealTimeDBContext();
                 AgeDBContext age = new AgeDBContext();
                 menu.setMid(rs.getInt("mid"));
                 menu.setDate(rs.getDate("date"));
                 menu.setAgeid(age.getAgeById(rs.getInt("ageid")));
-                menu.setFoodid(food.getFoodById(rs.getInt("foodid")));
+                menu.setMenu(rs.getString("menu"));
                 menu.setMealID(meal.getMealTimeById(rs.getInt("mealID")));
                 return menu;
             }
@@ -51,7 +56,7 @@ public class MenuDBContext extends DBContext{
         try {
             String sql = "SELECT [mid]\n"
                     + "      ,[date]\n"
-                    + "      ,[foodid]\n"
+                    + "      ,[menu]\n"
                     + "      ,[ageid]\n"
                     + "      ,[mealID]\n"
                     + "  FROM [SchoolManagement].[dbo].[Menu] Where ageid = ? and date = ?";
@@ -60,14 +65,13 @@ public class MenuDBContext extends DBContext{
             stm.setString(2, date);
             ResultSet rs = stm.executeQuery();
             while (rs.next()) {
-                FoodDBContext food = new FoodDBContext();
                 MealTimeDBContext meal = new MealTimeDBContext();
                 AgeDBContext age = new AgeDBContext();
                 Menu menu = new Menu();
                 menu.setMid(rs.getInt("mid"));
                 menu.setDate(rs.getDate("date"));
                 menu.setAgeid(age.getAgeById(rs.getInt("ageid")));
-                menu.setFoodid(food.getFoodById(rs.getInt("foodid")));
+                menu.setMenu(rs.getString("menu"));
                 menu.setMealID(meal.getMealTimeById(rs.getInt("mealID")));
                 me.add(menu);
             }
@@ -75,6 +79,75 @@ public class MenuDBContext extends DBContext{
             System.out.println(e);
         }
         return me;
+    }
+    
+    public List<Menu> getMenuByDate(String date) {
+        List<Menu> me = new ArrayList<>();
+        try {
+            String sql = "SELECT [mid]\n"
+                    + "      ,[date]\n"
+                    + "      ,[menu]\n"
+                    + "      ,[ageid]\n"
+                    + "      ,[mealID]\n"
+                    + "  FROM [SchoolManagement].[dbo].[Menu] Where date = ?";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setString(1, date);
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                MealTimeDBContext meal = new MealTimeDBContext();
+                AgeDBContext age = new AgeDBContext();
+                Menu menu = new Menu();
+                menu.setMid(rs.getInt("mid"));
+                menu.setDate(rs.getDate("date"));
+                menu.setAgeid(age.getAgeById(rs.getInt("ageid")));
+                menu.setMenu(rs.getString("menu"));
+                menu.setMealID(meal.getMealTimeById(rs.getInt("mealID")));
+                me.add(menu);
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return me;
+    }
+
+    // Insert a category
+    public boolean insertMenu(int ageid, String date, String menu, int mealID) {
+        String sql = "INSERT INTO [dbo].[Menu]\n"
+                + "           ([date]\n"
+                + "           ,[menu]\n"
+                + "           ,[ageid]\n"
+                + "           ,[mealID])\n"
+                + "     VALUES\n"
+                + "           (?,?,?,?)";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+
+            st.setString(1, date);
+            st.setString(2, menu);
+            st.setInt(3, ageid);
+            st.setInt(4, mealID);
+            st.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return false;
+    }
+
+    // Update
+    public void update(String date, int sdid, int csid) {
+        String sql = "UPDATE [dbo].[Schedules]\n"
+                + "   SET [Date] = ?\n"
+                + " WHERE sdid = ? and csid = ?";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setString(1, date);
+            st.setInt(3, csid);
+            st.setInt(2, sdid);
+            st.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
     }
 
 }

@@ -13,7 +13,6 @@ import DAO.SessionDetailDBContext;
 import Entity.ClassSession;
 import Entity.Curiculum;
 import Entity.Schedules;
-import Entity.SchedulesClone;
 import Entity.SchoolYear;
 import Entity.SessionDetails;
 import java.io.IOException;
@@ -73,7 +72,6 @@ public class SchedulesInYear extends HttpServlet {
         SessionDetailDBContext sesDe = new SessionDetailDBContext();
         SchedulesDBContext sche = new SchedulesDBContext();
 
-        List<SchedulesClone> listClone = new ArrayList<>();
         List<SessionDetails> list = new ArrayList<>();
         List<ClassSession> listClassSession = new ArrayList<>();
 

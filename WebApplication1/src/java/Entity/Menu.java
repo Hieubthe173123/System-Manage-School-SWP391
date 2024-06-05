@@ -13,17 +13,17 @@ import java.sql.Date;
 public class Menu {
     private int mid;
     private Date date;
-    private Food foodid;
+    private String menu;
     private AgeCategory ageid;
     private MealTime mealID;
 
     public Menu() {
     }
 
-    public Menu(int mid, Date date, Food foodid, AgeCategory ageid, MealTime mealID) {
+    public Menu(int mid, Date date, String menu, AgeCategory ageid, MealTime mealID) {
         this.mid = mid;
         this.date = date;
-        this.foodid = foodid;
+        this.menu = menu;
         this.ageid = ageid;
         this.mealID = mealID;
     }
@@ -44,13 +44,15 @@ public class Menu {
         this.date = date;
     }
 
-    public Food getFoodid() {
-        return foodid;
+    public String getMenu() {
+        return menu;
     }
 
-    public void setFoodid(Food foodid) {
-        this.foodid = foodid;
+    public void setMenu(String menu) {
+        this.menu = menu;
     }
+
+    
 
     public AgeCategory getAgeid() {
         return ageid;

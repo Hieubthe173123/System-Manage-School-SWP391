@@ -19,7 +19,7 @@ public class SchoolYearDBContext extends DBContext {
     SchoolYear s = new SchoolYear();
     public static void main(String[] args) {
         SchoolYearDBContext s = new SchoolYearDBContext();
-        System.out.println(s.getAllSchoolYear().size());
+        System.out.println(s.getSchoolYearByDateNow("2024-06-03"));
     }
 
     public SchoolYear getSchoolYearById(int id) {

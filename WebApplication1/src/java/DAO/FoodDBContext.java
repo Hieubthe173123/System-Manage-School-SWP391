@@ -16,7 +16,12 @@ import java.util.List;
  * @author admin
  */
 public class FoodDBContext extends DBContext {
-
+    
+    public static void main(String[] args) {
+        FoodDBContext f = new FoodDBContext();
+        System.out.println(f.getFoodById(4).getFname());
+    }
+    
     public Food getFoodById(int id) {
         Food food = new Food();
         try {

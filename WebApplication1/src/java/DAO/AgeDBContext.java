@@ -39,4 +39,23 @@ public class AgeDBContext extends DBContext {
         return null;
     }
   
+    public List<AgeCategory> getAllAgeCategory() {
+        List<AgeCategory> list = new ArrayList<>();
+        try {
+            String sql = "SELECT [ageid]\n"
+                    + "      ,[aname]\n"
+                    + "  FROM [SchoolManagement].[dbo].[Age_Category]";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+            AgeCategory age = new AgeCategory();
+                age.setAgeid(rs.getInt("ageid"));
+                age.setAname(rs.getString("aname"));
+                list.add(age);
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return list;
+    }
 }

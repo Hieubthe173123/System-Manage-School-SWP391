@@ -139,7 +139,7 @@
                                         </c:choose>
                                     </td>
                                     <td>
-                                        <button class="btn btn-warning btn-sm" onclick="editLecturer(${lecturer.lid.lid})">Update</button>
+                                        <button class="btn btn-warning btn-sm" onclick="window.location.href = 'update-lecturer-class?lid=${lecturer.lid.lid}'">Update</button>
                                         <button type="button" class="btn btn-danger btn-sm" onclick="window.location.href = 'delete-lecturer-class?lid=${lecturer.lid.lid}'">Delete</button>
                                     </td>
                                 </tr>

@@ -262,7 +262,7 @@ public class LecturerClassSession extends DBContext {
                 lecturer.setLid(rs.getInt("lid"));
                 lecturer.setLname(rs.getString("lname"));
                 lecturer.setGender(rs.getBoolean("gender"));
-                lecturer.setDob(rs.getDate("dob").toString()); // assuming dob is of type Date
+                lecturer.setDob(rs.getString("dob")); // assuming dob is of type Date
                 lecturer.setPhoneNumber(rs.getString("phoneNumber"));
                 lecturer.setIDcard(rs.getString("IDcard"));
                 lecturer.setEmail(rs.getString("Email"));
@@ -442,7 +442,8 @@ public class LecturerClassSession extends DBContext {
 
     public static void main(String[] args) {
         LecturerClassSession lc = new LecturerClassSession();
-        lc.insertLecturers("Bùi Trung Lâm","1", "2003-01-02","01243","32423423","Hà Nội","Lâm@f","lam","");
+        List<Lecturers_Class_Session> list = lc.getLecturerByid("1");
+        System.out.println(list);
          
     }
 

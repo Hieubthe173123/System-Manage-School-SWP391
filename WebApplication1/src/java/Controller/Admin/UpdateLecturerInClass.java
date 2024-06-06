@@ -5,6 +5,10 @@
 
 package Controller.Admin;
 
+import DAO.ClassDBContext;
+import DAO.LecturerClassSession;
+import Entity.Class;
+import Entity.Lecturers_Class_Session;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -12,6 +16,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  *
@@ -30,18 +35,16 @@ public class UpdateLecturerInClass extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet UpdateLecturerInClass</title>");  
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet UpdateLecturerInClass at " + request.getContextPath () + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
-        }
+        LecturerClassSession lcs = new LecturerClassSession();
+        String lid = request.getParameter("lid");
+        List<Lecturers_Class_Session> list = lcs.getLecturerByid(lid);
+        
+        
+        ClassDBContext cl = new ClassDBContext();
+        List<Class> list1 = cl.getAllLecturersContain();
+        request.setAttribute("listB", list1);
+        request.setAttribute("listA",list);
+        request.getRequestDispatcher("FE_Admin/UpdateLecturerInClass.jsp").forward(request, response);
     } 
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -68,7 +71,24 @@ public class UpdateLecturerInClass extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        processRequest(request, response);
+        
+        
+        int lid_raw = 0;
+        int classID_raw =0;
+       String lid = request.getParameter("lid");
+       String classID = request.getParameter("classID");
+       try{
+           lid_raw = Integer.parseInt(lid);
+           classID_raw = Integer.parseInt(classID);
+       }catch(Exception e){
+           
+       }
+       
+       Lecturers_Class_Session lcs = new Lecturers_Class_Session();
+       lcs.setLclassID(classID_raw);
+       LecturerClassSession lcs1 = new LecturerClassSession();
+       lcs1.updateLecturerinClass(classID_raw, lid_raw);
+       response.sendRedirect("lecturers");
     }
 
     /** 

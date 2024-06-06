@@ -83,7 +83,7 @@
                                 <select class="form-control" id="class" name="classID" required>
                                     <option>Chọn lớp học</option>
                                     <c:forEach items="${requestScope.listA}" var="cla">
-                                        <option value="${cla.classid}">${cla.clname}</option>
+                                        <option value="${cla.classid}" >${cla.clname}</option>
                                     </c:forEach>
                                 </select>
                             </div>

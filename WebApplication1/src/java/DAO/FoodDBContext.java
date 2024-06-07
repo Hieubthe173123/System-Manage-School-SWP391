@@ -118,10 +118,10 @@ public class FoodDBContext extends DBContext {
      public List<Food> searchFoodByName(String fname) {
         List<Food> list = new ArrayList<>();
         try {
-            String sql = "select * from Food where fname = ?";
+            String sql = "Select * from [SchoolManagement].[dbo].[Food] where fname like ?";
 
             PreparedStatement stm = connection.prepareStatement(sql);
-            stm.setString(1, fname);
+            stm.setString(1, '%' + fname + '%');
 
             ResultSet rs = stm.executeQuery();
             while (rs.next()) {

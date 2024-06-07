@@ -36,27 +36,45 @@
     </head>
     <body>
         <div class="container mt-5">
-            <h2 class="text-center">Food Management</h2>
-            <div class="row w-100 mb-3">
-                <div class="col-sm-6 mb-3 d-flex justify-content-between">
-                    <form class="form-inline" action="search-food" method="POST">
-                        <input class="form-control mr-sm-2" type="search" name="searchInput" placeholder="Search" required>
-                        <button class="btn btn-success my-2 my-sm-0" type="submit">Search</button>
-                    </form>
-                </div>
-                <div class="col-sm-6">
-                    <button class="btn btn-primary" id="addFoodBtn" data-toggle="modal" data-target="#addFoodModal">Add New Food</button>
-                </div>
-                <table class="table table-bordered">
-                    <thead class="thead-light">
-                        <tr>
-                            <th>FoodID</th>
-                            <th>Name</th>
-                            <th>Calo</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
+        <h2 href="#"class="text-center">Food Management</h2>
+
+        <div class="row mb-3">
+            <div class="col-sm-6">
+                <form class="form-inline" action="search-food" method="GET">
+                    <input class="form-control mr-sm-2" type="search" name="searchInput" placeholder="Search" required>
+                    <button class="btn btn-success my-2 my-sm-0" type="submit">Search</button>
+                </form>
+            </div>
+            <div class="col-sm-6 text-right">
+                <button class="btn btn-primary" id="addFoodBtn" data-toggle="modal" data-target="#addFoodModal">Add New Food</button>
+            </div>
+        </div>
+
+        <table class="table table-bordered">
+            <thead class="thead-light">
+                <tr>
+                    <th>FoodID</th>
+                    <th>Name</th>
+                    <th>Calories</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <c:choose>
+                    <c:when test="${not empty searchResults}">
+                        <c:forEach var="food" items="${searchResults}">
+                            <tr data-foodid="${food.foodid}" data-foodname="${food.fname}" data-calo="${food.calo}">
+                                <td>${food.foodid}</td>
+                                <td>${food.fname}</td>
+                                <td>${food.calo}</td>
+                                <td>
+                                    <button class="btn btn-warning btn-sm" onclick="editFood('${food.foodid}', '${food.fname}', '${food.calo}')">Update</button>
+                                    <button type="button" class="btn btn-danger btn-sm" onclick="deleteFood('${food.foodid}')">Delete</button>
+                                </td>
+                            </tr>
+                        </c:forEach>
+                    </c:when>
+                    <c:otherwise>
                         <c:forEach var="food" items="${foodList}">
                             <tr data-foodid="${food.foodid}" data-foodname="${food.fname}" data-calo="${food.calo}">
                                 <td>${food.foodid}</td>
@@ -68,10 +86,11 @@
                                 </td>
                             </tr>
                         </c:forEach>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+                    </c:otherwise>
+                </c:choose>
+            </tbody>
+        </table>
+    </div>
 
         <!-- Add Food Modal -->
         <div class="modal fade" id="addFoodModal" tabindex="-1" aria-labelledby="addFoodModalLabel" aria-hidden="true">

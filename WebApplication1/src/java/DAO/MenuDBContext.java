@@ -19,7 +19,7 @@ public class MenuDBContext extends DBContext {
 
     public static void main(String[] args) {
         MenuDBContext m = new MenuDBContext();
-        m.insertMenu(1, "2024-06-04", "Cá, Sữa, Canh", 1);
+        System.out.println(m.update("2024-06-04", "Cá, Sữa, Canh, Ngũ Cốc", 2, 1));
     }
 
     public Menu getMenuByAgeidAndate(int id, String date) {
@@ -80,7 +80,7 @@ public class MenuDBContext extends DBContext {
         }
         return me;
     }
-    
+
     public List<Menu> getMenuByDate(String date) {
         List<Menu> me = new ArrayList<>();
         try {
@@ -135,19 +135,23 @@ public class MenuDBContext extends DBContext {
     }
 
     // Update
-    public void update(String date, int sdid, int csid) {
-        String sql = "UPDATE [dbo].[Schedules]\n"
-                + "   SET [Date] = ?\n"
-                + " WHERE sdid = ? and csid = ?";
+    public boolean update(String date, String menu, int ageid, int meid) {
+        String sql = "UPDATE [dbo].[Menu]\n"
+                + "   SET [menu] = ?\n"
+                + " WHERE date = ? and mealID = ? and [ageid] = ?";
         try {
             PreparedStatement st = connection.prepareStatement(sql);
-            st.setString(1, date);
-            st.setInt(3, csid);
-            st.setInt(2, sdid);
+
+            st.setString(1, menu);
+            st.setString(2, date);
+            st.setInt(3, meid);
+            st.setInt(4, ageid);
             st.executeUpdate();
+        return true;
         } catch (SQLException e) {
             System.out.println(e);
         }
+        return false;
     }
 
 }

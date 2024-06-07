@@ -61,21 +61,22 @@ public class TimeTable extends HttpServlet {
         Class_SessionDBContext clSes = new Class_SessionDBContext();
         List<Curiculum> curi = new ArrayList<>();
         int stuid = Integer.parseInt(request.getParameter("stuid"));
-
+        
         // String stuid = request.getParameter("stuid");
         SchoolYearDBContext school = new SchoolYearDBContext();
         Date date = new Date();
         SimpleDateFormat dateF = new SimpleDateFormat("yyyy-MM-dd");
         FeedbackDBContext feed = new FeedbackDBContext();
         SchoolYear sch = school.getSchoolYearByDateNow(dateF.format(date));
-
-        StudentClassSession studID = studen.getStudentClassSessionByStuid(stuid, 1);
+        
+        StudentClassSession studID = studen.getStudentClassSessionByStuid(stuid, sch.getYid());
 
         int role = (int) session.getAttribute("role");
         int pid = (int) session.getAttribute("pid");
         List<Student> listS = students.getStudentByPid(pid);
 
         if (role == 1) {
+            
             int classI = studID.getCsid().getCsid();
             // Lấy ra ngày hiện tại và lớp học
 

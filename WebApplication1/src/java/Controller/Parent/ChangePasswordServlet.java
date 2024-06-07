@@ -89,7 +89,7 @@ public class ChangePasswordServlet extends HttpServlet {
             AccountDBContext acc = new AccountDBContext();
             request.setAttribute("mess", "Change password successfully!");
             ac.setPassword(newPass); 
-            acc.changePass(ac.getPid(), newPass);
+            acc.changePass(ac.getPid().getPid(), newPass);
             request.getSession().setAttribute("account", ac);
         }
         request.getRequestDispatcher("/FE_Parent/ChangePassWord.jsp").forward(request, response);

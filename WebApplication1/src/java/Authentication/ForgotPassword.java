@@ -2,8 +2,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package HomePage;
+package Authentication;
 
+import HomePage.*;
 import DAO.AccountDBContext;
 import DAO.LecturersDBContext;
 import DAO.ParentDBContext;

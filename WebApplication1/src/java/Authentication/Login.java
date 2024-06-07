@@ -2,8 +2,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package HomePage;
+package Authentication;
 
+import HomePage.*;
 import DAO.AccountDBContext;
 import DAO.StudentDBContext;
 import Entity.Account;
@@ -35,7 +36,7 @@ public class Login extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-       String user_raw = request.getParameter("username");
+        String user_raw = request.getParameter("username");
         String pass_raw = request.getParameter("password");
         AccountDBContext db = new AccountDBContext();
         StudentDBContext stu = new StudentDBContext();
@@ -49,7 +50,7 @@ public class Login extends HttpServlet {
         session.setAttribute("account", acc);
         if (acc != null) {
             if (acc.getRole() == 1) {
-                List<Student> list = stu.getStudentByPid(acc.getPid());
+                List<Student> list = stu.getStudentByPid(acc.getPid().getPid());
                 session.setAttribute("role", acc.getRole());
                 request.setAttribute("pid", acc.getPid());
                 request.setAttribute("list", list);

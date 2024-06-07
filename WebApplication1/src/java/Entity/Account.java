@@ -13,13 +13,13 @@ public class Account {
     private String username;
     private String password;
     private int role;
-    private int pid;
-    private int lid;
+    private Parent pid;
+    private Lecturers lid;
 
     public Account() {
     }
 
-    public Account(int aid, String username, String password, int role, int pid, int lid) {
+    public Account(int aid, String username, String password, int role, Parent pid, Lecturers lid) {
         this.aid = aid;
         this.username = username;
         this.password = password;
@@ -60,19 +60,19 @@ public class Account {
         this.role = role;
     }
 
-    public int getPid() {
+    public Parent getPid() {
         return pid;
     }
 
-    public void setPid(int pid) {
+    public void setPid(Parent pid) {
         this.pid = pid;
     }
 
-    public int getLid() {
+    public Lecturers getLid() {
         return lid;
     }
 
-    public void setLid(int lid) {
+    public void setLid(Lecturers lid) {
         this.lid = lid;
     }
 
@@ -80,5 +80,7 @@ public class Account {
     public String toString() {
         return "Account{" + "aid=" + aid + ", username=" + username + ", password=" + password + ", role=" + role + ", pid=" + pid + ", lid=" + lid + '}';
     }
+
+    
     
 }

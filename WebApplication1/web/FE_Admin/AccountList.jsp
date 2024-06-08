@@ -9,7 +9,6 @@
         <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
         <style>
-            /* Additional custom styles */
             .btn-campus {
                 background-color: #39BACD;
                 color: white;
@@ -41,53 +40,44 @@
             .toggle-password {
                 cursor: pointer;
             }
-
             .input-group-append .btn {
                 border-top-left-radius: 0;
                 border-bottom-left-radius: 0;
             }
-
             .input-group-append .btn i {
                 font-size: 1rem;
             }
-
             .input-group-append .btn:focus {
                 box-shadow: none;
             }
-
         </style>
     </head>
     <body>
         <div class="content-wrapper">
-
             <h1>Account List</h1>
             <form action="account-list" method="GET">
                 <div class="form-group">
                     <label for="roleSelect">Select Role:</label>
                     <select class="form-control" id="roleSelect" name="role">
-                        <option value="">All Roles</option>
-                        <option value="1" ${"1".equals(request.getParameter("role")) ? "selected" : ""}>Parent</option> 
-                        <option value="2" ${"2".equals(request.getParameter("role")) ? "selected" : ""}>Lecturers</option>
-                        <option value="3" ${"3".equals(request.getParameter("role")) ? "selected" : ""}>Admin</option>
+                        <option value="">All Roles</option>                                            
+                        <option value="1" ${1 == requestScope.role ? 'selected' : ''}>Parent</option> 
+                        <option value="2" ${2 == requestScope.role ? 'selected' : ''}>Lecturers</option>
+                        <option value="3" ${3 == requestScope.role ? 'selected' : ''}>Admin</option>
                     </select>
                 </div>
-
                 <div class="input-group mb-3">
-                    <input type="text" class="form-control" placeholder="Search..." name="searchName">
+                    <input type="text" class="form-control" placeholder="Search..." name="searchName" value="${param.searchName}">
                     <div class="input-group-append">
                         <button class="btn btn-outline-secondary" type="submit">
                             <i class="fa fa-search"></i>
                         </button>
                     </div>
                 </div>
-
                 <button type="submit" class="btn btn-campus">Show Accounts</button>
             </form>
-
             <div class="mb-3">
                 <button class="btn btn-campus" onclick="window.location.href = 'authentication-account'">Assign Permissions to Account</button>
             </div>       
-
             <div>
                 <table class="table table-striped">
                     <thead>
@@ -105,34 +95,35 @@
                     </thead>
                     <tbody>
                         <c:forEach var="acc" items="${sessionScope.accountList}" varStatus="idex">
-                            <c:if test="${empty param.searchName or fn:containsIgnoreCase(acc.username, param.searchName) or fn:containsIgnoreCase(acc.pid.pname, param.searchName) or fn:containsIgnoreCase(acc.lid.lname, param.searchName)}">
-                                <tr>
-                                    <td>${idex.index + 1}</td>
-                                    <td>${acc.aid}</td>
-                                    <td>${acc.username}</td>
-                                    <td>
-                                        <div class="input-group">
-                                            <input type="password" id="password-${idex.index}" value="${acc.password}" class="form-control" readonly>
-                                            <div class="input-group-append">
-                                                <span class="input-group-text">
-                                                    <i id="togglePassword-${idex.index}" class="fa fa-eye toggle-password" onclick="togglePassword(${idex.index})"></i>
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>${acc.role}</td>
-                                    <td>${acc.pid.pid}</td>
-                                    <td>${acc.pid.pname}</td>
-                                    <td>${acc.lid.lid}</td>
-                                    <td>${acc.lid.lname}</td>
-                                </tr>
+                            <c:if test="${empty param.searchName or 
+                                          fn:containsIgnoreCase(acc.username, param.searchName) or 
+                                          (acc.pid != null and acc.pid.pname != null and fn:containsIgnoreCase(acc.pid.pname, param.searchName)) or 
+                                          (acc.lid != null and acc.lid.lname != null and fn:containsIgnoreCase(acc.lid.lname, param.searchName))}">
+                                  <tr>
+                                      <td>${idex.index + 1}</td>
+                                      <td>${acc.aid}</td>
+                                      <td>${acc.username}</td>
+                                      <td>
+                                          <div class="input-group">
+                                              <input type="password" id="password-${idex.index}" value="${acc.password}" class="form-control" readonly>
+                                              <div class="input-group-append">
+                                                  <span class="input-group-text">
+                                                      <i id="togglePassword-${idex.index}" class="fa fa-eye toggle-password" onclick="togglePassword(${idex.index})"></i>
+                                                  </span>
+                                              </div>
+                                      </td>
+                                      <td>${acc.role}</td>
+                                      <td>${acc.pid != null ? acc.pid.pid : ''}</td>
+                                      <td>${acc.pid != null ? acc.pid.pname : ''}</td>
+                                      <td>${acc.lid != null ? acc.lid.lid : ''}</td>
+                                      <td>${acc.lid != null ? acc.lid.lname : ''}</td>
+                                  </tr>
                             </c:if>
                         </c:forEach>
                     </tbody>
                 </table>
             </div>
         </div>
-
         <script>
             function togglePassword(id) {
                 var passwordField = document.getElementById('password-' + id);

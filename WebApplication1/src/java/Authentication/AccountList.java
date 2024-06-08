@@ -26,6 +26,7 @@ public class AccountList extends HttpServlet {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        //Tạo Session
         HttpSession session = request.getSession();
         AccountDBContext db = new AccountDBContext();
 
@@ -33,20 +34,43 @@ public class AccountList extends HttpServlet {
         String searchName = request.getParameter("searchName");
 
         ArrayList<Account> accountList;
-        if (role != null && !role.isEmpty()) {
-            accountList = db.getAllAccountByRole(role);
-        } else {
-            accountList = db.getAllAccount();
-        }
+        
+        try {
 
-        if (searchName != null && !searchName.isEmpty()) {
-            // Lọc tài khoản theo tên người dùng, PID và LID
-            String searchNameLower = searchName.toLowerCase();
-            accountList.removeIf(account ->
-                    !account.getUsername().toLowerCase().contains(searchNameLower)
-                    && (account.getPid() == null || !account.getPid().getPname().toLowerCase().contains(searchNameLower))
-                    && (account.getLid() == null || !account.getLid().getLname().toLowerCase().contains(searchNameLower))
-            );
+            if (role != null && !role.isEmpty()) {
+                //Lấy Account theo Role
+                accountList = db.getAllAccountByRole(role);
+                request.setAttribute("role", Integer.parseInt(role));
+            } else {
+                //Lấy All ACCount
+                accountList = db.getAllAccount();
+            }
+
+            //Tìm kiếm theo username, pname, lname
+            if (searchName != null && !searchName.isEmpty()) {
+                String searchNameLower = searchName.toLowerCase();
+                accountList.removeIf(account -> {
+                    //Convert username => toLowerCase , kh phan biet hoa thuong
+                    String usernameLower = account.getUsername().toLowerCase();
+                    String parentNameLower = "";
+                    //nếu tên tồn tại => kết quả tìm kiếm
+                    if (account.getPid() != null && account.getPid().getPname() != null) {
+                        parentNameLower = account.getPid().getPname().toLowerCase();
+                    }
+                    String lecturerNameLower = "";
+                    if (account.getLid() != null && account.getLid().getLname() != null) {
+                        lecturerNameLower = account.getLid().getLname().toLowerCase();
+                    }
+                    // Trả về true nếu username, pname hoặc lname không có thông tin
+                    return !usernameLower.contains(searchNameLower)
+                            && !parentNameLower.contains(searchNameLower)
+                            && !lecturerNameLower.contains(searchNameLower);
+                });
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+            response.sendRedirect("Error/404.jsp");
+            return;
         }
 
         session.setAttribute("accountList", accountList);

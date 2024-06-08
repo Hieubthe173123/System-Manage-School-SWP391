@@ -23,6 +23,7 @@ public class AccountDBContext extends DBContext {
 
     public static void main(String[] args) {
         AccountDBContext ac = new AccountDBContext();
+        ac.deleteAccount("59");
 //        ArrayList<Account> list = ac.getOnlyNewAccount();
 //        System.out.println(list);
 
@@ -134,7 +135,6 @@ public class AccountDBContext extends DBContext {
         return list;
     }
 
-    
     public ArrayList<Account> getAllAccountByAid(String aid) {
         ArrayList<Account> list = new ArrayList<>();
         try {
@@ -318,7 +318,6 @@ public class AccountDBContext extends DBContext {
         return list;
     }
 
-
     //Hàm Update => Phân Quyền Role, Pid, Lid cho Account
     public void updateAuthenticationAccount3(Account acc) {
         try {
@@ -343,6 +342,49 @@ public class AccountDBContext extends DBContext {
         } catch (SQLException ex) {
             Logger.getLogger(AccountDBContext.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    //Hàm Tạo Account mới
+    public void createNewAccount(String username, String password) {
+        try {
+            String sql = " INSERT INTO Account (username, password, pid, lid) VALUES (?, ?, NULL, NULL)";
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, username);
+            ps.setString(2, password);
+            ps.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(AccountDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+
+    public void deleteAccount(String aid) {
+        try {
+            String sql = "DELETE FROM [dbo].[Account]\n"
+                    + "      WHERE aid = ?";
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, aid);
+            ps.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(AccountDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }
+
+    //Hàm kiểm tra xem username tồn tại 
+    public boolean isUsernameTaken(String username) {
+        try {
+            String sql = "SELECT COUNT(*) FROM Account WHERE username = ?";
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, username);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(AccountDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
     }
 
     //change password

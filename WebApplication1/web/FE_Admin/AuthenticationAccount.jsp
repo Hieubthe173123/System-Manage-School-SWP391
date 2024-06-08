@@ -50,6 +50,7 @@
             </div>
             <h2>Assign Roles to New Accounts</h2>
             <form action="authentication-account" method="POST">
+                <input type="hidden" name="action" value="delete">
                 <div class="table-responsive">
                     <table class="table table-striped">
                         <thead>
@@ -61,6 +62,7 @@
                                 <th>Role</th>
                                 <th>Parent Name</th>
                                 <th>Lecturer Name</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -69,7 +71,7 @@
                                     <td>${idex.index+1}</td>
                                     <td>${acc.aid}</td>
                                     <td>${acc.username}</td>
-                                    
+
                                     <td>
                                         <div class="input-group">
                                             <input type="password" id="password-${idex.index}" value="${acc.password}" class="form-control" readonly>
@@ -80,8 +82,8 @@
                                             </div>
                                         </div>
                                     </td>
-                                    
-                                    
+
+
                                     <td>
                                         <select name="role-${idex.index}" class="form-control" onchange="handleRoleChange(this, ${idex.index})">
                                             <option value="">Select Role</option>
@@ -90,8 +92,8 @@
                                             <option value="3" ${acc.role == 3 ? "selected" : ""}>Admin</option>
                                         </select>
                                     </td>
-                                    
-                                    
+
+
                                     <td>
                                         <select name="pid-${idex.index}" id="pid-${idex.index}" class="form-control" ${acc.role == 2 || acc.role == 3 ? "disabled" : ""}>
                                             <option value="">Select PID</option>
@@ -101,7 +103,7 @@
                                         </select>
                                         ${acc.pid != null ? acc.pid.getPname() : ""}
                                     </td>
-                                    
+
 
                                     <td>
                                         <select name="lid-${idex.index}" id="lid-${idex.index}" class="form-control" ${acc.role == 1 || acc.role == 3 ? "disabled" : ""}>
@@ -112,8 +114,12 @@
                                         </select>
                                         ${acc.lid != null ? acc.lid.getLname() : ""}
                                     </td>
-                                    
-                                    
+
+                                    <td>
+                                        <button type="button" class="btn btn-danger" onclick="deleteAccount(${acc.aid})">Delete</button>
+                                    </td>
+
+
                                 </tr>
                             </c:forEach>
                         </tbody>
@@ -166,6 +172,13 @@
                     passwordField.type = "password";
                     icon.classList.remove("fa-eye-slash");
                     icon.classList.add("fa-eye");
+                }
+            }
+            
+            // Xóa tài khoản
+            function deleteAccount(aid) {
+                if (confirm("Are you sure you want to delete this account?")) {
+                    window.location.href = 'authentication-account?aid=' + aid;
                 }
             }
         </script>

@@ -10,17 +10,18 @@
         <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
         <style>
             body {
-                font-family: Arial, sans-serif;
+                font-family: 'Roboto', sans-serif;
                 margin: 0;
                 display: flex;
+                background-color: #f8f9fa;
             }
 
             .sidebar {
                 width: 250px;
-                background-color: #2c3e50;
+                background-color: #343a40;
                 color: white;
                 height: 100vh;
-                padding: 10px;
+                padding: 20px;
                 position: fixed;
                 top: 0;
                 left: 0;
@@ -44,6 +45,10 @@
                 margin-right: 10px;
             }
 
+            .profile span {
+                font-size: 18px;
+            }
+
             nav ul {
                 list-style-type: none;
                 padding: 0;
@@ -53,14 +58,28 @@
                 margin: 15px 0;
             }
 
+            nav ul li button {
+                width: 100%;
+                text-align: left;
+                padding: 10px;
+                border: none;
+                background: none;
+                color: white;
+                font-size: 16px;
+                cursor: pointer;
+                transition: background 0.3s ease;
+            }
+
+            nav ul li button:hover {
+                background-color: #495057;
+            }
+
             .content {
                 flex: 1;
                 padding: 20px;
                 transition: margin-left 0.3s ease;
                 margin-left: 250px;
                 width: calc(100% - 250px);
-                margin-left: 250px;
-                transition: margin-left 0.3s ease, width 0.3s ease;
             }
 
             .content.full-width {
@@ -73,7 +92,8 @@
                 justify-content: space-between;
                 align-items: center;
                 padding: 10px;
-                background-color: #ecf0f1;
+                background-color: #ffffff;
+                border-bottom: 1px solid #dee2e6;
                 margin-bottom: 20px;
             }
 
@@ -89,6 +109,7 @@
             .cards {
                 display: flex;
                 justify-content: space-around;
+                flex-wrap: wrap;
             }
 
             .card {
@@ -99,6 +120,7 @@
                 margin: 10px;
                 cursor: pointer;
                 transition: transform 0.3s ease;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             }
 
             .card:hover {
@@ -106,50 +128,49 @@
             }
 
             .card.blue {
-                background-color: #3498db;
+                background-color: #007bff;
             }
 
             .card.green {
-                background-color: #2ecc71;
+                background-color: #28a745;
             }
 
             .card.yellow {
-                background-color: #f1c40f;
+                background-color: #ffc107;
             }
 
             .card.red {
-                background-color: #e74c3c;
+                background-color: #dc3545;
             }
 
         </style>
-
     </head>
     <body>
         <div class="sidebar" id="sidebar">
             <div class="profile">
                 <img src="../Image/avatar-icon-vector-11835238.jpg" alt="Profile Image">
-                <span></span>
+                <span>Admin</span>
             </div>
             <nav>
                 <ul>
-                    <li><button class="btn btn-outline-success">Trang chủ</button></li>
-                    <li><button class="btn btn-outline-success" onclick="window.location.href = 'account-list';">Quản lý tài khoản</button></li>
-                    <li><button class="btn btn-outline-success" onclick="window.location.href = 'lecturers';">Quản lý Giáo Viên</button></li>
-                    <li><button class="btn btn-outline-success">Quản lý Học Sinh</button></li>
-                    <li><button class="btn btn-outline-success" onclick="window.location.href = 'classController';">Quản lý Lớp Học</button></li>
-                    <li><button class="btn btn-outline-success" onclick="window.location.href = 'newyear';">Quản Lí Năm Học</button></li>
-                    <li><button class="btn btn-outline-success" onclick="window.location.href = 'promote';">Quản Lí Lên Lớp</button></li>
-                    <li><button class="btn btn-outline-success">Quản lý Lịch Học</button></li>
-                    <li><button class="btn btn-outline-success">Quản lý Thực Đơn</button></li>
-                    <li><button class="btn btn-outline-success">Quản lý Chương Trình Học</button></li>
-                    <li><button class="btn btn-outline-success" onclick="window.location.href = 'historyschoolyear';">Lịch Sử Năm Học</button></li>
+                    <li><button onclick="window.location.href = 'home';">Trang chủ</button></li>
+                    <li><button onclick="window.location.href = 'account-list';">Quản Lý tài khoản</button></li>
+                    <li><button onclick="window.location.href = 'lecturers';">Quản Lý Giáo Viên</button></li>
+                    <li><button onclick="window.location.href = 'students';">Quản Lý Học Sinh</button></li>
+                    <li><button onclick="window.location.href = 'classController';">Quản Lý Lớp Học</button></li>
+                    <li><button onclick="window.location.href = 'newyear';">Quản Lý Năm Học</button></li>
+                    <li><button onclick="window.location.href = 'promote';">Quản Lý Lên Lớp</button></li>
+                    <li><button onclick="window.location.href = 'schedule';">Quản Lý Lịch Học</button></li>
+                    <li><button onclick="window.location.href = 'menu';">Quản Lý Thực Đơn</button></li>
+                    <li><button onclick="window.location.href = 'curriculum';">Quản Lý Chương Trình Học</button></li>
+                    <li><button onclick="window.location.href = 'historyschoolyear';">Lịch Sử Năm Học</button></li>
                 </ul>
             </nav>
         </div>
         <div class="content" id="content">
             <header>
                 <button id="toggleButton" class="btn btn-light">&#9776;</button>
-                <span class="user-info"></span>
+                <span class="user-info">Welcome, Admin</span>
             </header>
             <main>
                 <h1>Home</h1>
@@ -180,8 +201,6 @@
                     content.classList.toggle('full-width');
                 });
             });
-
         </script>
     </body>
 </html>
-

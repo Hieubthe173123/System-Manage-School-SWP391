@@ -27,6 +27,7 @@ public class AuthenticationAccount extends HttpServlet {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        
 
     }
 
@@ -34,9 +35,9 @@ public class AuthenticationAccount extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         //processRequest(request, response);
-        
+
         AccountDBContext accdb = new AccountDBContext();
-        
+
         //Lấy Danh Sách các tài khoản mới được tạo , phụ huynh và Giáo Viên
         ArrayList<Account> newAccountList = accdb.getOnlyNewAccount();
         ArrayList<Parent> availableParents = accdb.getPidNotExitsAccount();
@@ -57,9 +58,23 @@ public class AuthenticationAccount extends HttpServlet {
         //processRequest(request, response);
         HttpSession session = request.getSession();
         ArrayList<Account> newAccountList = (ArrayList<Account>) session.getAttribute("newAccountList");
+        String aid = request.getParameter("aid");
+        AccountDBContext accdb = new AccountDBContext();
+        
+        if (aid != null && !aid.isEmpty()) {
+            try {
+                accdb.deleteAccount(aid);
+                session.setAttribute("successMessage", "Account deleted successfully");
+            } catch (Exception e) {
+                System.out.println(e);
+                session.setAttribute("errorMessage", "Failed to delete account");
+            }
+            response.sendRedirect("authentication-account");
+            return;
+        }
 
         try {
-            AccountDBContext accdb = new AccountDBContext();
+            
             for (int i = 0; i < newAccountList.size(); i++) {
                 String roleStr = request.getParameter("role-" + i);
                 String pid = request.getParameter("pid-" + i);
@@ -100,13 +115,15 @@ public class AuthenticationAccount extends HttpServlet {
                 //Update
                 accdb.updateAuthenticationAccount3(acc);
             }
+
         } catch (Exception e) {
             System.out.println(e);
             response.sendRedirect("Error/404.jsp");
             return;
         }
 
-        
+        response.sendRedirect("account-list");
+
     }
 
     @Override

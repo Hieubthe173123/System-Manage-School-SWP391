@@ -7,6 +7,7 @@
         <meta charset="UTF-8">
         <title>Promote Students</title>
         <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
         <style>
             .btn-campus {
                 background-color: #39BACD;

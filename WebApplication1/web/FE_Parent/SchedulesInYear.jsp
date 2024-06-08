@@ -98,7 +98,7 @@
 
                     </tbody>
                 </table>
-                <button>Save</button>
+                
                 <button type="button" onclick="location.href='updateSchedules?csid=${requestScope.csID}&yid=${requestScope.yearNow.yid}'">Edit</button>
             </form>
         </c:if>
@@ -132,15 +132,13 @@
                         <td>
                             <input type="date" name="dateInsert"/>
                         </td>
-                         <td><button class="edit-button">Edit</button></td>
                         </tr>                 
                     </c:forEach>  
 
                     </tbody>
                 </table>
-                <button type="button" onclick="location.href='updateSchedules?csid=${requestScope.csID}'">Edit</button>
+                <button>Save</button>
             </form>
-                
         </c:if>
 
 

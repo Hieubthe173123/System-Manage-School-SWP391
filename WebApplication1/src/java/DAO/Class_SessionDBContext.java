@@ -18,7 +18,7 @@ import java.util.List;
 public class Class_SessionDBContext extends DBContext {
     public static void main(String[] args) {
         Class_SessionDBContext c = new Class_SessionDBContext();
-        System.out.println(c.getClassSessionById(26).getYid().getYid());
+        System.out.println(c.getClassSessionById(16));
     }
     public ClassSession getClassSessionById(int id) {
         ClassSession claSes = new ClassSession();

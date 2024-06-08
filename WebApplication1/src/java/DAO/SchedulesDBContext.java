@@ -50,6 +50,32 @@ public class SchedulesDBContext extends DBContext {
         return null;
     }
 
+    public Schedules getSchedulesBySchedulesID(int id) {
+        Schedules schel = new Schedules();
+        try {
+            String sql = "SELECT [scheID]\n"
+                    + "      ,[sdid]\n"
+                    + "      ,[Date]\n"
+                    + "      ,[csid]\n"
+                    + "  FROM [SchoolManagement].[dbo].[Schedules] Where scheID = ?";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setInt(1, id);
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                SessionDetailDBContext ses = new SessionDetailDBContext();
+                Class_SessionDBContext cla = new Class_SessionDBContext();
+                schel.setScheID(rs.getInt("scheID"));
+                schel.setDate(rs.getDate("Date"));
+                schel.setSdid(ses.getSessionDetailById(rs.getInt("sdid")));
+                schel.setCsid(cla.getClassSessionById(rs.getInt("csid")));
+                return schel;
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return null;
+    }
+    
     public List<Schedules> getSchedulesByCsid(int csid) {
         List<Schedules> list = new ArrayList<>();
         try {

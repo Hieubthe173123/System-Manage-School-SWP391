@@ -81,6 +81,24 @@
                         </select>
                     </form>
                 </h2>
+                    <div style="display: flex; justify-content: end">
+                        <form action="timetable" method="GET">
+                        <input type="hidden" name="stuid" value="${sessionScope.studenId}"/>
+                        <select name="yidHistoty" onchange="this.form.submit()" >
+                            <c:forEach items="${requestScope.listYidInHistory}" var="s">
+                                <option value="${s.csid.yid.yid}" ${s.csid.yid.yid == requestScope.yidH ? 'selected' : ''}> ${s.csid.yid.dateStart}  - ${s.csid.yid.dateEnd} </option>
+                            </c:forEach>  
+                        </select>
+                        <select name="schedulesID">
+                            <option value="0">Chọn ngày</option>
+                            <c:forEach items="${requestScope.listSch}" var="s">
+                                <option value ="${s.scheID}" ${s.scheID == requestScope.schID ? 'selected' : ''}> ${s.date} </option>
+                            </c:forEach>  
+                        </select>
+                        <button type="submit">Search</button>
+                    </form>
+                </div>
+
                 <div class="row">
                     <div class="col">
                         <table border="2" class="activity-table">
@@ -109,15 +127,13 @@
                                 <tr>
                                     <th>Bữa ăn</th>
                                     <th>Món ăn</th>
-                                    <th>Calo</th>
                                 </tr>
                             </thead>
                             <c:forEach items="${requestScope.menu}" var="m">
                                 <tbody>
                                     <tr>
                                         <td>${m.mealID.mealName}</td>
-                                        <td>${m.foodid.fname}</td>
-                                        <td>${m.foodid.calo}</td>
+                                        <td>${m.menu}</td>
                                     </tr>           
                                 </tbody>
                             </c:forEach>

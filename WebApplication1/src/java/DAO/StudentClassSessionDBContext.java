@@ -19,7 +19,7 @@ public class StudentClassSessionDBContext extends DBContext {
 
     public static void main(String[] args) {
         StudentClassSessionDBContext d = new StudentClassSessionDBContext();
-        StudentClassSession s = d.getStudentClassSessionByStuid(2, 1);
+        StudentClassSession s = d.getStudentClassSessionByStuid(1, 2);
         System.out.println(s.getCsid().getCsid());
     }
 
@@ -29,7 +29,7 @@ public class StudentClassSessionDBContext extends DBContext {
             String sql = "SELECT [scid]\n"
                     + "      ,[stuid]\n"
                     + "      ,[csid]\n"
-                    + "  FROM [SchoolManagement].[dbo].[Student_Class_Session]";
+                    + "  FROM [SchoolManagement].[dbo].[Student_Class_Session] where stuid = ?";
             PreparedStatement stm = connection.prepareStatement(sql);
             stm.setInt(1, id);
             ResultSet rs = stm.executeQuery();

@@ -61,39 +61,70 @@ public class TimeTable extends HttpServlet {
         Class_SessionDBContext clSes = new Class_SessionDBContext();
         List<Curiculum> curi = new ArrayList<>();
         int stuid = Integer.parseInt(request.getParameter("stuid"));
-        
+        String yidHistory = request.getParameter("yidHistoty");
+        String schedulesID = request.getParameter("schedulesID");
+        // Lấy ra tất cả năm học của 1 học sinh đã học
+        List<StudentClassSession> listYidInHistory = studen.getStudentClassSessionById(stuid);
+
+        // Lấy ra ngày học trong 1 năm học dựa trên yid và studentID được gửi từ về
+        StudentClassSession stuClassSession = new StudentClassSession();
+        List<Schedules> listSch = new ArrayList<>();
+        if (yidHistory != null) {
+            stuClassSession = studen.getStudentClassSessionByStuid(stuid, Integer.parseInt(yidHistory));
+            listSch = sche.getSchedulesByCsid(stuClassSession.getCsid().getCsid());
+            request.setAttribute("yidH", Integer.parseInt(yidHistory));
+        } else {
+            listSch = sche.getSchedulesByCsid(listYidInHistory.get(0).getCsid().getCsid());
+        }
+
         // String stuid = request.getParameter("stuid");
         SchoolYearDBContext school = new SchoolYearDBContext();
         Date date = new Date();
         SimpleDateFormat dateF = new SimpleDateFormat("yyyy-MM-dd");
         FeedbackDBContext feed = new FeedbackDBContext();
         SchoolYear sch = school.getSchoolYearByDateNow(dateF.format(date));
-        
+
         StudentClassSession studID = studen.getStudentClassSessionByStuid(stuid, sch.getYid());
 
         int role = (int) session.getAttribute("role");
         int pid = (int) session.getAttribute("pid");
-        List<Student> listS = students.getStudentByPid(pid);
+        List<Student> listStudentByPid = students.getStudentByPid(pid);
 
         if (role == 1) {
-            
+
             int classI = studID.getCsid().getCsid();
             // Lấy ra ngày hiện tại và lớp học
 
             Schedules schedules = sche.getSchedulesByCsIdAndDate(classI, dateF.format(date));
             try {
-                curi = curiculum.getCuriculumById(schedules.getSdid().getSdid());
+                if (schedulesID != null && !schedulesID.equals("0")) {
+                    Schedules sc = sche.getSchedulesBySchedulesID(Integer.parseInt(schedulesID));
+                    curi = curiculum.getCuriculumById(sc.getSdid().getSdid());
+                    request.setAttribute("schID", Integer.parseInt(schedulesID));
+                } else {
+                    curi = curiculum.getCuriculumById(schedules.getSdid().getSdid());
+                }
+
             } catch (Exception e) {
             }
-
+            List<Menu> menuInDay = new ArrayList<>();
             Feedback f = feed.getFeedbackByIdAndate(dateF.format(date), stuid);
-            List<Menu> m = menu.getMenuByAgeAndDate(clSes.getClassSessionById(classI).getSid().getAge().getAgeid(), dateF.format(date));
+            if (schedulesID != null && !schedulesID.equals("0")) {
+                Schedules sc = sche.getSchedulesBySchedulesID(Integer.parseInt(schedulesID));
+                menuInDay = menu.getMenuByAgeAndDate(sc.getCsid().getSid().getAge().getAgeid(), sc.getDate().toString());
+                request.setAttribute("schID", Integer.parseInt(schedulesID));
+            } else {
+                menuInDay = menu.getMenuByAgeAndDate(clSes.getClassSessionById(classI).getSid().getAge().getAgeid(), dateF.format(date));
+            }
             request.setAttribute("curiculum", curi);
             request.setAttribute("feedback", f);
             request.setAttribute("pid", pid);
-            request.setAttribute("menu", m);
-            request.setAttribute("list", listS);
+            request.setAttribute("menu", menuInDay);
+            request.setAttribute("list", listStudentByPid);
+            request.setAttribute("listSch", listSch);
             request.setAttribute("role", role);
+            session.setAttribute("studenId", stuid);
+            request.setAttribute("listYidInHistory", listYidInHistory);
             request.setAttribute("student", students.getStudentById(stuid));
             request.getRequestDispatcher("FE_Parent/TimeTable.jsp").forward(request, response);
         }

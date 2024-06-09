@@ -6,6 +6,7 @@ package DAO;
 
 import Entity.Menu;
 import Entity.Session;
+import Entity.SessionDetails;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -46,4 +47,31 @@ public class SessionDBContext extends DBContext {
         return null;
     }
 
+    public List<Session> getAllSession() {
+        List<Session> list = new ArrayList<>();
+        try {
+            String sql = "SELECT * FROM session";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            ResultSet rs = stm.executeQuery();
+            AgeDBContext ageContext = new AgeDBContext(); // Create AgeDBContext object outside the loop
+            while (rs.next()) {
+                Session session = new Session();
+                session.setSid(rs.getInt("sid"));
+                session.setSname(rs.getString("sname"));
+                session.setTotalSession(rs.getInt("totalSession"));
+                session.setAge(ageContext.getAgeById(rs.getInt("ageid"))); // Use AgeDBContext to get Age object
+                list.add(session);
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return list; // Return the list, not null
+    }
+
+
+    public static void main(String[] args) {
+        SessionDBContext se = new SessionDBContext();
+        List<Session> list = se.getAllSession();
+        System.out.println(list);
+    }
 }

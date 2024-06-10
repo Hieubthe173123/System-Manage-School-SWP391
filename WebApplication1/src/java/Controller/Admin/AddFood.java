@@ -75,24 +75,38 @@ public class AddFood extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        try {           
+        try {
             String fname = request.getParameter("fname");
-            int calo = Integer.parseInt(request.getParameter("calo"));
+            String caloStr = request.getParameter("calo");
+            // Kiểm tra nếu calo là số nguyên hợp lệ
+            int calo;
+            try {
+                calo = Integer.parseInt(caloStr);
+                if (calo < 0) {
+                    request.setAttribute("errorMessage", "Calories cannot be negative.");
+                    request.getRequestDispatcher("/food").forward(request, response);
+                    return;
+                }
+            } catch (NumberFormatException e) {
+                request.setAttribute("errorMessage", "Calories must be an integer.");
+                request.getRequestDispatcher("/food").forward(request, response);
+                return;
+            }
 
             // Tạo đối tượng food mới
-            Food newFood = new Food();            
+            Food newFood = new Food();
             newFood.setFname(fname);
             newFood.setCalo(calo);
-
-            // Lưu đối tượng food mới vào cơ sở dữ liệu
+            // Kiểm tra xem món ăn đã tồn tại hay chưa
             FoodDBContext foodDBContext = new FoodDBContext();
+            if (foodDBContext.foodExists(fname)) {
+                request.setAttribute("errorMessage", "Food already exists.");
+                request.getRequestDispatcher("/food").forward(request, response);
+                return;
+            }
+            // Lưu đối tượng food mới vào cơ sở dữ liệu
             foodDBContext.addFood(newFood);
-
             // Chuyển hướng tới trang Admin_Food.jsp
-            request.getRequestDispatcher("/food").forward(request, response);
-        } catch (NumberFormatException e) {
-            // Xử lý lỗi khi chuyển đổi từ chuỗi thành số nguyên
-            request.setAttribute("errorMessage", "Invalid number format for calories.");
             request.getRequestDispatcher("/food").forward(request, response);
         } catch (Exception e) {
             // Xử lý lỗi khác

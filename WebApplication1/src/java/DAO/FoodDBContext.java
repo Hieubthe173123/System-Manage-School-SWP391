@@ -39,9 +39,9 @@ public class FoodDBContext extends DBContext {
         }
         return null;
     }
-    
+
     public List<Food> getAllFood() {
-         List<Food> food = new ArrayList<>();
+        List<Food> food = new ArrayList<>();
         try {
             String sql = "SELECT [foodid]\n"
                     + "      ,[fname]\n"
@@ -61,7 +61,8 @@ public class FoodDBContext extends DBContext {
         }
         return food;
     }
-     public void addFood(Food food) {
+
+    public void addFood(Food food) {
         try {
             String sql = "INSERT INTO [SchoolManagement].[dbo].[Food] ([fname], [calo]) VALUES (?, ?)";
             PreparedStatement stm = connection.prepareStatement(sql);
@@ -72,6 +73,22 @@ public class FoodDBContext extends DBContext {
         } catch (SQLException e) {
             System.out.println(e);
         }
+    }
+
+    public boolean foodExists(String fname) {
+        // Kết nối tới cơ sở dữ liệu và kiểm tra xem món ăn đã tồn tại hay chưa
+        String sql = "SELECT COUNT(*) FROM Food WHERE fname = ?";
+        try (
+                PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, fname);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            // Xử lý lỗi cơ sở dữ liệu
+        }
+        return false;
     }
 
     public boolean updateFood(int foodId, String foodName, int calo) throws SQLException {
@@ -110,12 +127,12 @@ public class FoodDBContext extends DBContext {
                 food.setCalo(rs.getInt("calo"));
                 list.add(food);
             }
-        } catch (SQLException ex) {           
+        } catch (SQLException ex) {
         }
         return list;
     }
 
-     public List<Food> searchFoodByName(String fname) {
+    public List<Food> searchFoodByName(String fname) {
         List<Food> list = new ArrayList<>();
         try {
             String sql = "Select * from [SchoolManagement].[dbo].[Food] where fname like ?";
@@ -131,7 +148,7 @@ public class FoodDBContext extends DBContext {
                 food.setCalo(rs.getInt("calo"));
                 list.add(food);
             }
-        } catch (SQLException ex) {           
+        } catch (SQLException ex) {
         }
         return list;
     }

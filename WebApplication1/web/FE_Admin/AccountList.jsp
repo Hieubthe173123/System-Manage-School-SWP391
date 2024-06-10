@@ -8,6 +8,8 @@
         <title>Account List</title>
         <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
         <style>
             .btn-campus {
                 background-color: #39BACD;
@@ -22,34 +24,53 @@
                 cursor: pointer;
                 transition: all 0.3s ease;
             }
+
             .btn-campus:hover {
                 background-color: #39BACD;
             }
+
             .custom-link:active {
                 font-weight: bold;
             }
+
             .content-wrapper {
                 max-width: 1200px;
                 margin: auto;
                 padding: 20px;
             }
+
             .table-responsive {
                 max-height: 400px;
                 overflow-y: auto;
             }
+
             .toggle-password {
                 cursor: pointer;
             }
+
             .input-group-append .btn {
                 border-top-left-radius: 0;
                 border-bottom-left-radius: 0;
             }
+
             .input-group-append .btn i {
                 font-size: 1rem;
             }
+
             .input-group-append .btn:focus {
                 box-shadow: none;
             }
+
+            /* CSS cho trạng thái Active */
+            .badge-success {
+                background-color: green;
+            }
+
+            /* CSS cho trạng thái Pending */
+            .badge-warning {
+                background-color: yellow;
+            }
+
         </style>
     </head>
     <body>
@@ -59,14 +80,15 @@
                 <div class="form-group">
                     <label for="roleSelect">Select Role:</label>
                     <select class="form-control" id="roleSelect" name="role">
-                        <option value="">All Roles</option>                                            
-                        <option value="1" ${1 == requestScope.role ? 'selected' : ''}>Parent</option> 
+                        <option value="">All Roles</option>
+                        <option value="1" ${1 == requestScope.role ? 'selected' : ''}>Parent</option>
                         <option value="2" ${2 == requestScope.role ? 'selected' : ''}>Lecturers</option>
                         <option value="3" ${3 == requestScope.role ? 'selected' : ''}>Admin</option>
                     </select>
                 </div>
                 <div class="input-group mb-3">
-                    <input type="text" class="form-control" placeholder="Search..." name="searchName" value="${param.searchName}">
+                    <input type="text" class="form-control" placeholder="Search..." name="searchName"
+                           value="${param.searchName}">
                     <div class="input-group-append">
                         <button class="btn btn-outline-secondary" type="submit">
                             <i class="fa fa-search"></i>
@@ -75,9 +97,11 @@
                 </div>
                 <button type="submit" class="btn btn-campus">Show Accounts</button>
             </form>
+
             <div class="mb-3">
                 <button class="btn btn-campus" onclick="window.location.href = 'authentication-account'">Assign Permissions to Account</button>
-            </div>       
+            </div>
+
             <div>
                 <table class="table table-striped">
                     <thead>
@@ -91,39 +115,56 @@
                             <th>Parent Name</th>
                             <th>LID</th>
                             <th>Lecturer Name</th>
+                            <th>Action</th>
+                            <th>Status</th>
                         </tr>
                     </thead>
                     <tbody>
                         <c:forEach var="acc" items="${sessionScope.accountList}" varStatus="idex">
-                            <c:if test="${empty param.searchName or 
-                                          fn:containsIgnoreCase(acc.username, param.searchName) or 
-                                          (acc.pid != null and acc.pid.pname != null and fn:containsIgnoreCase(acc.pid.pname, param.searchName)) or 
-                                          (acc.lid != null and acc.lid.lname != null and fn:containsIgnoreCase(acc.lid.lname, param.searchName))}">
-                                  <tr>
-                                      <td>${idex.index + 1}</td>
-                                      <td>${acc.aid}</td>
-                                      <td>${acc.username}</td>
-                                      <td>
-                                          <div class="input-group">
-                                              <input type="password" id="password-${idex.index}" value="${acc.password}" class="form-control" readonly>
-                                              <div class="input-group-append">
-                                                  <span class="input-group-text">
-                                                      <i id="togglePassword-${idex.index}" class="fa fa-eye toggle-password" onclick="togglePassword(${idex.index})"></i>
-                                                  </span>
-                                              </div>
-                                      </td>
-                                      <td>${acc.role}</td>
-                                      <td>${acc.pid != null ? acc.pid.pid : ''}</td>
-                                      <td>${acc.pid != null ? acc.pid.pname : ''}</td>
-                                      <td>${acc.lid != null ? acc.lid.lid : ''}</td>
-                                      <td>${acc.lid != null ? acc.lid.lname : ''}</td>
-                                  </tr>
-                            </c:if>
+                            <c:set var="hasRole" value="${not empty acc.role}" />
+                            <tr>
+                                <td>${idex.index + 1}</td>
+                                <td>${acc.aid}</td>
+                                <td>${acc.username}</td>
+                                <td>
+                                    <div class="input-group">
+                                        <input type="password" id="password-${idex.index}" value="${acc.password}" class="form-control" readonly>
+                                        <div class="input-group-append">
+                                            <span class="input-group-text">
+                                                <i id="togglePassword-${idex.index}" class="fa fa-eye toggle-password" onclick="togglePassword(${idex.index})"></i>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </td>
+
+                                <td>${acc.role}</td>
+                                <td>${acc.pid != null ? acc.pid.pid : ''}</td>
+                                <td>${acc.pid != null ? acc.pid.pname : ''}</td>
+                                <td>${acc.lid != null ? acc.lid.lid : ''}</td>
+                                <td>${acc.lid != null ? acc.lid.lname : ''}</td>
+
+                                <td>
+                                    <button type="button" class="btn btn-danger" onclick="deleteAccount(${acc.aid})">Delete</button>
+                                </td>
+
+                                <td>
+                                    <c:choose>
+                                        <c:when test="${hasRole}">
+                                            <span class="badge badge-success">Active</span>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <span class="badge badge-warning">Pending</span>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </td>
+
+                            </tr>
                         </c:forEach>
                     </tbody>
                 </table>
             </div>
         </div>
+
         <script>
             function togglePassword(id) {
                 var passwordField = document.getElementById('password-' + id);
@@ -138,6 +179,29 @@
                     icon.classList.remove("fa-eye-slash");
                     icon.classList.add("fa-eye");
                 }
+            }
+
+            // Xóa tài khoản
+            function deleteAccount(aid) {
+                Swal.fire({
+                    title: "Are you sure?",
+                    text: "You won't be able to revert this!",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Yes, delete it!"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        Swal.fire({
+                            title: "Deleted!",
+                            text: "Your Account has been deleted.",
+                            icon: "success"
+                        }).then(() => {
+                            window.location.href = 'account-list?action=delete&aid=' + aid;
+                        });
+                    }
+                });
             }
         </script>
     </body>

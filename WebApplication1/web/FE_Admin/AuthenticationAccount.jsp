@@ -9,7 +9,6 @@
         <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
         <style>
-            /* Additional custom styles */
             .btn-campus {
                 background-color: #39BACD;
                 color: white;
@@ -23,21 +22,26 @@
                 cursor: pointer;
                 transition: all 0.3s ease;
             }
+
             .btn-campus:hover {
                 background-color: #39BACD;
             }
+
             .custom-link:active {
                 font-weight: bold;
             }
+
             .content-wrapper {
                 max-width: 1200px;
                 margin: auto;
                 padding: 20px;
             }
+
             .table-responsive {
                 max-height: 400px;
                 overflow-y: auto;
             }
+
             .toggle-password {
                 cursor: pointer;
             }
@@ -49,9 +53,8 @@
                 <button class="btn btn-campus" onclick="window.location.href = 'account-list'">Back</button>
             </div>
             <h2>Assign Roles to New Accounts</h2>
-            <form action="authentication-account" method="POST">
-                <input type="hidden" name="action" value="delete">
-                <div class="table-responsive">
+            <form id="accountForm" action="authentication-account" method="POST">
+                <div class="">
                     <table class="table table-striped">
                         <thead>
                             <tr>
@@ -63,12 +66,13 @@
                                 <th>Parent Name</th>
                                 <th>Lecturer Name</th>
                                 <th>Action</th>
+
                             </tr>
                         </thead>
                         <tbody>
                             <c:forEach var="acc" items="${sessionScope.newAccountList}" varStatus="idex">
                                 <tr>
-                                    <td>${idex.index+1}</td>
+                                    <td>${idex.index + 1}</td>
                                     <td>${acc.aid}</td>
                                     <td>${acc.username}</td>
 
@@ -83,9 +87,8 @@
                                         </div>
                                     </td>
 
-
                                     <td>
-                                        <select name="role-${idex.index}" class="form-control" onchange="handleRoleChange(this, ${idex.index})">
+                                        <select name="role-${acc.aid}" class="form-control" onchange="handleRoleChange(this, ${idex.index})">
                                             <option value="">Select Role</option>
                                             <option value="1" ${acc.role == 1 ? "selected" : ""}>Parent</option>
                                             <option value="2" ${acc.role == 2 ? "selected" : ""}>Lecturers</option>
@@ -93,73 +96,63 @@
                                         </select>
                                     </td>
 
-
                                     <td>
-                                        <select name="pid-${idex.index}" id="pid-${idex.index}" class="form-control" ${acc.role == 2 || acc.role == 3 ? "disabled" : ""}>
+                                        <select name="pid-${acc.aid}" id="pid-${idex.index}" class="form-control" ${acc.role == 2 || acc.role == 3 ? "disabled" : ""}>
                                             <option value="">Select PID</option>
                                             <c:forEach var="parent" items="${sessionScope.availableParents}">
                                                 <option value="${parent.pid}" ${acc.pid != null && parent.pid == acc.pid.pid ? "selected" : ""}>${parent.pname}</option>
                                             </c:forEach>
                                         </select>
-                                        ${acc.pid != null ? acc.pid.getPname() : ""}
                                     </td>
 
-
                                     <td>
-                                        <select name="lid-${idex.index}" id="lid-${idex.index}" class="form-control" ${acc.role == 1 || acc.role == 3 ? "disabled" : ""}>
+                                        <select name="lid-${acc.aid}" id="lid-${idex.index}" class="form-control" ${acc.role == 1 || acc.role == 3 ? "disabled" : ""}>
                                             <option value="">Select LID</option>
                                             <c:forEach var="lecturer" items="${sessionScope.availableLecturers}">
                                                 <option value="${lecturer.lid}" ${acc.lid != null && lecturer.lid == acc.lid.lid ? "selected" : ""}>${lecturer.lname}</option>
                                             </c:forEach>
                                         </select>
-                                        ${acc.lid != null ? acc.lid.getLname() : ""}
                                     </td>
 
                                     <td>
-                                        <button type="button" class="btn btn-danger" onclick="deleteAccount(${acc.aid})">Delete</button>
+                                        <input type="hidden" name="accountId" value="${acc.aid}">
+                                        <button type="submit" class="btn btn-campus" onclick="return validateForm(${acc.aid})">Active</button>
                                     </td>
-
 
                                 </tr>
                             </c:forEach>
                         </tbody>
                     </table>
                 </div>
-                <button type="submit" class="btn btn-campus">Save</button>
+                <!--        <button type="submit" class="btn btn-campus">Save</button>-->
             </form>
         </div>
 
         <script>
-            //Disable role
             function handleRoleChange(select, index) {
                 var role = select.value;
                 var pidField = document.getElementById('pid-' + index);
                 var lidField = document.getElementById('lid-' + index);
 
                 if (role == '1') {
-                    //nếu role 1 (Parent) => disable Lid
                     pidField.disabled = false;
                     lidField.disabled = true;
                     lidField.value = '';
                 } else if (role == '2') {
-                    //nếu role 2 (Lecturers) => disable Pid
                     pidField.disabled = true;
                     lidField.disabled = false;
                     pidField.value = '';
                 } else if (role == '3') {
-                    //nếu role 3 (Admin) => disable Lid and Pid
                     pidField.disabled = true;
                     lidField.disabled = true;
                     pidField.value = '';
                     lidField.value = '';
                 } else {
-                    //Chưa chọn gì disable lid và pid
                     pidField.disabled = true;
                     lidField.disabled = true;
                 }
             }
 
-            //Ẩn hiện mật khẩu
             function togglePassword(id) {
                 var passwordField = document.getElementById('password-' + id);
                 var icon = document.getElementById('togglePassword-' + id);
@@ -174,14 +167,25 @@
                     icon.classList.add("fa-eye");
                 }
             }
-            
-            // Xóa tài khoản
-            function deleteAccount(aid) {
-                if (confirm("Are you sure you want to delete this account?")) {
-                    window.location.href = 'authentication-account?aid=' + aid;
+
+            function validateForm(accountId) {
+                var select = document.querySelector('select[name="role-' + accountId + '"]');
+                if (select.value === "") {
+                    alert("Please select a role for Account ID: " + accountId);
+                    return false;
+                }
+                return true;
+            }
+
+
+
+            window.onload = function () {
+                var selects = document.querySelectorAll('select[name^="role-"]');
+                for (var i = 0; i < selects.length; i++) {
+                    handleRoleChange(selects[i], i);
                 }
             }
+
         </script>
     </body>
 </html>
-

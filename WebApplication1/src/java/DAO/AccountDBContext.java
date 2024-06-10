@@ -23,7 +23,7 @@ public class AccountDBContext extends DBContext {
 
     public static void main(String[] args) {
         AccountDBContext ac = new AccountDBContext();
-        ac.deleteAccount("59");
+        ac.deleteAccount("66");
 //        ArrayList<Account> list = ac.getOnlyNewAccount();
 //        System.out.println(list);
 

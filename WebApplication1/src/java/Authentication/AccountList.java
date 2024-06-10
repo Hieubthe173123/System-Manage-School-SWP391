@@ -32,10 +32,17 @@ public class AccountList extends HttpServlet {
 
         String role = request.getParameter("role");
         String searchName = request.getParameter("searchName");
+        String aid = request.getParameter("aid");
+        String action = request.getParameter("action");
 
         ArrayList<Account> accountList;
-        
+
         try {
+
+            if (action != null && action.equals("delete") && aid != null) {
+                // Nếu action là "delete" và có thông tin về aid, tiến hành xóa tài khoản
+                db.deleteAccount(aid);
+            }
 
             if (role != null && !role.isEmpty()) {
                 //Lấy Account theo Role

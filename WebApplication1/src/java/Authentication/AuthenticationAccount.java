@@ -27,7 +27,6 @@ public class AuthenticationAccount extends HttpServlet {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
 
     }
 
@@ -55,65 +54,59 @@ public class AuthenticationAccount extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        //processRequest(request, response);
         HttpSession session = request.getSession();
         ArrayList<Account> newAccountList = (ArrayList<Account>) session.getAttribute("newAccountList");
-        String aid = request.getParameter("aid");
-        AccountDBContext accdb = new AccountDBContext();
-        
-        if (aid != null && !aid.isEmpty()) {
-            try {
-                accdb.deleteAccount(aid);
-                session.setAttribute("successMessage", "Account deleted successfully");
-            } catch (Exception e) {
-                System.out.println(e);
-                session.setAttribute("errorMessage", "Failed to delete account");
-            }
-            response.sendRedirect("authentication-account");
-            return;
-        }
 
         try {
-            
-            for (int i = 0; i < newAccountList.size(); i++) {
-                String roleStr = request.getParameter("role-" + i);
-                String pid = request.getParameter("pid-" + i);
-                String lid = request.getParameter("lid-" + i);
+            AccountDBContext accdb = new AccountDBContext();
 
-                int role;
-                //Chuyển Role thành int
-                //nếu role tồn tại thì sẽ conver => int
-                if (roleStr != null && !roleStr.isEmpty()) {
-                    role = Integer.parseInt(roleStr);
-                    //Ngược lại set mặc định = 0
-                } else {
-                    role = 0;
+           
+            int accountId = Integer.parseInt(request.getParameter("accountId"));
+
+            for (Account acc : newAccountList) {
+                // Tìm tài khoản cần cập nhật dựa trên accountId
+                if (acc.getAid() == accountId) {
+                    String roleStr = request.getParameter("role-" + acc.getAid());
+                    String pid = request.getParameter("pid-" + acc.getAid());
+                    String lid = request.getParameter("lid-" + acc.getAid());
+
+                    int role;
+                    // Kiểm tra roleStr có null hay không
+                    if (roleStr != null && !roleStr.isEmpty()) {
+                        role = Integer.parseInt(roleStr);
+                    } else {
+                        role = 0;
+                    }
+                    acc.setRole(role);
+
+                    //Set pid và lid theo từng role
+                    
+                    // nếu role 1 => set pid , lid is NULL
+                    if (role == 1) {
+                        Parent parent = new Parent();
+                        parent.setPid(Integer.parseInt(pid));
+                        acc.setPid(parent);
+                        acc.setLid(null);
+                        
+                        // nếu role 2 => set lid , pid is NULL
+                    } else if (role == 2) {
+                        Lecturers lecturer = new Lecturers();
+                        lecturer.setLid(Integer.parseInt(lid));
+                        acc.setPid(null);
+                        acc.setLid(lecturer);
+                        
+                        // nếu role 3 => set lid null , pid NULL
+                    } else if (role == 3) {
+                        acc.setPid(null);
+                        acc.setLid(null);
+                    }
+
+                    // update
+                    accdb.updateAuthenticationAccount3(acc);
+
+                   
+                    break;
                 }
-                Account acc = newAccountList.get(i);
-                acc.setRole(role);
-
-                //nếu role = 1 (Parent) => set Pid cho Account
-                if (role == 1) {
-                    Parent parent = new Parent();
-                    parent.setPid(Integer.parseInt(pid));
-                    acc.setPid(parent);
-                    //có pid => lid null
-                    acc.setLid(null);
-                } else if (role == 2) {
-                    //nếu role = 2 (Lecturers) => set Lid cho Account
-                    Lecturers lecturer = new Lecturers();
-                    lecturer.setLid(Integer.parseInt(lid));
-                    acc.setPid(null);
-                    //có lid => pid null
-                    acc.setLid(lecturer);
-                } else if (role == 3) {
-                    //nếu role = 3 (Admin) => set Pid cho Account
-                    acc.setPid(null);
-                    acc.setLid(null);
-                }
-
-                //Update
-                accdb.updateAuthenticationAccount3(acc);
             }
 
         } catch (Exception e) {
@@ -123,7 +116,6 @@ public class AuthenticationAccount extends HttpServlet {
         }
 
         response.sendRedirect("account-list");
-
     }
 
     @Override

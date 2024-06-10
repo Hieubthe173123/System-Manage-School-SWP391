@@ -28,23 +28,33 @@ public class SearchStudentController extends HttpServlet {
    
 
     //search by ID and by Name
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+   protected void processRequest(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        //get the value of the searchInput parameter
+        
+        // Get the value of the searchInput parameter
         String searchInput = request.getParameter("searchInput");
 
-        //call methods to search students by ID and name
-        StudentClassSessionDBContext scs = new StudentClassSessionDBContext();
-        List<StudentClassSession> searchResultsById = scs.getStudentClassSessionByID(searchInput);
-        List<StudentClassSession> searchResultsByName = scs.getStudentClassSessionByName(searchInput);
+        // Call methods to search students by ID and name
+        StudentDBContext sdb = new StudentDBContext();
+        List<Object> combinedResults = new ArrayList<>();
 
-        //a new list and add all the results from the two lists searchResultsById and searchResultsByName
-        List<StudentClassSession> combinedResults = new ArrayList<>();
-        combinedResults.addAll(searchResultsById);
-        combinedResults.addAll(searchResultsByName);
+        if (searchInput != null && !searchInput.isEmpty()) {
+            try {
+                int id = Integer.parseInt(searchInput);
+                Student studentById = sdb.getStudentById(id);
+                if (studentById != null) {
+                    combinedResults.add(studentById);
+                }
+            } catch (NumberFormatException e) {
+                // If searchInput cannot be parsed to an integer, search by name
+                List<Student> studentsByName = sdb.getStudentByName(searchInput);
+                combinedResults.addAll(studentsByName);
+            }
+        }
 
-        request.setAttribute("list", combinedResults);
+        // Set the search results as an attribute of the request
+        request.setAttribute("search", combinedResults);
         request.getRequestDispatcher("FE_Admin/CRUD_Student.jsp").forward(request, response);
     }
 

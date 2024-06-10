@@ -37,34 +37,39 @@ public class StudentController extends HttpServlet {
 
         String timeStart = request.getParameter("timeStart");
         String timeEnd = request.getParameter("timeEnd");
-        String yid = request.getParameter("yid");
         String indexPage = request.getParameter("index");
-
-        if (indexPage == null) { //check index
+        
+        if (timeStart != null && timeEnd != null) {
+        if (indexPage == null) {
             indexPage = "1";
         }
         int index = Integer.parseInt(indexPage);
-        int count;
-        List<StudentClassSession> list;
-
-        if (timeStart != null && timeEnd != null) {
-            count = stu.getTotalStudentBySchoolYear(timeStart, timeEnd);
-            list = stu.getStudentClassSessionBySchoolYearWithPaging(timeStart, timeEnd, index);
-            request.setAttribute("listC", list);
-        } else {
-            count = stu.getTotalStudent();
-            list = sdc.pagingStudent(index);
-            request.setAttribute("listA", list);
-        }
-        //Take total number of students / 10
+        int count = stu.getTotalStudentBySchoolYear(timeStart, timeEnd);
         int endPage = count / 10;
-        if (count % 10 != 0) { 
+        if (count % 10 != 0) {
             endPage++;
         }
-        
-
+        List<StudentClassSession> list = stu.getStudentClassSessionBySchoolYearWithPaging(timeStart, timeEnd, index);
+        request.setAttribute("listC", list);
         request.setAttribute("index", index);
         request.setAttribute("endPage", endPage);
+        
+         } else {
+        if (indexPage == null) {
+            indexPage = "1";
+        }
+        int index = Integer.parseInt(indexPage);
+        int count = stu.getTotalStudent();
+        int endPage = count / 10;
+        if (count % 10 != 0) {
+            endPage++;
+        }
+        List<Student> list1 = sdc.pagingStudent(index);
+        request.setAttribute("listA", list1);
+        request.setAttribute("index", index);
+        request.setAttribute("endPage", endPage);
+        }
+        
 
         List<SchoolYear> list2 = sy.getAllSchoolYear();
         request.setAttribute("list2", list2);

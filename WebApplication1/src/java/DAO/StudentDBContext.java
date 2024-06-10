@@ -82,6 +82,32 @@ public class StudentDBContext extends DBContext {
         }
         return null;
     }
+    
+   public List<Student> getStudentByName(String sname) {
+    List<Student> list = new ArrayList<>();
+    ParentDBContext parent = new ParentDBContext();
+    try {
+        String sql = "SELECT [stuid], [sname], [dob], [gender], [Address], [pid] "
+                   + "FROM [SchoolManagement].[dbo].[Student] WHERE sname LIKE ?";
+        PreparedStatement stm = connection.prepareStatement(sql);
+        stm.setString(1, "%" + sname + "%");
+        ResultSet rs = stm.executeQuery();
+        while (rs.next()) {
+            Student student = new Student();
+            student.setStuid(rs.getInt("stuid"));
+            student.setSname(rs.getString("sname"));
+            student.setDob(rs.getString("dob"));
+            student.setGender(rs.getBoolean("gender"));
+            student.setAddress(rs.getString("Address"));
+            student.setPid(parent.getParentByid(rs.getInt("pid")));
+            list.add(student);
+        }
+    } catch (SQLException e) {
+        System.out.println(e);
+    }
+    return list;
+}
+
 
     public ArrayList<Student> getStudentByIdUser(int id) {
         ParentDBContext parent = new ParentDBContext();
@@ -144,15 +170,16 @@ public class StudentDBContext extends DBContext {
         }
         return list;
     }
+    
 
-    public List<StudentClassSession> pagingStudent(int index) {
-        List<StudentClassSession> list = new ArrayList<>();
+    public List<Student> pagingStudent(int index) {
+        List<Student> list = new ArrayList<>();
+        ParentDBContext parent = new ParentDBContext();
         try {
-            String sql = "SELECT S.stuid, S.sname, S.dob, S.gender, S.[Address], P.pid, C.classID, C.clname "
+            String sql = "SELECT S.stuid, S.sname, S.dob, S.gender, S.[Address], P.pid "
                     + "FROM Student S "
                     + "INNER JOIN Student_Class_Session SCS ON S.stuid = SCS.stuid "
                     + "INNER JOIN Class_Session CS ON SCS.csid = CS.csid "
-                    + "INNER JOIN Class C ON CS.classID = C.classID "
                     + "INNER JOIN Parent P ON S.pid = P.pid "
                     + "ORDER BY S.stuid OFFSET ? ROWS FETCH NEXT 10 ROWS ONLY;";
 
@@ -167,22 +194,11 @@ public class StudentDBContext extends DBContext {
                 student.setGender(rs.getBoolean("gender"));
                 student.setDob(rs.getString("dob"));
                 student.setAddress(rs.getString("Address"));
+                
+                student.setPid(parent.getParentByid(rs.getInt("pid")));
+                list.add(student);
+                
 
-                Class cl = new Class();
-                cl.setClassid(rs.getInt("classID"));
-                cl.setClname(rs.getString("clname"));
-
-                ClassSession cs = new ClassSession();
-                cs.setClassID(cl);
-
-                Parent parent = new Parent();
-                parent.setPid(rs.getInt("pid"));
-                student.setPid(parent);
-
-                StudentClassSession stuClass = new StudentClassSession();
-                stuClass.setCsid(cs);
-                stuClass.setStuid(student);
-                list.add(stuClass);
             }
         } catch (SQLException e) {
             Logger.getLogger(RoomDBContext.class.getName()).log(Level.SEVERE, null, e);
@@ -276,9 +292,6 @@ public class StudentDBContext extends DBContext {
         }
     }
 
-    public static void main(String[] args) {
-        StudentDBContext stu = new StudentDBContext();
-         List<StudentClassSession> list = stu.pagingStudent(5);
-         System.out.println(list);
-    }
+    
+ 
 }

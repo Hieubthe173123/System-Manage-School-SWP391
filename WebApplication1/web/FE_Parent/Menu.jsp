@@ -55,6 +55,7 @@
             <br/>
             <button type="submit">Submit</button>
         </form>
+        <h3 style="color: red">${sessionScope.Noti}</h3>
         <h1>Bữa ăn hôm nay</h1>
         <h3 style="color: red">${sessionScope.Mess}</h3>
         <h3 style="color: red">${sessionScope.Err}</h3>

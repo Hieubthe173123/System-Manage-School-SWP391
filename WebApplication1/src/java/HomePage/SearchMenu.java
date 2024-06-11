@@ -74,7 +74,7 @@ public class SearchMenu extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         String date_raw = request.getParameter("date");
-   
+        if(date_raw != null && !date_raw.isEmpty()){
         AgeDBContext age = new AgeDBContext();
         List<AgeCategory> listAge = age.getAllAgeCategory();
 
@@ -89,6 +89,11 @@ public class SearchMenu extends HttpServlet {
         request.setAttribute("date_raw", date_raw);
         request.setAttribute("listAgeCategory", listAge);
         request.getRequestDispatcher("FE_Parent/SearchMenu.jsp").forward(request, response);
+        }else{
+            HttpSession session = request.getSession();
+            session.setAttribute("Noti", "Bạn chưa nhập ngày tìm kiếm!");
+            response.sendRedirect("menu");
+        }
     } 
 
     /** 

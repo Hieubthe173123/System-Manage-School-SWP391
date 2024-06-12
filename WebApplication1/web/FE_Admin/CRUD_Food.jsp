@@ -152,6 +152,7 @@
                         <form action="update-food" method="POST">
                             <div class="form-group">
                                 <label for="updateFoodId">Food ID</label>
+                                <p id="displayFoodId" class="form-control-plaintext"></p>
                                 <input type="hidden" class="form-control" name="foodid" id="updateFoodId" required>
                             </div>
                             <div class="form-group">
@@ -198,6 +199,7 @@
                                             }
 
                                             function editFood(foodId, foodName, calo) {
+                                                document.getElementById('displayFoodId').innerText = foodId;
                                                 document.getElementById('updateFoodId').value = foodId;
                                                 document.getElementById('updateFoodName').value = foodName;
                                                 document.getElementById('updateCalo').value = calo;
@@ -212,7 +214,7 @@
 
                                                 const input = document.createElement('input');
                                                 input.type = 'hidden';
-                                                input.name = 'fname';
+                                                input.name = 'foodid';
                                                 input.value = deleteFoodId;
 
                                                 form.appendChild(input);

@@ -81,8 +81,7 @@ public class DeleteFood extends HttpServlet {
                 request.getRequestDispatcher("/food").forward(request, response);
             } 
         } catch (SQLException e) {
-            e.printStackTrace();
-            response.sendRedirect("error.jsp"); // Redirect to an error page
+            request.setAttribute("errorMessage", "enroll");
         }
     }
 

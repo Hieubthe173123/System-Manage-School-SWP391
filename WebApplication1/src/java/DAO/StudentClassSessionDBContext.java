@@ -81,22 +81,116 @@ public class StudentClassSessionDBContext extends DBContext {
         return stu;
     }
 
-    public List<StudentClassSession> getStudentClassSessionBySchoolYear(String timeStart, String timeEnd) {
+    public StudentClassSession getStudentById(int id) {
+    List<StudentClassSession> list = new ArrayList<>();
+    try {
+        String sql = "SELECT S.stuid, S.sname, S.dob, S.gender, S.Address, P.pname, CL.clname "
+                   + "FROM Student S "
+                   + "INNER JOIN Parent P ON S.pid = P.pid "
+                   + "INNER JOIN Student_Class_Session SCS ON S.stuid = SCS.stuid "
+                   + "INNER JOIN Class_Session CS ON SCS.csid = CS.csid "
+                   + "INNER JOIN Class CL ON CS.classID = CL.classID "
+                   + "WHERE S.stuid = ?";
+        
+        PreparedStatement stm = connection.prepareStatement(sql);
+        stm.setInt(1, id);
+        ResultSet rs = stm.executeQuery();
+
+        if (rs.next()) {
+            Student student = new Student();
+            student.setStuid(rs.getInt("stuid"));
+            student.setSname(rs.getString("sname"));
+            student.setDob(rs.getString("dob"));
+            student.setGender(rs.getBoolean("gender"));
+            student.setAddress(rs.getString("Address"));
+
+            Parent parent = new Parent();
+            parent.setPid(rs.getInt("pid"));
+            parent.setPname(rs.getString("pname"));
+            student.setPid(parent);
+
+            Class cl = new Class();
+            cl.setClassid(rs.getInt("classID"));
+            cl.setClname(rs.getString("clname"));
+            
+            ClassSession cs = new ClassSession();
+            cs.setClassID(cl);
+           StudentClassSession stuClass = new StudentClassSession();
+                stuClass.setCsid(cs);
+                stuClass.setStuid(student);
+                list.add(stuClass);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(RoomDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+    
+    
+     public List<StudentClassSession> getStudentByName(String sname) {
+    List<StudentClassSession> list = new ArrayList<>();
+   
+    try {
+        String sql = "SELECT S.stuid, S.sname, S.dob, S.gender, S.Address, P.pname,CL.clname "
+                   + "FROM Student S "
+                   + "INNER JOIN Parent P ON S.pid = P.pid "
+                   + "INNER JOIN Student_Class_Session SCS ON S.stuid = SCS.stuid "
+                   + "INNER JOIN Class_Session CS ON SCS.csid = CS.csid "
+                   + "INNER JOIN Class CL ON CS.classID = CL.classID "
+                   + "WHERE S.sname LIKE ?";
+        
+        PreparedStatement stm = connection.prepareStatement(sql);
+        stm.setString(1, "%" + sname + "%");
+        ResultSet rs = stm.executeQuery();
+
+        if (rs.next()) {
+            Student student = new Student();
+            student.setStuid(rs.getInt("stuid"));
+            student.setSname(rs.getString("sname"));
+            student.setDob(rs.getString("dob"));
+            student.setGender(rs.getBoolean("gender"));
+            student.setAddress(rs.getString("Address"));
+
+            Parent parent = new Parent();
+            parent.setPid(rs.getInt("pid"));
+            parent.setPname(rs.getString("pname"));
+            student.setPid(parent);
+
+            Class cl = new Class();
+            cl.setClassid(rs.getInt("classID"));
+            cl.setClname(rs.getString("clname"));
+            
+            ClassSession cs = new ClassSession();
+            cs.setClassID(cl);
+           StudentClassSession stuClass = new StudentClassSession();
+                stuClass.setCsid(cs);
+                stuClass.setStuid(student);
+                list.add(stuClass);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(RoomDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
+    }
+
+
+   //Get list of students from last year and paging
+    public List<StudentClassSession> getStudentClassSessionByLatestSchoolYearWithPaging(int index) {
         List<StudentClassSession> list = new ArrayList<>();
         try {
             String sql
-                    = "SELECT S.stuid, S.sname, S.dob, S.gender, S.[Address], p.pid, cl.classID, cl.clname "
-                    + "FROM Student S "
-                    + "LEFT join Student_Class_Session scs ON S.stuid = scs.stuid "
-                    + "LEFT join  Class_Session cs ON scs.csid = cs.csid "
-                    + "LEFT join Parent p ON s.pid = p.pid "
-                    + "LEFT join class cl ON cs.classID = cl.classID "
-                    + "LEFT join SchoolYear sy ON cs.yid = sy.yid "
-                    + "Where sy.dateStart LIKE ? AND sy.dateEnd LIKE ?";
+            = "SELECT S.stuid, S.sname, S.dob, S.gender, S.[Address], p.pid, p.pname, cl.classID, cl.clname "
+            + "FROM Student S "
+            + "INNER JOIN Student_Class_Session scs ON S.stuid = scs.stuid "
+            + "INNER JOIN Class_Session cs ON scs.csid = cs.csid "
+            + "INNER JOIN Parent p ON S.pid = p.pid "
+            + "INNER JOIN Class cl ON cs.classID = cl.classID "
+            + "INNER JOIN SchoolYear sy ON cs.yid = sy.yid "
+            + "WHERE sy.dateEnd = (SELECT MAX(dateEnd) FROM SchoolYear) " // Lấy năm học cuối cùng
+            + "ORDER BY S.stuid OFFSET ? ROWS FETCH NEXT 10 ROWS ONLY";
 
             PreparedStatement stm = connection.prepareStatement(sql);
-            stm.setString(1, timeStart + "%");
-            stm.setString(2, timeEnd + "%");
+            stm.setInt(1, (index - 1) * 10);
             ResultSet rs = stm.executeQuery();
 
             while (rs.next()) {
@@ -116,6 +210,7 @@ public class StudentClassSessionDBContext extends DBContext {
 
                 Parent parent = new Parent();
                 parent.setPid(rs.getInt("pid"));
+                 parent.setPname(rs.getString("pname"));
                 student.setPid(parent);
 
                 StudentClassSession stuClass = new StudentClassSession();
@@ -128,27 +223,29 @@ public class StudentClassSessionDBContext extends DBContext {
         }
         return list;
     }
-
-    public List<StudentClassSession> getStudentClassSessionBySchoolYearWithPaging(String timeStart, String timeEnd, int index) {
+    
+    
+    //Get list of students by class ID of the most recent school year and paginate
+    public List<StudentClassSession> getStudentsByClassIdWithPaging(String classId, int index) {
         List<StudentClassSession> list = new ArrayList<>();
         try {
             String sql
-                    = "SELECT S.stuid, S.sname, S.dob, S.gender, S.[Address], p.pid, cl.classID, cl.clname "
+                    = "SELECT S.stuid, S.sname, S.dob, S.gender, S.[Address], p.pid, p.pname, cl.classID, cl.clname "
                     + "FROM Student S "
-                    + "Inner join Student_Class_Session scs ON S.stuid = scs.stuid "
-                    + "Inner join  Class_Session cs ON scs.csid = cs.csid "
-                    + "Inner join Parent p ON S.pid = p.pid "
-                    + "Inner join class cl ON cs.classID = cl.classID "
-                    + "Inner join SchoolYear sy ON cs.yid = sy.yid "
-                    + "Where sy.dateStart LIKE ? AND sy.dateEnd LIKE ? "
+                    + "INNER JOIN Student_Class_Session scs ON S.stuid = scs.stuid "
+                    + "INNER JOIN Class_Session cs ON scs.csid = cs.csid "
+                    + "INNER JOIN Parent p ON S.pid = p.pid "
+                    + "INNER JOIN class cl ON cs.classID = cl.classID "
+                    + "INNER JOIN SchoolYear sy ON cs.yid = sy.yid "
+                    + "WHERE sy.dateEnd = (SELECT MAX(dateEnd) FROM SchoolYear) "
+                    + "AND cl.classID = ? "
                     + "ORDER BY S.stuid OFFSET ? ROWS FETCH NEXT 10 ROWS ONLY";
-
+            
             PreparedStatement stm = connection.prepareStatement(sql);
-            stm.setString(1, timeStart + "%");
-            stm.setString(2, timeEnd + "%");
-            stm.setInt(3, (index - 1) * 10);
+            stm.setString(1, classId);
+            stm.setInt(2, (index - 1) * 10);
             ResultSet rs = stm.executeQuery();
-
+            
             while (rs.next()) {
                 Student student = new Student();
                 student.setStuid(rs.getInt("stuid"));
@@ -157,15 +254,16 @@ public class StudentClassSessionDBContext extends DBContext {
                 student.setDob(rs.getString("dob"));
                 student.setAddress(rs.getString("Address"));
 
-                Class cl = new Class();
-                cl.setClassid(rs.getInt("classID"));
-                cl.setClname(rs.getString("clname"));
+                Class classObj = new Class();
+                classObj.setClassid(rs.getInt("classID"));
+                classObj.setClname(rs.getString("clname"));
 
                 ClassSession cs = new ClassSession();
-                cs.setClassID(cl);
+                cs.setClassID(classObj);
 
                 Parent parent = new Parent();
                 parent.setPid(rs.getInt("pid"));
+                parent.setPname(rs.getString("pname"));
                 student.setPid(parent);
 
                 StudentClassSession stuClass = new StudentClassSession();
@@ -173,31 +271,52 @@ public class StudentClassSessionDBContext extends DBContext {
                 stuClass.setStuid(student);
                 list.add(stuClass);
             }
-        } catch (SQLException ex) {
-            Logger.getLogger(RoomDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException e) {
+            System.out.println(e);
         }
         return list;
     }
+    
+     
+    //Get the total number of students in the most recent school year 
+   public int getTotalStudentByLatestSchoolYear() {
+    String sql = "SELECT COUNT(*) as total FROM Student S "
+            + "INNER JOIN Student_Class_Session scs ON S.stuid = scs.stuid "
+            + "INNER JOIN Class_Session cs ON scs.csid = cs.csid "
+            + "INNER JOIN SchoolYear sy ON cs.yid = sy.yid "
+            + "WHERE sy.dateEnd = (SELECT MAX(dateEnd) FROM SchoolYear)";
+    try {
+        PreparedStatement stm = connection.prepareStatement(sql);
+        ResultSet rs = stm.executeQuery();
+        if (rs.next()) {
+            return rs.getInt("total");
+        }
+    } catch (SQLException ex) {
+        Logger.getLogger(StudentClassSessionDBContext.class.getName()).log(Level.SEVERE, null, ex);
+    }
+    return 0;
+}
 
-    //number of students attending a class in a particular academic year
-    public int getTotalStudentBySchoolYear(String timeStart, String timeEnd) {
-        String sql = "SELECT COUNT(*) as total FROM Student S "
-                + "INNER JOIN Student_Class_Session scs ON S.stuid = scs.stuid "
-                + "INNER JOIN Class_Session cs ON scs.csid = cs.csid "
-                + "INNER JOIN SchoolYear sy ON cs.yid = sy.yid "
-                + "WHERE sy.dateStart LIKE ? AND sy.dateEnd LIKE ?";
+    //get total number of students by class ID
+    public int getTotalStudentsByClassId(String classId) {
+        int totalStudents = 0;
         try {
+            String sql = "SELECT COUNT(DISTINCT scs.stuid) AS Total_Student "
+                    + "FROM Student_Class_Session scs "
+                    + "INNER JOIN Class_Session cs ON scs.csid = cs.csid "
+                    + "INNER JOIN SchoolYear sy ON cs.yid = sy.yid "
+                    + "WHERE sy.dateEnd = (SELECT MAX(dateEnd) FROM SchoolYear) "
+                    + "AND cs.classID = ?";
             PreparedStatement stm = connection.prepareStatement(sql);
-            stm.setString(1, "%" + timeStart + "%");
-            stm.setString(2, "%" + timeEnd + "%");
+            stm.setString(1, classId);
             ResultSet rs = stm.executeQuery();
             if (rs.next()) {
-                return rs.getInt(1);
+                totalStudents = rs.getInt("Total_Student");
             }
         } catch (SQLException ex) {
-            Logger.getLogger(StudentClassSessionDBContext.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println(ex);
         }
-        return 0;
+        return totalStudents;
     }
 
     //Get total number of students from database
@@ -317,21 +436,6 @@ public class StudentClassSessionDBContext extends DBContext {
         return totalStudent;
     }
 
-  public static void main(String[] args) {
-      ParentDBContext parent = new  ParentDBContext();
-      String pname= "Nguyen Thi Khanh Linh";
-       String gender= "female";
-       String dob= "1999-01-01";
-        String phoneNumber= "012345678";
-       String address= "Ha Noi";
-       String email= "Linh@gmail.com";
-      String nickname = "Linh";
-      
-      String stuName = "Nguyen Thi Anh";
-      String stuDob= "2023-01-01";
-      String stuGender= "female";
-       String stuAddress= "Ha Noi";
-       String classID = "1A";
-  }
+
       
 }

@@ -4,11 +4,12 @@
  */
 package Controller.Admin;
 
+import DAO.ClassDBContext;
 import DAO.SchoolYearDBContext;
 import DAO.StudentClassSessionDBContext;
 import DAO.StudentDBContext;
-import Entity.SchoolYear;
 import Entity.Student;
+import Entity.Class;
 import Entity.StudentClassSession;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -28,68 +29,65 @@ public class StudentController extends HttpServlet {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         response.setContentType("text/html;charset=UTF-8");
-        StudentClassSessionDBContext stu = new StudentClassSessionDBContext();
-        SchoolYearDBContext sy = new SchoolYearDBContext();
+
+        StudentClassSessionDBContext stuDB = new StudentClassSessionDBContext();
         StudentDBContext sdc = new StudentDBContext();
-        
+        ClassDBContext cdb = new ClassDBContext();
+        SchoolYearDBContext sy = new SchoolYearDBContext();
 
-        String timeStart = request.getParameter("timeStart");
-        String timeEnd = request.getParameter("timeEnd");
+        String classId = request.getParameter("classId");
         String indexPage = request.getParameter("index");
-        
-        if (timeStart != null && timeEnd != null) {
-        if (indexPage == null) {
-            indexPage = "1";
-        }
-        int index = Integer.parseInt(indexPage);
-        int count = stu.getTotalStudentBySchoolYear(timeStart, timeEnd);
-        int endPage = count / 10;
-        if (count % 10 != 0) {
-            endPage++;
-        }
-        List<StudentClassSession> list = stu.getStudentClassSessionBySchoolYearWithPaging(timeStart, timeEnd, index);
-        request.setAttribute("listC", list);
-        request.setAttribute("index", index);
-        request.setAttribute("endPage", endPage);
-        
-         } else {
-        if (indexPage == null) {
-            indexPage = "1";
-        }
-        int index = Integer.parseInt(indexPage);
-        int count = stu.getTotalStudent();
-        int endPage = count / 10;
-        if (count % 10 != 0) {
-            endPage++;
-        }
-        List<Student> list1 = sdc.pagingStudent(index);
-        request.setAttribute("listA", list1);
-        request.setAttribute("index", index);
-        request.setAttribute("endPage", endPage);
-        }
-        
 
-        List<SchoolYear> list2 = sy.getAllSchoolYear();
-        request.setAttribute("list2", list2);
+        if (indexPage == null) {
+            indexPage = "1";
+        }
+        int index = Integer.parseInt(indexPage);
+
+        List<Class> classList = cdb.getAllClasses();
+        request.setAttribute("classList", classList);
+
+        if (classId != null && !classId.isEmpty()) {
+            List<StudentClassSession> studentList = stuDB.getStudentsByClassIdWithPaging(classId, index);
+            int count = stuDB.getTotalStudentsByClassId(classId);
+            int endPage = count / 10;
+            if (count % 10 != 0) {
+                endPage++;
+            }
+            request.setAttribute("studentList", studentList);
+            request.setAttribute("index", index);
+            request.setAttribute("endPage", endPage);
+            request.setAttribute("classId", classId);
+        } else {
+
+            // Get students for the latest school year
+            List<StudentClassSession> studentList = stuDB.getStudentClassSessionByLatestSchoolYearWithPaging( index);
+            int count = stuDB.getTotalStudentByLatestSchoolYear();
+            int endPage = count / 10;
+            if (count % 10 != 0) {
+                endPage++;
+            }
+            request.setAttribute("allStudent", studentList);
+            request.setAttribute("index", index);
+            request.setAttribute("endPage", endPage);
+        }
+
         request.getRequestDispatcher("FE_Admin/CRUD_Student.jsp").forward(request, response);
     }
-   
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
     }
 
-    
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
     }
 
-   
     @Override
     public String getServletInfo() {
         return "Short description";

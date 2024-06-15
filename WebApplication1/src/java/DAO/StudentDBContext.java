@@ -172,39 +172,7 @@ public class StudentDBContext extends DBContext {
     }
     
 
-    public List<Student> pagingStudent(int index) {
-        List<Student> list = new ArrayList<>();
-        ParentDBContext parent = new ParentDBContext();
-        try {
-            String sql = "SELECT S.stuid, S.sname, S.dob, S.gender, S.[Address], P.pid "
-                    + "FROM Student S "
-                    + "INNER JOIN Student_Class_Session SCS ON S.stuid = SCS.stuid "
-                    + "INNER JOIN Class_Session CS ON SCS.csid = CS.csid "
-                    + "INNER JOIN Parent P ON S.pid = P.pid "
-                    + "ORDER BY S.stuid OFFSET ? ROWS FETCH NEXT 10 ROWS ONLY;";
-
-            PreparedStatement stm = connection.prepareStatement(sql);
-            stm.setInt(1, (index - 1) * 10);  // Calculate the correct offset
-            ResultSet rs = stm.executeQuery();
-
-            while (rs.next()) {
-                Student student = new Student();
-                student.setStuid(rs.getInt("stuid"));
-                student.setSname(rs.getString("sname"));
-                student.setGender(rs.getBoolean("gender"));
-                student.setDob(rs.getString("dob"));
-                student.setAddress(rs.getString("Address"));
-                
-                student.setPid(parent.getParentByid(rs.getInt("pid")));
-                list.add(student);
-                
-
-            }
-        } catch (SQLException e) {
-            Logger.getLogger(RoomDBContext.class.getName()).log(Level.SEVERE, null, e);
-        }
-        return list;
-    }
+  
 
     public void deleteStudentAndParent(String stuid, String pid) {
         try {

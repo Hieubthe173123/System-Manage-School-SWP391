@@ -33,12 +33,12 @@ public class PromoteToNewClass extends HttpServlet {
         HttpSession session = request.getSession();
         //gọi đối tượng DBContext để tương tác
         SchoolYearDBContext db = new SchoolYearDBContext();
-
+        
         //Lấy danh sách tất cả các năm học , lưu vào session
         ArrayList<SchoolYear> listYear = db.getAllSchoolYear();
         session.setAttribute("listYear", listYear);
-
-        // Lấy tham số yid và newCsid từ request
+        
+         // Lấy tham số yid và newCsid từ request
         String yid = request.getParameter("yid");
         String newCsid = request.getParameter("newCsid");
         try {
@@ -62,21 +62,11 @@ public class PromoteToNewClass extends HttpServlet {
                         db.addStudentToClass(studentClassSession);
 
                     }
-                } else {
+                }else{
                     request.setAttribute("err", "you need choose Student to add !!!");
                 }
                 response.sendRedirect("promote?yid=" + yid + "&newCsid=" + newCsid);
                 return;
-            }
-
-            // Nếu không có yid trong request, lấy yid của năm học mới nhất
-            if (yid == null || yid.isEmpty()) {
-                SchoolYear newestYear = db.getNewestSchoolYear();
-                if (newestYear != null) {
-                    yid = String.valueOf(newestYear.getYid());
-                    response.sendRedirect("promote?yid=" + yid);
-                    return;
-                }
             }
 
             //Nếu yid không null, hiển thị thông tin của năm học đó
@@ -87,7 +77,7 @@ public class PromoteToNewClass extends HttpServlet {
                 //Lấy ra các năm học dựa theo id
                 ArrayList<SchoolYear> selectedYear = db.getSchoolYearById(yid);
                 session.setAttribute("selectedYear", selectedYear);
-
+                
                 //kiểm tra xem sinh viên đó đã đăng ký học lớp nào trong năm học đó
                 ArrayList<StudentClassSession> assignedStudents = db.getAssignedStudentId(yid);
                 session.setAttribute("assignedStudents", assignedStudents);
@@ -96,20 +86,6 @@ public class PromoteToNewClass extends HttpServlet {
                 if (newCsid != null && !newCsid.isEmpty()) {
                     ArrayList<StudentClassSession> studentClassSessionOldYear = db.getStudentsFromPreviousYears(yid);
                     session.setAttribute("studentClassSessionOldYear", studentClassSessionOldYear);
-                }
-
-                // Xử lý tìm kiếm
-                String searchQuery = request.getParameter("searchQuery");
-                if (searchQuery != null && !searchQuery.isEmpty()) {
-                    ArrayList<StudentClassSession> filteredStudents = new ArrayList<>();
-                    ArrayList<StudentClassSession> studentClassSessionOldYear = db.getStudentsFromPreviousYears(yid);
-                    for (StudentClassSession student : studentClassSessionOldYear) {
-                        String className = student.getCsid().getClassID().getClname().toLowerCase();
-                        if (className.contains(searchQuery.toLowerCase())) {
-                            filteredStudents.add(student);
-                        }
-                    }
-                    session.setAttribute("studentClassSessionOldYear", filteredStudents);
                 }
             }
         } catch (Exception e) {

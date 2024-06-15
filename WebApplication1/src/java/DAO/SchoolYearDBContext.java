@@ -817,7 +817,7 @@ public class SchoolYearDBContext extends DBContext {
 
     public static void main(String[] args) {
         SchoolYearDBContext db = new SchoolYearDBContext();
-//       ArrayList<Lecturers_Class_Session> list =  db.getLecturersByCsid2(1);
-//        System.out.println(list);
+       ArrayList<Lecturers_Class_Session> list =  db.getLecturersByCsid2(1);
+        System.out.println(list);
     }
 }

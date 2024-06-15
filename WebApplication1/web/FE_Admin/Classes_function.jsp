@@ -58,14 +58,16 @@
                 <select name="yid" id="yearSelect" class="form-control" onchange="this.form.submit()">
                     <option value="">Select a year</option>
                     <c:forEach var="year" items="${requestScope.listYear}">
-                        <option value="${year.yid}" <c:if test="${param.yid == year.yid}">selected</c:if>>
+                        <option value="${year.yid}" <c:if test="${param.yid == year.yid || fn:contains(requestScope.yid, year.yid)}">selected</c:if>>
                             ${year.dateStart} - ${year.dateEnd}
                         </option>
                     </c:forEach>
                 </select>
             </form>
 
-            <h2>Class Student In Year: <c:out value="${selectedYear[0].dateStart} - ${selectedYear[0].dateEnd}"/></h2>
+            <c:if test="${not empty selectedYear}">
+                <h2>Class Student In Year: <c:out value="${selectedYear[0].dateStart} - ${selectedYear[0].dateEnd}"/></h2>
+            </c:if>
             <div class="row">
                 <div class="col-md-2 mb-3">
                     <div class="table-responsive">
@@ -84,7 +86,6 @@
                     </div>
                 </div>
                 <div class="col-md-10">
-
                     <table class="table table-bordered">
                         <thead class="thead-dark">
                             <tr>
@@ -102,9 +103,8 @@
                         <tbody>
                             <c:if test="${not empty requestScope.studentClassSessionbyCsid}">
                                 <c:forEach var="s" items="${requestScope.studentClassSessionbyCsid}" varStatus="idex">
-
                                     <tr>
-                                        <td>${idex.index+1}</td>
+                                        <td>${idex.index + 1}</td>
                                         <td>${s.stuid.stuid}</td>
                                         <td>${s.stuid.sname}</td>
                                         <td>${s.stuid.dob}</td>
@@ -115,22 +115,25 @@
                                             <c:choose>
                                                 <c:when test="${not empty requestScope.lecClassSessionbyCsid2}">
                                                     <c:forEach var="lec" items="${requestScope.lecClassSessionbyCsid2}">
-                                                        ${lec.lid.lname}
+                                                        ${lec.lid.lname}<br/>
                                                     </c:forEach>
                                                 </c:when>
                                                 <c:otherwise>
-
+                                                    N/A
                                                 </c:otherwise>
                                             </c:choose>
                                         </td>
                                         <td>${s.csid.classID.clname}</td>
                                     </tr>
-
                                 </c:forEach>
+                            </c:if>
+                            <c:if test="${empty requestScope.studentClassSessionbyCsid}">
+                                <tr>
+                                    <td colspan="9" class="text-center">No students available for this class session.</td>
+                                </tr>
                             </c:if>
                         </tbody>
                     </table>
-
                 </div>
             </div>
         </div>

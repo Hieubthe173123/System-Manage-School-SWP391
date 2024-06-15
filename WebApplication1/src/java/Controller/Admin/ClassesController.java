@@ -35,6 +35,14 @@ public class ClassesController extends HttpServlet {
         String yid = request.getParameter("yid");
         String csid = request.getParameter("csid");
         try {
+
+            // Nếu không có yid trong request, lấy yid của năm học mới nhất
+            if (yid == null || yid.isEmpty()) {
+                SchoolYear newestYear = yearDB.getNewestSchoolYear();
+                if (newestYear != null) {
+                    yid = String.valueOf(newestYear.getYid());
+                }
+            }
             //Nếu có yid , lấy các thông tin liên quan đến năm học
             if (yid != null && !yid.isEmpty()) {
 

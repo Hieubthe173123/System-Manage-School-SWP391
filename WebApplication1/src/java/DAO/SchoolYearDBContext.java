@@ -632,6 +632,7 @@ public class SchoolYearDBContext extends DBContext {
         return false;
     }
 
+    //Lấy ra năm học mới nhất
     public SchoolYear getNewestSchoolYear() {
         String sql = "SELECT TOP 1 * FROM SchoolYear ORDER BY dateStart DESC";
         try {

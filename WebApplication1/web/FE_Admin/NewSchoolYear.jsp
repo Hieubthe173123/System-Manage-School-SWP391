@@ -1,7 +1,7 @@
-  <%-- 
-    Document   : NewSchoolYear
-    Created on : May 30, 2024, 6:55:04 PM
-    Author     : DELL
+<%-- 
+  Document   : NewSchoolYear
+  Created on : May 30, 2024, 6:55:04 PM
+  Author     : DELL
 --%>
 
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
@@ -63,6 +63,9 @@
                 </div>
                 <button type="submit" class="btn btn-primary">Create</button>
             </form>
+            <c:if test="${not empty err}">
+                <p style="color: red;">${err}</p>
+            </c:if>
         </div>
     </body>
 </html>

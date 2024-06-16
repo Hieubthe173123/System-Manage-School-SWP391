@@ -613,8 +613,6 @@ public class SchoolYearDBContext extends DBContext {
         return lecturers;
     }
 
-
-
     //check năm học đó đã tồn tại chưa
     public boolean isSchoolYearExists(String dateStart, String dateEnd) {
         try {
@@ -743,6 +741,23 @@ public class SchoolYearDBContext extends DBContext {
         return newYid; // Trả về ID của năm học mới được chèn
     }
 
+    //Lấy ra số lượng học sinh trong lớp
+    public int getStudentCountByClassSession(int csid) {
+        int count = 0;
+        String sql = "SELECT COUNT(*) AS total FROM [dbo].[Student_Class_Session] WHERE csid = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, csid);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                count = rs.getInt("total");
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(SchoolYearDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return count;
+    }
+
     public ArrayList<SchoolYear> getMostRecentSchoolYearEndDate() {
         ArrayList<SchoolYear> list = new ArrayList<>();
         try {
@@ -775,49 +790,9 @@ public class SchoolYearDBContext extends DBContext {
         return null;
     }
 
-    public ArrayList<ClassSession> searchClassSessionByYid(String yid, String searchClass) {
-        ArrayList<ClassSession> list = new ArrayList<>();
-        try {
-            String sql = "SELECT cls.csid, cls.classID, cl.clname, cls.sid, cls.rid, cls.yid FROM Class_Session cls\n"
-                    + "JOIN Class cl on cls.classID = cl.classID\n"
-                    + "WHERE cls.yid = ? AND cl.clname LIKE ?";
-            PreparedStatement ps = connection.prepareStatement(sql);
-            ps.setString(1, yid);
-            ps.setString(2, "%" + searchClass + "%");
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                ClassSession cls = new ClassSession();
-                cls.setCsid(rs.getInt("csid"));
-
-                Class cl = new Class();
-                cl.setClname(rs.getString("clname"));
-                cls.setClassID(cl);
-
-                Session ses = new Session();
-                ses.setSid(rs.getInt("sid"));
-                cls.setSid(ses);
-
-                Room ro = new Room();
-                ro.setRid(rs.getInt("rid"));
-                cls.setRid(ro);
-
-                SchoolYear year = new SchoolYear();
-                year.setYid(rs.getInt("yid"));
-                cls.setYid(year);
-
-                list.add(cls);
-
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(SchoolYearDBContext.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return list;
-
-    }
-
     public static void main(String[] args) {
         SchoolYearDBContext db = new SchoolYearDBContext();
-       ArrayList<Lecturers_Class_Session> list =  db.getLecturersByCsid2(1);
-        System.out.println(list);
+        int student = db.getStudentCountByClassSession(1);
+        System.out.println(student);
     }
 }

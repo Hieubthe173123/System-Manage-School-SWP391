@@ -29,18 +29,17 @@ public class PromoteToNewClass extends HttpServlet {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        //Tạo 1 session mới để lưu trữ thông tin
         HttpSession session = request.getSession();
-        //gọi đối tượng DBContext để tương tác
         SchoolYearDBContext db = new SchoolYearDBContext();
-        
-        //Lấy danh sách tất cả các năm học , lưu vào session
+
+        // Lấy danh sách tất cả các năm học và lưu vào session
         ArrayList<SchoolYear> listYear = db.getAllSchoolYear();
         session.setAttribute("listYear", listYear);
-        
-         // Lấy tham số yid và newCsid từ request
+
+        // Lấy tham số yid và newCsid từ request
         String yid = request.getParameter("yid");
         String newCsid = request.getParameter("newCsid");
+
         try {
             //khi ấn submit để insert sẽ gọi đến hàm POST
             if (request.getMethod().equalsIgnoreCase("POST")) {
@@ -49,47 +48,88 @@ public class PromoteToNewClass extends HttpServlet {
 
                 //Nếu có học sinh được chọn
                 if (selectedStudents != null) {
+                    StudentDBContext studb = new StudentDBContext();
+                    Class_SessionDBContext clsdb = new Class_SessionDBContext();
+                    //Hàm đếm có bao nhiêu học sinh trong lớp
+                    int currentStudentCount = db.getStudentCountByClassSession(Integer.parseInt(newCsid));
+
+                    // Kiểm tra xem lớp học đã đầy chưa (giới hạn 20 học sinh)
+                    if (currentStudentCount + selectedStudents.length > 20) {
+                        //nếu lớp full => thông báo
+                        session.setAttribute("error", "Class is already full. You cannot add more students.");
+                        response.sendRedirect("promote?yid=" + yid + "&newCsid=" + newCsid);
+                        return;
+                    }
+
+                    // Thêm từng học sinh vào lớp mới
                     for (String studentID : selectedStudents) {
-
-                        StudentDBContext studb = new StudentDBContext();
-                        Class_SessionDBContext clsdb = new Class_SessionDBContext();
-
-                        //Tạo StudentClassSession để lưu thông tin học sinh và lớp học
                         StudentClassSession studentClassSession = new StudentClassSession();
                         studentClassSession.setStuid(studb.getStudentById(Integer.parseInt(studentID)));
                         studentClassSession.setCsid(clsdb.getClassSessionById(Integer.parseInt(newCsid)));
-                        //Thêm học sinh vào lớp mới
+                        //Hàm addStudent
                         db.addStudentToClass(studentClassSession);
-
                     }
-                }else{
-                    request.setAttribute("err", "you need choose Student to add !!!");
+                } else {
+                    session.setAttribute("error", "You need to choose students to add!");
                 }
                 response.sendRedirect("promote?yid=" + yid + "&newCsid=" + newCsid);
                 return;
             }
 
-            //Nếu yid không null, hiển thị thông tin của năm học đó
+            // Nếu chưa chọn năm học, tự động chọn năm học mới nhất
+            if (yid == null || yid.isEmpty()) {
+                SchoolYear newestYear = db.getNewestSchoolYear();
+                if (newestYear != null) {
+                    yid = String.valueOf(newestYear.getYid());
+                    response.sendRedirect("promote?yid=" + yid);
+                    return;
+                }
+            }
+
+            // Nếu có yid được chọn từ request
             if (yid != null) {
                 ArrayList<ClassSession> listClassSession = db.getClassSessionByYid(yid);
                 session.setAttribute("listClassSession", listClassSession);
 
-                //Lấy ra các năm học dựa theo id
                 ArrayList<SchoolYear> selectedYear = db.getSchoolYearById(yid);
                 session.setAttribute("selectedYear", selectedYear);
-                
-                //kiểm tra xem sinh viên đó đã đăng ký học lớp nào trong năm học đó
+
                 ArrayList<StudentClassSession> assignedStudents = db.getAssignedStudentId(yid);
                 session.setAttribute("assignedStudents", assignedStudents);
 
-                // Nếu có lớp mới được chọn, lấy danh sách học sinh của năm học cũ để thêm vào lớp mới
+                // Nếu có newCsid được chọn, lấy danh sách học sinh từ năm học trước
                 if (newCsid != null && !newCsid.isEmpty()) {
                     ArrayList<StudentClassSession> studentClassSessionOldYear = db.getStudentsFromPreviousYears(yid);
                     session.setAttribute("studentClassSessionOldYear", studentClassSessionOldYear);
+
+                    int currentStudentCount = db.getStudentCountByClassSession(Integer.parseInt(newCsid));
+                    session.setAttribute("currentStudentCount", currentStudentCount);
+                }
+
+                // Xử lý tìm kiếm học sinh trong năm học trước
+                String searchQuery = request.getParameter("searchQuery");
+                if (searchQuery != null && !searchQuery.isEmpty()) {
+                    // Tạo một danh sách mới để lưu trữ các học sinh lọc được
+                    ArrayList<StudentClassSession> filteredStudents = new ArrayList<>();
+                    
+                    // Lấy danh sách học sinh từ các năm học trước dựa trên yid
+                    ArrayList<StudentClassSession> studentClassSessionOldYear = db.getStudentsFromPreviousYears(yid);
+                    
+                    // Duyệt qua từng học sinh trong danh sách
+                    for (StudentClassSession student : studentClassSessionOldYear) {
+                        // Lấy tên lớp học của học sinh hiện tại và chuyển thành chữ thường
+                        String className = student.getCsid().getClassID().getClname().toLowerCase();
+                        
+                        // Kiểm tra xem tên lớp học có chứa searchQuery (chuyển thành chữ thường) không
+                        if (className.contains(searchQuery.toLowerCase())) {
+                            // Nếu có, thêm học sinh vào danh sách lọc
+                            filteredStudents.add(student);
+                        }
+                    }
+                    session.setAttribute("studentClassSessionOldYear", filteredStudents);
                 }
             }
         } catch (Exception e) {
-            // Xử lý ngoại lệ
             System.out.println(e);
             response.sendRedirect("Error/404.jsp");
             return;

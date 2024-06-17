@@ -67,5 +67,8 @@
                 <p style="color: red;">${err}</p>
             </c:if>
         </div>
+
+        <!-- Bootstrap JS -->
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     </body>
 </html>

@@ -5,6 +5,7 @@
 package Controller.Admin;
 
 import DAO.SchoolYearDBContext;
+import Entity.SchoolYear;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -30,26 +31,43 @@ public class NewSchoolYearController extends HttpServlet {
             if (dateStart != null && !dateStart.isEmpty() && dateEnd != null && !dateEnd.isEmpty()) {
                 SchoolYearDBContext yearDB = new SchoolYearDBContext();
 
-                // Kiểm tra nếu năm học đã tồn tại
+                // Kiểm tra năm học đã tồn tại
                 if (yearDB.isSchoolYearExists(dateStart, dateEnd)) {
                     request.setAttribute("err", "Năm học này đã tồn tại! Vui lòng chọn năm học khác.");
                     request.getRequestDispatcher("FE_Admin/NewSchoolYear.jsp").forward(request, response);
                 } else {
-                    yearDB.createNewSchoolYearForClassSession(dateStart, dateEnd);
-                    response.sendRedirect("classController");
-                    return;
+                    // Kiểm tra năm học mới phải cách năm học cũ ít nhất 1 năm
+                    SchoolYear latestYear = yearDB.getNewestSchoolYear();
+
+                    if (latestYear != null) {
+                        // Lấy năm bắt đầu và năm kết thúc của năm học mới nhất
+                        int latestYearEnd = Integer.parseInt(latestYear.getDateEnd().substring(0, 4));
+                        int newYearStart = Integer.parseInt(dateStart.substring(0, 4));
+                        int newYearEnd = Integer.parseInt(dateEnd.substring(0, 4));
+
+                        // Kiểm tra năm học mới phải kế tiếp năm học cũ
+                        if (newYearStart == latestYearEnd && newYearEnd == newYearStart + 1) {
+                            // Tạo năm học mới
+                            yearDB.createNewSchoolYearForClassSession(dateStart, dateEnd);
+                            response.sendRedirect("classController");
+                        } else {
+                            request.setAttribute("err", "Năm học mới phải kế tiếp năm học cũ (ví dụ: 2023-2024 tiếp đến 2024-2025).");
+                            request.getRequestDispatcher("FE_Admin/NewSchoolYear.jsp").forward(request, response);
+                        }
+                    } else {
+                        // Nếu không có năm học nào trước đó, tạo năm học mới trực tiếp
+                        yearDB.createNewSchoolYearForClassSession(dateStart, dateEnd);
+                        response.sendRedirect("classController");
+                    }
                 }
             } else {
-                //request.setAttribute("err", "Ngày bắt đầu và kết thúc không được để trống!");
+                request.setAttribute("err", "Ngày bắt đầu và kết thúc không được để trống!");
                 request.getRequestDispatcher("FE_Admin/NewSchoolYear.jsp").forward(request, response);
             }
         } catch (Exception e) {
             e.printStackTrace();
             response.sendRedirect("Error/404.jsp");
         }
-
-        //request.getRequestDispatcher("FE_Admin/NewSchoolYear.jsp").forward(request, response);
-
     }
 
     @Override

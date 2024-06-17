@@ -64,7 +64,6 @@
                     </form>
                 </div>
                 <div class="col-sm-6 text-right">
-                    <!--                    <button class="btn btn-primary mr-2" id="addNewParentBtn" data-toggle="modal" data-target="#parentModal">Add New Parent</button>-->
                     <button class="btn btn-primary" id="addNewStudentBtn" data-toggle="modal" data-target="#studentModal">Add New Student</button>
                 </div>
             </div>
@@ -109,7 +108,7 @@
                             <td>${studentClass.csid.classID.clname}</td>
                             <td>
                                 <button class="btn btn-warning btn-sm" onclick="showEditModal('${studentClass.stuid.stuid}', '${studentClass.stuid.sname}', '${studentClass.stuid.dob}', '${studentClass.stuid.gender}', '${studentClass.stuid.address}', '${studentClass.csid.classID.classid}')">Update</button>
-                                <button type="button" class="btn btn-danger btn-sm" onclick="showDeleteModal('${studentClass.stuid.stuid}', '${studentClass.stuid.pid.pid}')">Delete</button>
+                                <button class="btn btn-danger btn-sm" onclick="showDeactivateModal('${studentClass.stuid.stuid}', '${studentClass.stuid.pid.pid}')">Delete</button>
                             </td>
                         </tr>
                     </c:forEach>
@@ -151,71 +150,21 @@
                                     <input type="text" class="form-control" id="studentAddress" name="sAddress" required>
                                 </div>
                                 <div class="form-group">
-                                    <label for="classId">Class ID</label>
+                                    <label for="parentId">Parent ID</label>
+                                    <input type="text" class="form-control" id="parentId" name="pid" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="studentClassId">Class ID</label>
                                     <select class="form-control" id="studentClassId" name="classId" required>
-                                        <option value="1A">1A</option>
-                                        <option value="1B">1B</option>
-                                        <option value="1C">1C</option>
-                                        <option value="2A">2A</option>
-                                        <option value="2B">2B</option>
-                                        <option value="2C">2C</option>
-                                        <option value="3A">3A</option>
-                                        <option value="3B">3B</option>
-                                        <option value="3C">3C</option>
-                                        <option value="4A">4A</option>
-                                        <option value="4B">4B</option>
-                                        <option value="4C">4C</option>
-                                        <option value="5A">5A</option>
-                                        <option value="5B">5B</option>
-                                        <option value="5C">5C</option>
-
+                                        <c:forEach var="classObj" items="${classList}">
+                                            <option value="${classObj.classid}" <c:if test="${param.classId == classObj.classid}">selected</c:if>>
+                                                ${classObj.clname}
+                                            </option>
+                                        </c:forEach>
                                     </select>
                                 </div>
-                                <!-- Add New Parent section -->
-                                <hr>
-                                <h5 class="mb-3">Add Parent Information</h5> 
-                                <div class="form-group">
-                                    <label for="pname">Parent Name</label>
-                                    <input type="text" class="form-control" id="pname" name="pname" required>
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="pgender">Gender</label>
-                                    <select class="form-control" id="pgender" name="gender" required>
-                                        <option>Male</option>
-                                        <option>Female</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="pdob">Date of Birth</label>
-                                    <input type="date" class="form-control" id="pdob" name="dob" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="pphone">Phone Number</label>
-                                    <input type="text" class="form-control" id="pphone" name="phoneNumber" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="pidCard">ID Card</label>
-                                    <input type="text" class="form-control" id="pidCard" name="IDcard" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="pemail">Email</label>
-                                    <input type="email" class="form-control" id="pemail" name="email" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="paddress">Address</label>
-                                    <input type="text" class="form-control" id="paddress" name="address" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="nickname">Nickname</label>
-                                    <input type="text" class="form-control" id="nickname" name="nickname" required>
-                                </div>
-
-                                <button type="submit" class="btn btn-primary mt-3">Submit</button>
-                                <% String mess = (String) request.getAttribute("mess");
-                    if (mess != null) { %>
-                                <p style="color: red" id="message">${mess}</p>
-                                <% } %>
+                                 <button type="button" class="btn btn-secondary mt-3" data-dismiss="modal">Cancel</button>
+                                <button type="submit" class="btn btn-primary mt-3">Add</button>
                             </form>
                         </div>
                     </div>
@@ -223,22 +172,44 @@
             </div>
 
 
+
+            <!--             Delete Student Modal 
+                        <div class="modal fade" id="deleteStudentModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Confirm Delete</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        Are you sure you want to delete this student and parent?
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                        <button type="button" id="confirmDeleteBtn" class="btn btn-danger">Delete</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>-->
+
             <!-- Delete Student Modal -->
             <div class="modal fade" id="deleteStudentModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Confirm Delete</h5>
+                            <h5 class="modal-title" id="exampleModalLabel">Confirm Deactivation</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
                         <div class="modal-body">
-                            Are you sure you want to delete this student and parent?
+                            Are you sure you want to deactivate this student and parent?
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                            <button type="button" id="confirmDeleteBtn" class="btn btn-danger">Delete</button>
+                            <button type="button" id="confirmDeactivateBtn" class="btn btn-danger">Deactivate</button>
                         </div>
                     </div>
                 </div>
@@ -300,10 +271,6 @@
                 </div>
             </div>
 
-
-
-
-
             <!-- paging -->
             <div class="d-flex justify-content-center Endpage">
                 <c:if test="${index > 1}">
@@ -343,37 +310,38 @@
             <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
             <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
             <script src="script.js"></script>
-            <<script>
-                        //Confirm deletion
-                        let deleteStudentId; //Store student and parent IDs to be deleted.
-                        let deleteParentId;
+            <script>
+                        //Confirm deactivation
+                        let deactivateStudentId;
+                        let deactivateParentId;
 
-                        function showDeleteModal(stuid, pid) {
-                            deleteStudentId = stuid;
-                            deleteParentId = pid;
-                            $('#deleteStudentModal').modal('show'); //hiển thị modal xác nhận xóa
+                        function showDeactivateModal(stuid, pid) {
+                            deactivateStudentId = stuid;
+                            deactivateParentId = pid;
+                            $('#deleteStudentModal').modal('show');
                         }
 
-                        document.getElementById('confirmDeleteBtn').addEventListener('click', function () {
+                        document.getElementById('confirmDeactivateBtn').addEventListener('click', function () {
                             const form = document.createElement('form');
                             form.method = 'POST';
-                            form.action = 'deleteStudent';
+                            form.action = 'deactivate-student';
 
                             const stuidInput = document.createElement('input');
                             stuidInput.type = 'hidden';
                             stuidInput.name = 'stuid';
-                            stuidInput.value = deleteStudentId;
+                            stuidInput.value = deactivateStudentId;
 
                             const pidInput = document.createElement('input');
                             pidInput.type = 'hidden';
                             pidInput.name = 'pid';
-                            pidInput.value = deleteParentId;
+                            pidInput.value = deactivateParentId;
 
                             form.appendChild(stuidInput);
                             form.appendChild(pidInput);
                             document.body.appendChild(form);
                             form.submit();
                         });
+
 
                         // Xử lý hiển thị modal chỉnh sửa sinh viên
                         function showEditModal(stuid, sname, dob, gender, address, classId) {

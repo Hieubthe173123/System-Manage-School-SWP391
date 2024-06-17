@@ -69,7 +69,6 @@
                         <th>Age</th>
                         <th>Session Name</th>
                         <th>Class</th>
-                        <th>Lecturers</th>
                         <th>Date Start</th>
                         <th>Date End</th>
                     </tr>
@@ -83,18 +82,6 @@
                             <td>${scs.csid.sid.sid} tuổi</td>
                             <td>${scs.csid.sid.sname}</td>
                             <td>${scs.csid.classID.clname}</td>
-                            <td>
-                            <c:choose>
-                                <c:when test="${not empty requestScope.lecClassSessionbyCsid2}">
-                                    <c:forEach var="lec" items="${requestScope.lecClassSessionbyCsid2}">
-                                        ${lec.lid.lname}<br>
-                                    </c:forEach>
-                                </c:when>
-                                <c:otherwise>
-                                    N/A
-                                </c:otherwise>
-                            </c:choose>
-                        </td>
                             <td>${scs.csid.yid.dateStart}</td>
                             <td>${scs.csid.yid.dateEnd}</td>
                         </tr>

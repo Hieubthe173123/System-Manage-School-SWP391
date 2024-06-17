@@ -6,6 +6,7 @@ package Controller.Admin;
 
 import DAO.SchoolYearDBContext;
 import DAO.StudentDBContext;
+import Entity.Lecturers_Class_Session;
 import Entity.Student;
 import Entity.StudentClassSession;
 import java.io.IOException;
@@ -33,29 +34,32 @@ public class SchoolYearHistory extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        //processRequest(request, response);
         HttpSession session = request.getSession();
         SchoolYearDBContext db = new SchoolYearDBContext();
         StudentDBContext studb = new StudentDBContext();
+
+        // Lấy danh sách tất cả sinh viên
         ArrayList<Student> students = studb.getAllStudent();
-        
-        //Lấy tham số selectedStudent từ request
+        session.setAttribute("students", students);
+
+        // Lấy ID sinh viên được chọn từ các tham số
         String selectedStuid = request.getParameter("selectedStudent");
+
         try {
-            //nếu có stuid sẽ hiện ra lịch sử của học sinh đó
+            // Nếu có ID sinh viên được chọn
             if (selectedStuid != null && !selectedStuid.isEmpty()) {
+                // Lấy lịch sử năm học của sinh viên được chọn
                 ArrayList<StudentClassSession> history = db.getHistorySchoolYearbyStuid(selectedStuid);
                 session.setAttribute("selectedStuid", selectedStuid);
                 session.setAttribute("history", history);
             }
         } catch (Exception e) {
-            //Xử Lý ngoại lệ
             e.printStackTrace();
             response.sendRedirect("Error/404.jsp");
             return;
         }
 
-        session.setAttribute("students", students);
+        // Forward to JSP page
         request.getRequestDispatcher("FE_Admin/SchoolYearHistory.jsp").forward(request, response);
     }
 

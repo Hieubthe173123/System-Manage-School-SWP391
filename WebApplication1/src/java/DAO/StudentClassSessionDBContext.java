@@ -81,88 +81,96 @@ public class StudentClassSessionDBContext extends DBContext {
         return stu;
     }
 
+    
+    //search student by id
     public StudentClassSession getStudentById(int id) {
-    List<StudentClassSession> list = new ArrayList<>();
-    try {
-        String sql = "SELECT S.stuid, S.sname, S.dob, S.gender, S.Address, P.pname, CL.clname "
-                   + "FROM Student S "
-                   + "INNER JOIN Parent P ON S.pid = P.pid "
-                   + "INNER JOIN Student_Class_Session SCS ON S.stuid = SCS.stuid "
-                   + "INNER JOIN Class_Session CS ON SCS.csid = CS.csid "
-                   + "INNER JOIN Class CL ON CS.classID = CL.classID "
-                   + "WHERE S.stuid = ?";
-        
-        PreparedStatement stm = connection.prepareStatement(sql);
-        stm.setInt(1, id);
-        ResultSet rs = stm.executeQuery();
+        StudentClassSession stuClass = null;
 
-        if (rs.next()) {
-            Student student = new Student();
-            student.setStuid(rs.getInt("stuid"));
-            student.setSname(rs.getString("sname"));
-            student.setDob(rs.getString("dob"));
-            student.setGender(rs.getBoolean("gender"));
-            student.setAddress(rs.getString("Address"));
+        try {
+            String sql = "SELECT S.stuid, S.sname, S.dob, S.gender, S.[Address], P.pid, P.pname, CL.classID, CL.clname "
+                    + "FROM Student S "
+                    + "INNER JOIN Student_Class_Session SCS ON S.stuid = SCS.stuid "
+                    + "INNER JOIN Class_Session CS ON SCS.csid = CS.csid "
+                    + "INNER JOIN Parent P ON S.pid = P.pid "
+                    + "INNER JOIN Class CL ON CS.classID = CL.classID "
+                    + "INNER JOIN SchoolYear SY ON CS.yid = SY.yid "
+                    + "WHERE S.stuid = ? "
+                    + "AND SY.dateEnd = (SELECT MAX(dateEnd) FROM SchoolYear) ";
 
-            Parent parent = new Parent();
-            parent.setPid(rs.getInt("pid"));
-            parent.setPname(rs.getString("pname"));
-            student.setPid(parent);
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setInt(1, id);
+            ResultSet rs = stm.executeQuery();
 
-            Class cl = new Class();
-            cl.setClassid(rs.getInt("classID"));
-            cl.setClname(rs.getString("clname"));
-            
-            ClassSession cs = new ClassSession();
-            cs.setClassID(cl);
-           StudentClassSession stuClass = new StudentClassSession();
+            if (rs.next()) { 
+                Student student = new Student();
+                student.setStuid(rs.getInt("stuid"));
+                student.setSname(rs.getString("sname"));
+                student.setDob(rs.getString("dob"));
+                student.setGender(rs.getBoolean("gender"));
+                student.setAddress(rs.getString("Address"));
+
+                Parent parent = new Parent();
+                parent.setPid(rs.getInt("pid"));
+                parent.setPname(rs.getString("pname"));
+                student.setPid(parent);
+
+                Class cl = new Class();
+                cl.setClassid(rs.getInt("classID"));
+                cl.setClname(rs.getString("clname"));
+
+                ClassSession cs = new ClassSession();
+                cs.setClassID(cl);
+
+                stuClass = new StudentClassSession();
                 stuClass.setCsid(cs);
                 stuClass.setStuid(student);
-                list.add(stuClass);
             }
         } catch (SQLException ex) {
             Logger.getLogger(RoomDBContext.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return null;
+        return stuClass;
     }
+
     
-    
-     public List<StudentClassSession> getStudentByName(String sname) {
-    List<StudentClassSession> list = new ArrayList<>();
-   
-    try {
-        String sql = "SELECT S.stuid, S.sname, S.dob, S.gender, S.Address, P.pname,CL.clname "
-                   + "FROM Student S "
-                   + "INNER JOIN Parent P ON S.pid = P.pid "
-                   + "INNER JOIN Student_Class_Session SCS ON S.stuid = SCS.stuid "
-                   + "INNER JOIN Class_Session CS ON SCS.csid = CS.csid "
-                   + "INNER JOIN Class CL ON CS.classID = CL.classID "
-                   + "WHERE S.sname LIKE ?";
-        
-        PreparedStatement stm = connection.prepareStatement(sql);
-        stm.setString(1, "%" + sname + "%");
-        ResultSet rs = stm.executeQuery();
+    //search student by name
+    public List<StudentClassSession> getStudentByName(String sname) {
+        List<StudentClassSession> list = new ArrayList<>();
 
-        if (rs.next()) {
-            Student student = new Student();
-            student.setStuid(rs.getInt("stuid"));
-            student.setSname(rs.getString("sname"));
-            student.setDob(rs.getString("dob"));
-            student.setGender(rs.getBoolean("gender"));
-            student.setAddress(rs.getString("Address"));
+        try {
+            String sql = "SELECT S.stuid, S.sname, S.dob, S.gender, S.[Address],P.pid, P.pname, CL.classID ,CL.clname "
+                    + "FROM Student S "
+                    + "INNER JOIN Student_Class_Session SCS ON S.stuid = SCS.stuid "
+                    + "INNER JOIN Class_Session CS ON SCS.csid = CS.csid "
+                    + "INNER JOIN Parent P ON S.pid = P.pid "
+                    + "INNER JOIN Class CL ON CS.classID = CL.classID "
+                    + "INNER JOIN SchoolYear SY ON CS.yid = SY.yid "
+                    + "WHERE S.sname LIKE ? "
+                    + "AND SY.dateEnd = (SELECT MAX(dateEnd) FROM SchoolYear) ";
 
-            Parent parent = new Parent();
-            parent.setPid(rs.getInt("pid"));
-            parent.setPname(rs.getString("pname"));
-            student.setPid(parent);
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setString(1, "%" + sname + "%");
+            ResultSet rs = stm.executeQuery();
 
-            Class cl = new Class();
-            cl.setClassid(rs.getInt("classID"));
-            cl.setClname(rs.getString("clname"));
-            
-            ClassSession cs = new ClassSession();
-            cs.setClassID(cl);
-           StudentClassSession stuClass = new StudentClassSession();
+            while (rs.next()) {
+                Student student = new Student();
+                student.setStuid(rs.getInt("stuid"));
+                student.setSname(rs.getString("sname"));
+                student.setDob(rs.getString("dob"));
+                student.setGender(rs.getBoolean("gender"));
+                student.setAddress(rs.getString("Address"));
+
+                Parent parent = new Parent();
+                parent.setPid(rs.getInt("pid"));
+                parent.setPname(rs.getString("pname"));
+                student.setPid(parent);
+
+                Class cl = new Class();
+                cl.setClassid(rs.getInt("classID"));
+                cl.setClname(rs.getString("clname"));
+
+                ClassSession cs = new ClassSession();
+                cs.setClassID(cl);
+                StudentClassSession stuClass = new StudentClassSession();
                 stuClass.setCsid(cs);
                 stuClass.setStuid(student);
                 list.add(stuClass);
@@ -173,21 +181,20 @@ public class StudentClassSessionDBContext extends DBContext {
         return list;
     }
 
-
-   //Get list of students from last year and paging
+    //Get list of students from last year and paging
     public List<StudentClassSession> getStudentClassSessionByLatestSchoolYearWithPaging(int index) {
         List<StudentClassSession> list = new ArrayList<>();
         try {
             String sql
-            = "SELECT S.stuid, S.sname, S.dob, S.gender, S.[Address], p.pid, p.pname, cl.classID, cl.clname "
-            + "FROM Student S "
-            + "INNER JOIN Student_Class_Session scs ON S.stuid = scs.stuid "
-            + "INNER JOIN Class_Session cs ON scs.csid = cs.csid "
-            + "INNER JOIN Parent p ON S.pid = p.pid "
-            + "INNER JOIN Class cl ON cs.classID = cl.classID "
-            + "INNER JOIN SchoolYear sy ON cs.yid = sy.yid "
-            + "WHERE sy.dateEnd = (SELECT MAX(dateEnd) FROM SchoolYear) " // Lấy năm học cuối cùng
-            + "ORDER BY S.stuid OFFSET ? ROWS FETCH NEXT 10 ROWS ONLY";
+                    = "SELECT S.stuid, S.sname, S.dob, S.gender, S.[Address], p.pid, p.pname, cl.classID, cl.clname "
+                    + "FROM Student S "
+                    + "INNER JOIN Student_Class_Session scs ON S.stuid = scs.stuid "
+                    + "INNER JOIN Class_Session cs ON scs.csid = cs.csid "
+                    + "INNER JOIN Parent p ON S.pid = p.pid "
+                    + "INNER JOIN Class cl ON cs.classID = cl.classID "
+                    + "INNER JOIN SchoolYear sy ON cs.yid = sy.yid "
+                    + "WHERE sy.dateEnd = (SELECT MAX(dateEnd) FROM SchoolYear) " // Lấy năm học cuối cùng
+                    + "ORDER BY S.stuid OFFSET ? ROWS FETCH NEXT 10 ROWS ONLY";
 
             PreparedStatement stm = connection.prepareStatement(sql);
             stm.setInt(1, (index - 1) * 10);
@@ -210,7 +217,7 @@ public class StudentClassSessionDBContext extends DBContext {
 
                 Parent parent = new Parent();
                 parent.setPid(rs.getInt("pid"));
-                 parent.setPname(rs.getString("pname"));
+                parent.setPname(rs.getString("pname"));
                 student.setPid(parent);
 
                 StudentClassSession stuClass = new StudentClassSession();
@@ -223,8 +230,7 @@ public class StudentClassSessionDBContext extends DBContext {
         }
         return list;
     }
-    
-    
+
     //Get list of students by class ID of the most recent school year and paginate
     public List<StudentClassSession> getStudentsByClassIdWithPaging(String classId, int index) {
         List<StudentClassSession> list = new ArrayList<>();
@@ -240,12 +246,12 @@ public class StudentClassSessionDBContext extends DBContext {
                     + "WHERE sy.dateEnd = (SELECT MAX(dateEnd) FROM SchoolYear) "
                     + "AND cl.classID = ? "
                     + "ORDER BY S.stuid OFFSET ? ROWS FETCH NEXT 10 ROWS ONLY";
-            
+
             PreparedStatement stm = connection.prepareStatement(sql);
             stm.setString(1, classId);
             stm.setInt(2, (index - 1) * 10);
             ResultSet rs = stm.executeQuery();
-            
+
             while (rs.next()) {
                 Student student = new Student();
                 student.setStuid(rs.getInt("stuid"));
@@ -276,26 +282,25 @@ public class StudentClassSessionDBContext extends DBContext {
         }
         return list;
     }
-    
-     
+
     //Get the total number of students in the most recent school year 
-   public int getTotalStudentByLatestSchoolYear() {
-    String sql = "SELECT COUNT(*) as total FROM Student S "
-            + "INNER JOIN Student_Class_Session scs ON S.stuid = scs.stuid "
-            + "INNER JOIN Class_Session cs ON scs.csid = cs.csid "
-            + "INNER JOIN SchoolYear sy ON cs.yid = sy.yid "
-            + "WHERE sy.dateEnd = (SELECT MAX(dateEnd) FROM SchoolYear)";
-    try {
-        PreparedStatement stm = connection.prepareStatement(sql);
-        ResultSet rs = stm.executeQuery();
-        if (rs.next()) {
-            return rs.getInt("total");
+    public int getTotalStudentByLatestSchoolYear() {
+        String sql = "SELECT COUNT(*) as total FROM Student S "
+                + "INNER JOIN Student_Class_Session scs ON S.stuid = scs.stuid "
+                + "INNER JOIN Class_Session cs ON scs.csid = cs.csid "
+                + "INNER JOIN SchoolYear sy ON cs.yid = sy.yid "
+                + "WHERE sy.dateEnd = (SELECT MAX(dateEnd) FROM SchoolYear)";
+        try {
+            PreparedStatement stm = connection.prepareStatement(sql);
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("total");
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(StudentClassSessionDBContext.class.getName()).log(Level.SEVERE, null, ex);
         }
-    } catch (SQLException ex) {
-        Logger.getLogger(StudentClassSessionDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        return 0;
     }
-    return 0;
-}
 
     //get total number of students by class ID
     public int getTotalStudentsByClassId(String classId) {
@@ -372,50 +377,7 @@ public class StudentClassSessionDBContext extends DBContext {
         }
     }
 
-    
-  public void addParent(String pname, String gender, String dob, String phoneNumber, String IDcard, String Address, String Email, String NickName, String stuName, String stuDob, String stuGender,String stuAddress,String classId) {
-    String sql = "INSERT INTO Parent (pname, gender, dob, phoneNumber, IDcard, [Address], Email, NickName) "
-            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-    try {
-        connection.setAutoCommit(false);
-        PreparedStatement stm = connection.prepareStatement(sql);
-        stm.setString(1, pname);
-        stm.setString(2, gender);
-        stm.setString(3, dob);
-        stm.setString(4, phoneNumber);
-        stm.setString(5, IDcard);
-        stm.setString(6, Address);
-        stm.setString(7, Email);
-        stm.setString(8, NickName);
-
-        stm.executeUpdate();
-        
-        // Lấy pid của phụ huynh vừa thêm vào
-        ResultSet generatedKeys = stm.getGeneratedKeys();
-        int pid = -1;
-        if (generatedKeys.next()) {
-            pid = generatedKeys.getInt(1);
-        }
-
-        connection.commit(); 
-        addStudent(stuName, stuDob, stuGender, stuAddress,  classId);
-    } catch (SQLException ex) {
-        try {
-            connection.rollback(); 
-        } catch (SQLException e) {
-            Logger.getLogger(DBContext.class.getName()).log(Level.SEVERE, null, e);
-        }
-        Logger.getLogger(DBContext.class.getName()).log(Level.SEVERE, null, ex);
-    } finally {
-        try {
-            connection.setAutoCommit(true); 
-        } catch (SQLException ex) {
-            Logger.getLogger(DBContext.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-  }
-    
-     public int countStudentInClass(String classID) {
+    public int countStudentInClass(String classID) {
         int totalStudent = 0;
         try {
             String sql = "SELECT COUNT(DISTINCT scs.stuid) AS Total_Student "
@@ -436,6 +398,4 @@ public class StudentClassSessionDBContext extends DBContext {
         return totalStudent;
     }
 
-
-      
 }

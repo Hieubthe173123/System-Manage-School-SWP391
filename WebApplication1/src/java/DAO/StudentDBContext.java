@@ -83,30 +83,6 @@ public class StudentDBContext extends DBContext {
         return null;
     }
     
-   public List<Student> getStudentByName(String sname) {
-    List<Student> list = new ArrayList<>();
-    ParentDBContext parent = new ParentDBContext();
-    try {
-        String sql = "SELECT [stuid], [sname], [dob], [gender], [Address], [pid] "
-                   + "FROM [SchoolManagement].[dbo].[Student] WHERE sname LIKE ?";
-        PreparedStatement stm = connection.prepareStatement(sql);
-        stm.setString(1, "%" + sname + "%");
-        ResultSet rs = stm.executeQuery();
-        while (rs.next()) {
-            Student student = new Student();
-            student.setStuid(rs.getInt("stuid"));
-            student.setSname(rs.getString("sname"));
-            student.setDob(rs.getString("dob"));
-            student.setGender(rs.getBoolean("gender"));
-            student.setAddress(rs.getString("Address"));
-            student.setPid(parent.getParentByid(rs.getInt("pid")));
-            list.add(student);
-        }
-    } catch (SQLException e) {
-        System.out.println(e);
-    }
-    return list;
-}
 
 
     public ArrayList<Student> getStudentByIdUser(int id) {
@@ -259,7 +235,20 @@ public class StudentDBContext extends DBContext {
             Logger.getLogger(RoomDBContext.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
-    
- 
+//     public void updateStudentClass(int stuid, int classId) {
+//        String sql = "UPDATE [dbo].[Student_Class_Session] " +
+//                     "SET [csid] = ? " +
+//                     "WHERE [stuid] = ?";
+//        try (PreparedStatement stm = connection.prepareStatement(sql)) {
+//            stm.setInt(1, classId);
+//            stm.setInt(2, stuid);
+//            stm.executeUpdate();
+//        } catch (SQLException ex) {
+//            Logger.getLogger(RoomDBContext.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//    }
+     
+     
 }
+ 
+

@@ -187,14 +187,21 @@
                         icon: "error"
                     });
                 } else if (selectedCount === 0) {
-                    event.preventDefault(); 
+                    event.preventDefault();
                     Swal.fire({
                         title: "Error",
                         text: "Please select at least one student.",
                         icon: "error"
                     });
+                } else if (selectedCount > 20) {
+                    event.preventDefault();
+                    Swal.fire({
+                        title: "Error",
+                        text: "You must only choose 20 student",
+                        icon: "error"
+                    });
                 } else if (currentStudentCount + selectedCount > maxStudents) {
-                    event.preventDefault(); 
+                    event.preventDefault();
                     Swal.fire({
                         title: "Error",
                         text: "Class is already full. You cannot add more students.",

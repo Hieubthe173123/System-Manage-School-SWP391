@@ -12,6 +12,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -67,11 +69,27 @@ public class SessionDBContext extends DBContext {
         }
         return list; // Return the list, not null
     }
+    public int SessionNumber(String sid) {
+         try {
+            String sql = "select totalSession from Session where sid = ?";
+
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setString(1, sid);
+            ResultSet rs = stm.executeQuery();
+            
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(RoomDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return 0;
+    }
 
 
     public static void main(String[] args) {
         SessionDBContext se = new SessionDBContext();
-        List<Session> list = se.getAllSession();
-        System.out.println(list);
+        int sc = se.SessionNumber("1");
+        System.out.println(sc);
     }
 }

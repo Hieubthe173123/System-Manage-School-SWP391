@@ -147,7 +147,7 @@
                     <input type="text" placeholder="Search Activity" />
                     <button type="submit">Search</button>
                 </form>
-                <button class="add-btn">Add Activity</button>
+                <button class="add-btn"  onclick="window.location.href = 'add-curiculum'">Add Activity</button>
                 <button class="add-btn">Promote Activity</button>
 
             </div>
@@ -171,7 +171,7 @@
                             <td>${cur.timeEnd}</td>
                             <td>${cur.isFix ? 'Hoạt động cứng' : 'Hoạt động bình thường'}</td>
                             <td><button class="action-btn update-btn">Update</button></td>
-                            <td><button class="action-btn delete-btn">Delete</button></td>
+                            <td><button class="action-btn delete-btn" onclick="window.location.href = 'delete-curiculum?nameAct=${cur.nameAct}'">Delete</button></td>
                         </tr>
                     </c:forEach>
                 </tbody>

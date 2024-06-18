@@ -4,8 +4,10 @@
  */
 package Controller.Admin;
 
+import DAO.CuriculumDBContext;
 import DAO.SessionDBContext;
 import DAO.SessionDetailDBContext;
+import Entity.Curiculum;
 import Entity.Session;
 import Entity.SessionDetails;
 import java.io.IOException;
@@ -45,6 +47,12 @@ public class SessionDetail extends HttpServlet {
         String sid = request.getParameter("sid");
         List<SessionDetails> list1 = sd.getAllSessionDetails(sid);
         request.setAttribute("list1", list1);
+        
+        
+        String sdid = request.getParameter("sdid");
+        CuriculumDBContext cur = new CuriculumDBContext();
+        List<Curiculum> list2 = cur.getAllActivityInSession(sid, sdid);
+        request.setAttribute("list2",list2);
         request.getRequestDispatcher("FE_Admin/SessionDetail.jsp").forward(request, response);
     }
 

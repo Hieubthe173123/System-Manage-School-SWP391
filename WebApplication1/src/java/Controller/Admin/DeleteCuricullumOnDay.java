@@ -5,8 +5,7 @@
 
 package Controller.Admin;
 
-import DAO.CuriculumDBContext;
-import Entity.Curiculum;
+import DAO.SessionDetailDBContext;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -14,14 +13,13 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.util.List;
 
 /**
  *
  * @author admin
  */
-@WebServlet(name="ActivityOnDay", urlPatterns={"/activity-day"})
-public class ActivityOnDay extends HttpServlet {
+@WebServlet(name="DeleteCuricullumOnDay", urlPatterns={"/delete-curiculum-day"})
+public class DeleteCuricullumOnDay extends HttpServlet {
    
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -32,13 +30,11 @@ public class ActivityOnDay extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        String sid = request.getParameter("sid");
-        String sdid = request.getParameter("sdid");
-        CuriculumDBContext cur = new CuriculumDBContext();
-        List<Curiculum> list = cur.getAllActivityInSession(sid, sdid);
-        request.setAttribute("list",list);
-        request.getRequestDispatcher("FE_Admin/ActivityDay.jsp").forward(request, response);
+         SessionDetailDBContext sdb = new SessionDetailDBContext();
+       String curID = request.getParameter("curid");
+       sdb.deleteActivityOnSession(curID);
+        String referer = request.getHeader("referer");
+        response.sendRedirect(referer);
     } 
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -65,7 +61,7 @@ public class ActivityOnDay extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        processRequest(request, response);
+       
     }
 
     /** 

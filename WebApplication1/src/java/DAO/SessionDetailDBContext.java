@@ -11,6 +11,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -94,9 +96,92 @@ public class SessionDetailDBContext extends DBContext {
         return list;
     }
 
+    public void insertSession(String sid) {
+        String sql = "INSERT INTO [dbo].[Session_Details] ([sid])\n"
+                + "                VALUES (?);\n"
+                + "                \n"
+                + "                INSERT INTO [dbo].[Curiculum] ([nameAct], [sdid], [isFix], [TimeStart], [TimeEnd])\n"
+                + "                SELECT DISTINCT\n"
+                + "                       nameact,\n"
+                + "                       (SELECT MAX(sdid) FROM Session_Details),\n"
+                + "                       isFix,\n"
+                + "                       TimeStart,\n"
+                + "                       TimeEnd\n"
+                + "               FROM Curiculum\n"
+                + "                WHERE isFix = 1;\n"
+                + "\n"
+                + "\n"
+                + "				WITH NumberedSessions AS (\n"
+                + "    SELECT sdid, ROW_NUMBER() OVER(PARTITION BY sid ORDER BY sdid) AS row_number\n"
+                + "    FROM  Session_Details\n"
+                + ")\n"
+                + "UPDATE sd\n"
+                + "SET sessionNumber = ns.row_number\n"
+                + "FROM  Session_Details sd\n"
+                + "JOIN NumberedSessions ns ON sd.sdid = ns.sdid;";
+
+        try {
+            connection.setAutoCommit(false);
+
+            PreparedStatement stm = connection.prepareStatement(sql);
+
+            stm.setString(1, sid);
+            stm.executeUpdate();
+
+            connection.commit();
+        } catch (SQLException ex) {
+            try {
+                connection.rollback();
+            } catch (SQLException e) {
+                Logger.getLogger(DBContext.class.getName()).log(Level.SEVERE, null, e);
+            }
+            Logger.getLogger(DBContext.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                connection.setAutoCommit(true);
+            } catch (SQLException ex) {
+                Logger.getLogger(DBContext.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+
+    public int getTotalSession(String sid) {
+        try {
+            String sql = "select count(*) from Session_Details where sid = ?";
+
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setString(1, sid);
+            ResultSet rs = stm.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(RoomDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return 0;
+
+    }
+
+    public void deleteActivityOnSession(String curID) {
+        try {
+
+            String sql = "UPDATE [dbo].[Curiculum]\n" +
+"                      SET statusSes = null\n" +
+"                     WHERE curID = ?";
+
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setString(1, curID);
+            stm.executeUpdate();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(LecturersDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
     public static void main(String[] args) {
         SessionDetailDBContext sd = new SessionDetailDBContext();
-        List<SessionDetails> list = sd.getAllSessionDetails("1");
-        System.out.println(list);
+        sd.deleteActivityOnSession("2");
+
     }
 }

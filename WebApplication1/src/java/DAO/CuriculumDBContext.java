@@ -85,7 +85,8 @@ public class CuriculumDBContext extends DBContext {
 
     public int getTotalCuriculum() {
         try {
-            String sql = "select count(*) FROM Curiculum";
+            String sql = "SELECT COUNT(DISTINCT nameAct) AS distinct_nameAct_count\n"
+                    + "FROM Curiculum;";
 
             PreparedStatement stm = connection.prepareStatement(sql);
             ResultSet rs = stm.executeQuery();
@@ -131,7 +132,7 @@ public class CuriculumDBContext extends DBContext {
                     + "ORDER BY\n"
                     + "    curID\n"
                     + "OFFSET ? ROWS\n"
-                    + "FETCH NEXT 10 ROWS ONLY;;";
+                    + "FETCH NEXT 10 ROWS ONLY;";
 
             PreparedStatement stm = connection.prepareStatement(sql);
             stm.setString(1, sid); // Set the session ID parameter
@@ -157,12 +158,12 @@ public class CuriculumDBContext extends DBContext {
     public List<Curiculum> getAllActivityInSession(String sid, String sdid) {
         List<Curiculum> list = new ArrayList<>();
         try {
-            String sql = "select Curiculum.curID,Curiculum.nameAct,  LEft(CONVERT(VARCHAR, TimeStart, 108),5)  as TimeStart, LEft(CONVERT(VARCHAR, TimeStart, 108),5) as TimeEnd,Curiculum.isFix\n"
-                    + "from Curiculum\n"
-                    + "left join Session_Details on Curiculum.sdid = Session_Details.sdid\n"
-                    + "left join Session on Session_Details.sid = Session.sid\n"
-                    + "where Session.sid = ? and Session_Details.sdid = ?\n"
-                    + "order by Curiculum.TimeStart asc";
+            String sql = "select Curiculum.curID,Curiculum.nameAct,  LEft(CONVERT(VARCHAR, TimeStart, 108),5)  as TimeStart, LEft(CONVERT(VARCHAR, TimeEnd, 108),5) as TimeEnd,Curiculum.isFix\n" +
+"                                     from Curiculum\n" +
+"                                    left join Session_Details on Curiculum.sdid = Session_Details.sdid\n" +
+"                                  left join Session on Session_Details.sid = Session.sid\n" +
+"                                where Session.sid = ? and Session_Details.sdid = ? and Curiculum.statusSes is not null\n" +
+"                                order by Curiculum.TimeStart asc";
 
             PreparedStatement stm = connection.prepareStatement(sql);
             stm.setString(1, sid); // Set the session ID parameter
@@ -183,10 +184,68 @@ public class CuriculumDBContext extends DBContext {
         return list;
     }
 
-    public static void main(String[] args) {
-        CuriculumDBContext cur = new CuriculumDBContext();
-        List<Curiculum> sc = cur.getAllActivityInSession("1", "1");
-        System.out.println(sc);
+    public void deleteCuriculum(String nameAct) {
+        try {
+            String sql = "DELETE FROM [dbo].[Curiculum]\n"
+                    + "      WHERE nameAct = ?";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setString(1, nameAct);
+            stm.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(LecturerClassSession.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
     }
+
+    public void insertCurriculum(String nameAct, String isFix) {
+        String sql = " INSERT INTO [dbo].[Curiculum]\n"
+                + "           ([nameAct]\n"
+                + "           ,[isFix])\n"
+                + "     VALUES\n"
+                + "           (?, ?);";
+        try {
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setString(1, nameAct);
+            stm.setString(2, isFix);
+            stm.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(RoomDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void promoteCuriculum(String nameAct,String sdid,String timeStart,String timeEnd) {
+        try {
+            String sql = "INSERT INTO [dbo].[Curiculum] ([nameAct], [sdid], [isFix], [TimeStart], [TimeEnd], [statusCur], [statusSes])\n"
+                    + "SELECT distinct \n"
+                    + "    ?,\n"
+                    + "    ?,\n"
+                    + "    isFix,\n"
+                    + "    ?,\n"
+                    + "     ?,\n"
+                    + "    statusCur,\n"
+                    + "    'active'\n"
+                    + "FROM \n"
+                    + "    Curiculum\n"
+                    + "WHERE \n"
+                    + "    nameAct = ? ;";
+
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setString(1, nameAct);
+            stm.setString(2, sdid);
+            stm.setString(3,timeStart);
+            stm.setString(4, timeEnd);
+            stm.setString(5, nameAct);
+
+            stm.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(LecturerClassSession.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public static void main(String[] args) {
+        CuriculumDBContext cur = new CuriculumDBContext();
+        cur.promoteCuriculum("Vòng tròn chia sẻ , Ôn tập ","1","07:00:00","09:30:00");
+
+    }
+
 }

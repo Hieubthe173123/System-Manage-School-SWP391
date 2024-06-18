@@ -341,42 +341,7 @@ public class StudentClassSessionDBContext extends DBContext {
 
     }
 
-    public void addStudent(String sname, String dob, String gender, String address, String classID) {
-        String sql = "INSERT INTO Student (sname, dob, gender, [Address]) "
-                + "VALUES (?, ?, ?, ?); "
-                + "INSERT INTO Student_Class_Session (stuid, csid) "
-                + "VALUES ( "
-                + "    (SELECT MAX(stuid) FROM Student), "
-                + "    (SELECT csid FROM Class_Session WHERE classID = ? AND yid = (SELECT MAX(yid) FROM Class_Session)) "
-                + ")";
-        try {
-            connection.setAutoCommit(false);
-            PreparedStatement stm = connection.prepareStatement(sql);
-            stm.setString(1, sname);
-            stm.setString(2, dob);
-            stm.setString(3, gender);
-            stm.setString(4, address);
-            stm.setString(5, classID);
-
-            stm.executeUpdate();
-
-            connection.commit();
-        } catch (SQLException ex) {
-            try {
-                connection.rollback();
-            } catch (SQLException e) {
-                Logger.getLogger(DBContext.class.getName()).log(Level.SEVERE, null, e);
-            }
-            Logger.getLogger(DBContext.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            try {
-                connection.setAutoCommit(true);
-            } catch (SQLException ex) {
-                Logger.getLogger(DBContext.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-    }
-
+    
     public int countStudentInClass(String classID) {
         int totalStudent = 0;
         try {
@@ -398,4 +363,84 @@ public class StudentClassSessionDBContext extends DBContext {
         return totalStudent;
     }
 
+    public boolean addNewtudent(String sname, String dob, boolean gender, String address, int pid, int classID) {
+    
+    PreparedStatement insert = null;
+    PreparedStatement insertStuToClass = null;
+    boolean insertionSuccess = false; //Returns the result of adding students and adding to class.
+
+    try {
+        connection.setAutoCommit(false);
+
+        String insertStudentSql = "INSERT INTO Student (sname, dob, gender, [Address], pid) VALUES (?, ?, ?, ?, ?)";
+        insert = connection.prepareStatement(insertStudentSql);
+
+        insert.setString(1, sname);
+        insert.setString(2, dob);
+        insert.setBoolean(3, gender);
+        insert.setString(4, address);
+        insert.setInt(5, pid);
+
+        int rowsInserted = insert.executeUpdate();
+
+       //is to get the id of the newly added student
+        int stuid = -1;
+        String retrieveStudentIdSql = "SELECT MAX(stuid) AS stuid FROM Student";
+        try (PreparedStatement retrieveIdStmt = connection.prepareStatement(retrieveStudentIdSql);
+             ResultSet rs = retrieveIdStmt.executeQuery()) {
+            
+            if (rs.next()) {
+                stuid = rs.getInt("stuid");
+            }
+        }
+
+        // SQL to insert student into current year class session
+        String insertStudentToClass = "INSERT INTO Student_Class_Session (stuid, csid) " +
+                "SELECT ?, cs.csid " +
+                "FROM Class_Session cs " +
+                "INNER JOIN SchoolYear sy ON cs.yid = sy.yid " +
+                "WHERE sy.dateEnd = (SELECT MAX(dateEnd) FROM SchoolYear) AND cs.classID = ?";
+        insertStuToClass = connection.prepareStatement(insertStudentToClass);
+        insertStuToClass.setInt(1, stuid);
+        insertStuToClass.setInt(2, classID);
+
+        // Execute insert 
+        int rowsAssigned = insertStuToClass.executeUpdate();
+
+        // Commit transaction if both inserts are successful
+        if (rowsInserted > 0 && rowsAssigned > 0) {
+            connection.commit();
+            insertionSuccess = true;
+        } else {
+            connection.rollback();
+        }
+
+    } catch (SQLException ex) {
+        try {
+            if (connection != null) {
+                connection.rollback();
+            }
+        } catch (SQLException rollbackEx) {
+            rollbackEx.printStackTrace(); // Handle rollback exception
+        }
+        ex.printStackTrace(); // Handle SQL exception
+    } finally {
+        try {
+            if (insert != null) {
+                insert.close();
+            }
+            if (insertStuToClass != null) {
+                insertStuToClass.close();
+            }
+            if (connection != null) {
+                connection.setAutoCommit(true);
+                connection.close();
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace(); // Handle closing exception
+        }
+    }
+
+    return insertionSuccess;
+}
 }

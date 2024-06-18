@@ -133,10 +133,18 @@
                                 <div class="form-group">
                                     <label for="sName">Student Name</label>
                                     <input type="text" class="form-control" id="sName" name="sName" required>
+                                    <% String NameError = (String) request.getAttribute("NameError");
+                                        if (NameError != null) { %>
+                                    <p style="color: red" id="message">${NameErrorMessage}</p>
+                                    <% } %>
                                 </div>
                                 <div class="form-group">
                                     <label for="sDob">Date of Birth</label>
                                     <input type="date" class="form-control" id="sDob" name="sDob" required>
+                                    <% String DobError = (String) request.getAttribute("DobError");
+                                        if (DobError != null) { %>
+                                    <p style="color: red" id="message">${DobErrorMessage}</p>
+                                    <% } %>
                                 </div>
                                 <div class="form-group">
                                     <label for="sGender">Gender</label>
@@ -148,10 +156,18 @@
                                 <div class="form-group">
                                     <label for="studentAddress">Address</label>
                                     <input type="text" class="form-control" id="studentAddress" name="sAddress" required>
+                                    <% String AddressError = (String) request.getAttribute("AddressError");
+                                        if (AddressError != null) { %>
+                                    <p style="color: red" id="message">${AddressErrorMessage}</p>
+                                    <% } %>
                                 </div>
                                 <div class="form-group">
                                     <label for="parentId">Parent ID</label>
                                     <input type="text" class="form-control" id="parentId" name="pid" required>
+                                    <% String pidError = (String) request.getAttribute("pidError");
+                                        if (pidError != null) { %>
+                                    <p style="color: red" id="message">${pidErrodMessage}</p>
+                                    <% } %>
                                 </div>
                                 <div class="form-group">
                                     <label for="studentClassId">Class ID</label>
@@ -161,9 +177,14 @@
                                                 ${classObj.clname}
                                             </option>
                                         </c:forEach>
+                                        <% String classIdError = (String) request.getAttribute("classIdError");
+                                        if (classIdError != null) { %>
+                                        <p style="color: red" id="message">${classIdErrorMessage}</p>
+                                        <% } %>
+
                                     </select>
                                 </div>
-                                 <button type="button" class="btn btn-secondary mt-3" data-dismiss="modal">Cancel</button>
+                                <button type="button" class="btn btn-secondary mt-3" data-dismiss="modal">Cancel</button>
                                 <button type="submit" class="btn btn-primary mt-3">Add</button>
                             </form>
                         </div>
@@ -271,16 +292,33 @@
                 </div>
             </div>
 
-            <!-- paging -->
+            <!-- Paging controls for all students -->
             <div class="d-flex justify-content-center Endpage">
-                <c:if test="${index > 1}">
-                    <button class="page-btn" onclick="window.location.href = 'student?index=${index - 1}'">Previous</button>
+                <c:if test="${!empty allStudent}">
+                    <c:if test="${index > 1}">
+                        <button class="page-btn" onclick="window.location.href = 'student?index=${index - 1}'">Previous</button>
+                    </c:if>
+                    <c:forEach begin="1" end="${endPage}" var="i">
+                        <button class="page-btn ${i == index ? 'active' : ''}" onclick="window.location.href = 'student?index=${i}'">${i}</button>
+                    </c:forEach>
+                    <c:if test="${index < endPage}">
+                        <button class="page-btn" onclick="window.location.href = 'student?index=${index + 1}'">Next</button>
+                    </c:if>
                 </c:if>
-                <c:forEach begin="1" end="${endPage}" var="i">
-                    <button class="page-btn ${i == index ? 'active' : ''}" onclick="window.location.href = 'student?index=${i}'">${i}</button>
-                </c:forEach>
-                <c:if test="${index < endPage}">
-                    <button class="page-btn" onclick="window.location.href = 'student?index=${index + 1}'">Next</button>
+            </div>
+
+            <!-- Paging controls for students of a specific class -->
+            <div class="d-flex justify-content-center Endpage">
+                <c:if test="${!empty studentList}">
+                    <c:if test="${index > 1}">
+                        <button class="page-btn" onclick="window.location.href = 'student?classId=${classId}&index=${index - 1}'">Previous</button>
+                    </c:if>
+                    <c:forEach begin="1" end="${endPage}" var="i">
+                        <button class="page-btn ${i == index ? 'active' : ''}" onclick="window.location.href = 'student?classId=${classId}&index=${i}'">${i}</button>
+                    </c:forEach>
+                    <c:if test="${index < endPage}">
+                        <button class="page-btn" onclick="window.location.href = 'student?classId=${classId}&index=${index + 1}'">Next</button>
+                    </c:if>
                 </c:if>
             </div>
 
@@ -311,97 +349,97 @@
             <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
             <script src="script.js"></script>
             <script>
-                        //Confirm deactivation
-                        let deactivateStudentId;
-                        let deactivateParentId;
+                //Confirm deactivation
+                let deactivateStudentId;
+                let deactivateParentId;
 
-                        function showDeactivateModal(stuid, pid) {
-                            deactivateStudentId = stuid;
-                            deactivateParentId = pid;
-                            $('#deleteStudentModal').modal('show');
-                        }
+                function showDeactivateModal(stuid, pid) {
+                    deactivateStudentId = stuid;
+                    deactivateParentId = pid;
+                    $('#deleteStudentModal').modal('show');
+                }
 
-                        document.getElementById('confirmDeactivateBtn').addEventListener('click', function () {
-                            const form = document.createElement('form');
-                            form.method = 'POST';
-                            form.action = 'deactivate-student';
+                document.getElementById('confirmDeactivateBtn').addEventListener('click', function () {
+                    const form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action = 'deactivate-student';
 
-                            const stuidInput = document.createElement('input');
-                            stuidInput.type = 'hidden';
-                            stuidInput.name = 'stuid';
-                            stuidInput.value = deactivateStudentId;
+                    const stuidInput = document.createElement('input');
+                    stuidInput.type = 'hidden';
+                    stuidInput.name = 'stuid';
+                    stuidInput.value = deactivateStudentId;
 
-                            const pidInput = document.createElement('input');
-                            pidInput.type = 'hidden';
-                            pidInput.name = 'pid';
-                            pidInput.value = deactivateParentId;
+                    const pidInput = document.createElement('input');
+                    pidInput.type = 'hidden';
+                    pidInput.name = 'pid';
+                    pidInput.value = deactivateParentId;
 
-                            form.appendChild(stuidInput);
-                            form.appendChild(pidInput);
-                            document.body.appendChild(form);
-                            form.submit();
-                        });
-
-
-                        // Xử lý hiển thị modal chỉnh sửa sinh viên
-                        function showEditModal(stuid, sname, dob, gender, address, classId) {
-                            document.getElementById('editStudentId').value = stuid;
-                            document.getElementById('editStudentName').value = sname;
-                            document.getElementById('editStudentDob').value = dob;
-                            document.getElementById('editStudentGender').value = gender === 'true' ? 'true' : 'false';
-                            document.getElementById('editStudentAddress').value = address;
-                            document.getElementById('editStudentClassName').value = classId;
-
-                            // Show the edit modal
-                            $('#editStudentModal').modal('show');
-                        }
+                    form.appendChild(stuidInput);
+                    form.appendChild(pidInput);
+                    document.body.appendChild(form);
+                    form.submit();
+                });
 
 
-                        // Xử lý khi người dùng xác nhận cập nhật sinh viên
-                        document.getElementById('confirmUpdateBtn').addEventListener('click', function () {
-                            const form = document.createElement('form');
-                            form.method = 'POST';
-                            form.action = 'update-student';
+                // Xử lý hiển thị modal chỉnh sửa sinh viên
+                function showEditModal(stuid, sname, dob, gender, address, classId) {
+                    document.getElementById('editStudentId').value = stuid;
+                    document.getElementById('editStudentName').value = sname;
+                    document.getElementById('editStudentDob').value = dob;
+                    document.getElementById('editStudentGender').value = gender === 'true' ? 'true' : 'false';
+                    document.getElementById('editStudentAddress').value = address;
+                    document.getElementById('editStudentClassName').value = classId;
 
-                            const stuidInput = document.createElement('input');
-                            stuidInput.type = 'hidden';
-                            stuidInput.name = 'stuid';
-                            stuidInput.value = document.getElementById('editStudentId').value;
+                    // Show the edit modal
+                    $('#editStudentModal').modal('show');
+                }
 
-                            const snameInput = document.createElement('input');
-                            snameInput.type = 'hidden';
-                            snameInput.name = 'sname';
-                            snameInput.value = document.getElementById('editStudentName').value;
 
-                            const dobInput = document.createElement('input');
-                            dobInput.type = 'hidden';
-                            dobInput.name = 'dob';
-                            dobInput.value = document.getElementById('editStudentDob').value;
+                // Xử lý khi người dùng xác nhận cập nhật sinh viên
+                document.getElementById('confirmUpdateBtn').addEventListener('click', function () {
+                    const form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action = 'update-student';
 
-                            const genderInput = document.createElement('input');
-                            genderInput.type = 'hidden';
-                            genderInput.name = 'gender';
-                            genderInput.value = document.getElementById('editStudentGender').value;
+                    const stuidInput = document.createElement('input');
+                    stuidInput.type = 'hidden';
+                    stuidInput.name = 'stuid';
+                    stuidInput.value = document.getElementById('editStudentId').value;
 
-                            const addressInput = document.createElement('input');
-                            addressInput.type = 'hidden';
-                            addressInput.name = 'address';
-                            addressInput.value = document.getElementById('editStudentAddress').value;
+                    const snameInput = document.createElement('input');
+                    snameInput.type = 'hidden';
+                    snameInput.name = 'sname';
+                    snameInput.value = document.getElementById('editStudentName').value;
 
-                            const classNameInput = document.createElement('input');
-                            classNameInput.type = 'hidden';
-                            classNameInput.name = 'className';
-                            classNameInput.value = document.getElementById('editStudentClassName').value;
+                    const dobInput = document.createElement('input');
+                    dobInput.type = 'hidden';
+                    dobInput.name = 'dob';
+                    dobInput.value = document.getElementById('editStudentDob').value;
 
-                            form.appendChild(stuidInput);
-                            form.appendChild(snameInput);
-                            form.appendChild(dobInput);
-                            form.appendChild(genderInput);
-                            form.appendChild(addressInput);
-                            form.appendChild(classNameInput);
-                            document.body.appendChild(form);
-                            form.submit();
-                        });
+                    const genderInput = document.createElement('input');
+                    genderInput.type = 'hidden';
+                    genderInput.name = 'gender';
+                    genderInput.value = document.getElementById('editStudentGender').value;
+
+                    const addressInput = document.createElement('input');
+                    addressInput.type = 'hidden';
+                    addressInput.name = 'address';
+                    addressInput.value = document.getElementById('editStudentAddress').value;
+
+                    const classNameInput = document.createElement('input');
+                    classNameInput.type = 'hidden';
+                    classNameInput.name = 'className';
+                    classNameInput.value = document.getElementById('editStudentClassName').value;
+
+                    form.appendChild(stuidInput);
+                    form.appendChild(snameInput);
+                    form.appendChild(dobInput);
+                    form.appendChild(genderInput);
+                    form.appendChild(addressInput);
+                    form.appendChild(classNameInput);
+                    document.body.appendChild(form);
+                    form.submit();
+                });
             </script>
 
     </body>

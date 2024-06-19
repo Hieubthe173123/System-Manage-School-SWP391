@@ -64,7 +64,7 @@
                     </form>
                 </div>
                 <div class="col-sm-6 text-right">
-                    <button class="btn btn-primary" id="addNewStudentBtn" data-toggle="modal" data-target="#studentModal">Add New Student</button>
+                    <a href="add-student" class="btn btn-primary" id="addNewStudentBtn">Add New Student</a>
                 </div>
             </div>
             <div class="row mt-3">
@@ -115,83 +115,6 @@
 
                 </tbody>
             </table>
-
-
-            <!-- Modal for adding new student -->
-            <div class="modal fade" id="studentModal" tabindex="-1" aria-labelledby="studentModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="studentModalLabel">Add New Student</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <form id="studentForm" action="add-student" method="post">
-                                <!-- Student information -->
-                                <div class="form-group">
-                                    <label for="sName">Student Name</label>
-                                    <input type="text" class="form-control" id="sName" name="sName" required>
-                                    <% String NameError = (String) request.getAttribute("NameError");
-                                        if (NameError != null) { %>
-                                    <p style="color: red" id="message">${NameErrorMessage}</p>
-                                    <% } %>
-                                </div>
-                                <div class="form-group">
-                                    <label for="sDob">Date of Birth</label>
-                                    <input type="date" class="form-control" id="sDob" name="sDob" required>
-                                    <% String DobError = (String) request.getAttribute("DobError");
-                                        if (DobError != null) { %>
-                                    <p style="color: red" id="message">${DobErrorMessage}</p>
-                                    <% } %>
-                                </div>
-                                <div class="form-group">
-                                    <label for="sGender">Gender</label>
-                                    <select class="form-control" id="sGender" name="sGender" required>
-                                        <option value="true">Male</option>
-                                        <option value="false">Female</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="studentAddress">Address</label>
-                                    <input type="text" class="form-control" id="studentAddress" name="sAddress" required>
-                                    <% String AddressError = (String) request.getAttribute("AddressError");
-                                        if (AddressError != null) { %>
-                                    <p style="color: red" id="message">${AddressErrorMessage}</p>
-                                    <% } %>
-                                </div>
-                                <div class="form-group">
-                                    <label for="parentId">Parent ID</label>
-                                    <input type="text" class="form-control" id="parentId" name="pid" required>
-                                    <% String pidError = (String) request.getAttribute("pidError");
-                                        if (pidError != null) { %>
-                                    <p style="color: red" id="message">${pidErrodMessage}</p>
-                                    <% } %>
-                                </div>
-                                <div class="form-group">
-                                    <label for="studentClassId">Class ID</label>
-                                    <select class="form-control" id="studentClassId" name="classId" required>
-                                        <c:forEach var="classObj" items="${classList}">
-                                            <option value="${classObj.classid}" <c:if test="${param.classId == classObj.classid}">selected</c:if>>
-                                                ${classObj.clname}
-                                            </option>
-                                        </c:forEach>
-                                        <% String classIdError = (String) request.getAttribute("classIdError");
-                                        if (classIdError != null) { %>
-                                        <p style="color: red" id="message">${classIdErrorMessage}</p>
-                                        <% } %>
-
-                                    </select>
-                                </div>
-                                <button type="button" class="btn btn-secondary mt-3" data-dismiss="modal">Cancel</button>
-                                <button type="submit" class="btn btn-primary mt-3">Add</button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
 
 
             <!--             Delete Student Modal 

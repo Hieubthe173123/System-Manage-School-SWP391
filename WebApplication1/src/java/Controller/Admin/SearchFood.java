@@ -65,16 +65,19 @@ public class SearchFood extends HttpServlet {
 
         FoodDBContext fooddb = new FoodDBContext();
 
-// Search by foodid
-        List<Food> searchResultsById = fooddb.searchFoodByID(searchInput);
-
-// Search by fname
-        List<Food> searchResultsByName = fooddb.searchFoodByName(searchInput);
-
-// Combine search results
+// Initialize the list to store combined results
         List<Food> combinedResults = new ArrayList<>();
-        combinedResults.addAll(searchResultsById);
-        combinedResults.addAll(searchResultsByName);
+
+// Check if searchInput is numeric (indicating a search by foodid)
+        if (searchInput != null && searchInput.matches("\\d+")) {
+            // Search by foodid
+            List<Food> searchResultsById = fooddb.searchFoodByID(searchInput);
+            combinedResults.addAll(searchResultsById);
+        } else {
+            // Search by fname
+            List<Food> searchResultsByName = fooddb.searchFoodByName(searchInput);
+            combinedResults.addAll(searchResultsByName);
+        }
 
 // Forward the combined search results to the JSP page
         request.setAttribute("searchResults", combinedResults);

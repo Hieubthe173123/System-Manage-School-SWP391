@@ -83,7 +83,7 @@ public class UpdateFood extends HttpServlet {
                 request.getRequestDispatcher("/food").forward(request, response);
             }
         } catch (SQLException e) {
-            request.setAttribute("errorMessage", "An error occurred while adding food.");
+            request.setAttribute("errorMessage", "An error occurred while update food.");
             request.getRequestDispatcher("/food").forward(request, response);
         }
     }

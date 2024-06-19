@@ -107,8 +107,8 @@
                             <td>${studentClass.stuid.pid.pname}</td>
                             <td>${studentClass.csid.classID.clname}</td>
                             <td>
-                                <button class="btn btn-warning btn-sm" onclick="showEditModal('${studentClass.stuid.stuid}', '${studentClass.stuid.sname}', '${studentClass.stuid.dob}', '${studentClass.stuid.gender}', '${studentClass.stuid.address}', '${studentClass.csid.classID.classid}')">Update</button>
-                                <button class="btn btn-danger btn-sm" onclick="showDeactivateModal('${studentClass.stuid.stuid}', '${studentClass.stuid.pid.pid}')">Delete</button>
+                                  <a class="btn btn-warning btn-sm" href="update-student?stuid=${studentClass.stuid.stuid}&sname=${studentClass.stuid.sname}&dob=${studentClass.stuid.dob}&gender=${studentClass.stuid.gender}&address=${studentClass.stuid.address}&classid=${studentClass.csid.classID.classid}">Update</a>
+                                <button class="btn btn-danger btn-sm" onclick="showDeactivateModal('${studentClass.stuid.stuid}', '${studentClass.stuid.pid.pid}')">Status</button>
                             </td>
                         </tr>
                     </c:forEach>
@@ -237,60 +237,6 @@
             </div>
 
 
-            <!-- Modal for editing student -->
-            <div class="modal fade" id="editStudentModal" tabindex="-1" aria-labelledby="editStudentModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="editStudentModalLabel">Update Student</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <form id="editStudentForm">
-                                <input type="hidden" id="editStudentId">
-                                <div class="form-group">
-                                    <label for="editStudentName">Student Name</label>
-                                    <input type="text" class="form-control" id="editStudentName" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="editStudentDob">Date of Birth</label>
-                                    <input type="date" class="form-control" id="editStudentDob" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="editStudentGender">Gender</label>
-                                    <select class="form-control" id="editStudentGender" name="gender" required>
-                                        <option value="true">Male</option>
-                                        <option value="false">Female</option>
-                                    </select>
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="editStudentAddress">Address</label>
-                                    <input type="text" class="form-control" id="editStudentAddress" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="editStudentClassName">Class</label>
-                                    <select class="form-control" id="editStudentClassName" name="className" required>
-                                        <c:forEach var="classObj" items="${classList}">
-                                            <option value="${classObj.classid}" <c:if test="${param.classId == classObj.classid}">selected</c:if>>
-                                                ${classObj.clname}
-                                            </option>
-                                        </c:forEach>
-                                    </select>
-                                </div>
-
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                                    <button type="button" id="confirmUpdateBtn" class="btn btn-danger">Update</button>
-                                </div>
-
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
             <!-- Paging controls for all students -->
             <div class="d-flex justify-content-center Endpage">
@@ -348,99 +294,7 @@
             <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
             <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
             <script src="script.js"></script>
-            <script>
-                //Confirm deactivation
-                let deactivateStudentId;
-                let deactivateParentId;
-
-                function showDeactivateModal(stuid, pid) {
-                    deactivateStudentId = stuid;
-                    deactivateParentId = pid;
-                    $('#deleteStudentModal').modal('show');
-                }
-
-                document.getElementById('confirmDeactivateBtn').addEventListener('click', function () {
-                    const form = document.createElement('form');
-                    form.method = 'POST';
-                    form.action = 'deactivate-student';
-
-                    const stuidInput = document.createElement('input');
-                    stuidInput.type = 'hidden';
-                    stuidInput.name = 'stuid';
-                    stuidInput.value = deactivateStudentId;
-
-                    const pidInput = document.createElement('input');
-                    pidInput.type = 'hidden';
-                    pidInput.name = 'pid';
-                    pidInput.value = deactivateParentId;
-
-                    form.appendChild(stuidInput);
-                    form.appendChild(pidInput);
-                    document.body.appendChild(form);
-                    form.submit();
-                });
-
-
-                // Xử lý hiển thị modal chỉnh sửa sinh viên
-                function showEditModal(stuid, sname, dob, gender, address, classId) {
-                    document.getElementById('editStudentId').value = stuid;
-                    document.getElementById('editStudentName').value = sname;
-                    document.getElementById('editStudentDob').value = dob;
-                    document.getElementById('editStudentGender').value = gender === 'true' ? 'true' : 'false';
-                    document.getElementById('editStudentAddress').value = address;
-                    document.getElementById('editStudentClassName').value = classId;
-
-                    // Show the edit modal
-                    $('#editStudentModal').modal('show');
-                }
-
-
-                // Xử lý khi người dùng xác nhận cập nhật sinh viên
-                document.getElementById('confirmUpdateBtn').addEventListener('click', function () {
-                    const form = document.createElement('form');
-                    form.method = 'POST';
-                    form.action = 'update-student';
-
-                    const stuidInput = document.createElement('input');
-                    stuidInput.type = 'hidden';
-                    stuidInput.name = 'stuid';
-                    stuidInput.value = document.getElementById('editStudentId').value;
-
-                    const snameInput = document.createElement('input');
-                    snameInput.type = 'hidden';
-                    snameInput.name = 'sname';
-                    snameInput.value = document.getElementById('editStudentName').value;
-
-                    const dobInput = document.createElement('input');
-                    dobInput.type = 'hidden';
-                    dobInput.name = 'dob';
-                    dobInput.value = document.getElementById('editStudentDob').value;
-
-                    const genderInput = document.createElement('input');
-                    genderInput.type = 'hidden';
-                    genderInput.name = 'gender';
-                    genderInput.value = document.getElementById('editStudentGender').value;
-
-                    const addressInput = document.createElement('input');
-                    addressInput.type = 'hidden';
-                    addressInput.name = 'address';
-                    addressInput.value = document.getElementById('editStudentAddress').value;
-
-                    const classNameInput = document.createElement('input');
-                    classNameInput.type = 'hidden';
-                    classNameInput.name = 'className';
-                    classNameInput.value = document.getElementById('editStudentClassName').value;
-
-                    form.appendChild(stuidInput);
-                    form.appendChild(snameInput);
-                    form.appendChild(dobInput);
-                    form.appendChild(genderInput);
-                    form.appendChild(addressInput);
-                    form.appendChild(classNameInput);
-                    document.body.appendChild(form);
-                    form.submit();
-                });
-            </script>
+            
 
     </body>
 </html>

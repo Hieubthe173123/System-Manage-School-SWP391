@@ -211,7 +211,7 @@ public class StudentDBContext extends DBContext {
             }
         }
     }
-
+    
     public void updateStudent(Student student) {
         try {
             String sql
@@ -235,20 +235,17 @@ public class StudentDBContext extends DBContext {
             Logger.getLogger(RoomDBContext.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-//     public void updateStudentClass(int stuid, int classId) {
-//        String sql = "UPDATE [dbo].[Student_Class_Session] " +
-//                     "SET [csid] = ? " +
-//                     "WHERE [stuid] = ?";
-//        try (PreparedStatement stm = connection.prepareStatement(sql)) {
-//            stm.setInt(1, classId);
-//            stm.setInt(2, stuid);
-//            stm.executeUpdate();
-//        } catch (SQLException ex) {
-//            Logger.getLogger(RoomDBContext.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//    }
-     
-     
-}
- 
 
+     public void updateStudentClass(int stuid, int newClassId) {
+        try {
+            String updateClassSQL = "UPDATE Student_Class_Session SET csid = ? WHERE stuid = ?";
+            PreparedStatement updateClassStmt = connection.prepareStatement(updateClassSQL);
+            updateClassStmt.setInt(1, newClassId);
+            updateClassStmt.setInt(2, stuid);
+            updateClassStmt.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(RoomDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+}
+    

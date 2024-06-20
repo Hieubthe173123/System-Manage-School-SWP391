@@ -35,5 +35,10 @@ public class AgeCategory {
     public void setAname(String aname) {
         this.aname = aname;
     }
+
+    @Override
+    public String toString() {
+        return "AgeCategory{" + "ageid=" + ageid + ", aname=" + aname + '}';
+    }
     
 }

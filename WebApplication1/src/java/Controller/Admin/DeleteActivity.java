@@ -5,9 +5,7 @@
 
 package Controller.Admin;
 
-import DAO.AgeDBContext;
-import DAO.SessionDBContext;
-import Entity.AgeCategory;
+import DAO.CuriculumDBContext;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -15,14 +13,13 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.util.List;
 
 /**
  *
  * @author admin
  */
-@WebServlet(name="AddSession", urlPatterns={"/add-sessions"})
-public class AddSession extends HttpServlet {
+@WebServlet(name="DeleteActivity", urlPatterns={"/delete-activity"})
+public class DeleteActivity extends HttpServlet {
    
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -34,11 +31,11 @@ public class AddSession extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        AgeDBContext age = new AgeDBContext();
-        List<AgeCategory> list = age.getAge();
-        request.setAttribute("list", list);
-        request.getRequestDispatcher("FE_Admin/AddSession.jsp").forward(request, response);
-                
+        String nameAct = request.getParameter("nameAct");
+        CuriculumDBContext cur = new CuriculumDBContext();
+        cur.deleteActivity(nameAct);
+         String referer = request.getHeader("referer");
+        response.sendRedirect(referer);
     } 
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -65,12 +62,7 @@ public class AddSession extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        String sname = request.getParameter("sname");
-        String totalSession = request.getParameter("totalSession");
-        String ageid = request.getParameter("ageid");
-        SessionDBContext s = new SessionDBContext();
-        s.addSession(sname, totalSession, ageid);
-        response.sendRedirect("session");
+        processRequest(request, response);
     }
 
     /** 

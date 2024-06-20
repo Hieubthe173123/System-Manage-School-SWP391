@@ -1,9 +1,3 @@
-<%-- 
-    Document   : Curiculum
-    Created on : Jun 10, 2024, 2:25:44 PM
-    Author     : admin
---%>
-
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -139,55 +133,65 @@
             }
         </style>
     </head>
-    <body>
+     <body>
         <div class="container">
             <h1>Curriculum List</h1>
             <div class="actions">
-                <form>
-                    <input type="text" placeholder="Search Activity" />
+                <form method="get" action="curriculum">
+                    <input type="hidden" name="sid" value="${param.sid}" />
+                    <input type="text" name="nameAct" placeholder="Search Activity" value="${param.nameAct}" />
                     <button type="submit">Search</button>
                 </form>
-                <button class="add-btn"  onclick="window.location.href = 'add-curiculum'">Add Activity</button>
+                <button class="add-btn" onclick="window.location.href = 'add-curiculum'">Add Activity</button>
                 <button class="add-btn">Promote Activity</button>
-
             </div>
+            
+            <form action="curriculum" method="get">
+                <select name="sid" id="sessionSelect" onchange="this.form.submit()">
+                    <c:forEach var="ses" items="${requestScope.list}">
+                        <option value="${ses.sid}" ${ses.sid == param.sid ? 'selected' : ''}>
+                            ${ses.sname}
+                        </option>
+                    </c:forEach>
+                </select>
+            </form>
+            
             <table>
                 <thead>
                     <tr>
                         <th>ID</th>
                         <th>Activity</th>
-                        <th>Start Time</th>
-                        <th>End Time</th>
                         <th>Fixed</th>
                         <th colspan="2">Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <c:forEach var="cur" items="${requestScope.list}">
-                        <tr class="${cur.isFix ? 'fixed-activity' : ''}">
-                            <td>${cur.curID}</td>
-                            <td>${cur.nameAct}</td>
-                            <td>${cur.timeStart}</td>
-                            <td>${cur.timeEnd}</td>
-                            <td>${cur.isFix ? 'Hoạt động cứng' : 'Hoạt động bình thường'}</td>
-                            <td><button class="action-btn update-btn">Update</button></td>
-                            <td><button class="action-btn delete-btn" onclick="window.location.href = 'delete-curiculum?nameAct=${cur.nameAct}'">Delete</button></td>
-                        </tr>
-                    </c:forEach>
+                    <c:choose>
+                        <c:when test="${!empty requestScope.list2}">
+                            <c:forEach var="cur" items="${requestScope.list2}">
+                                <tr class="${cur.isFix ? 'fixed-activity' : ''}">
+                                    <td>${cur.curID}</td>
+                                    <td>${cur.nameAct}</td>
+                                    <td>${cur.isFix ? 'Hoạt động cứng' : 'Hoạt động bình thường'}</td>
+                                    <td><button class="action-btn update-btn">Update</button></td>
+                                    <td><button class="action-btn delete-btn" onclick="window.location.href = 'delete-activity?nameAct=${cur.nameAct}'">Delete</button></td>
+                                </tr>
+                            </c:forEach>
+                        </c:when>
+                        <c:otherwise>
+                            <c:forEach var="cur" items="${requestScope.list1}">
+                                <tr class="${cur.isFix ? 'fixed-activity' : ''}">
+                                    <td>${cur.curID}</td>
+                                    <td>${cur.nameAct}</td>
+                                    <td>${cur.isFix ? 'Hoạt động cứng' : 'Hoạt động bình thường'}</td>
+                                    <td><button class="action-btn update-btn">Update</button></td>
+                                    <td><button class="action-btn delete-btn" onclick="window.location.href = 'delete-activity?nameAct=${cur.nameAct}'">Delete</button></td>
+                                </tr>
+                            </c:forEach>
+                        </c:otherwise>
+                    </c:choose>
                 </tbody>
-
             </table>
-            <div class="pagination">
-                <c:if test="${index > 1}">
-                    <button class="page-btn" onclick="window.location.href = 'curriculum?sid=${param.sid}&index=${index - 1}'">Previous</button>
-                </c:if>
-                <c:forEach begin="1" end="${endPage}" var="i">
-                    <button class="page-btn ${i == index ? 'active' : ''}" onclick="window.location.href = 'curriculum?sid=${param.sid}&index=${i}'">${i}</button>
-                </c:forEach>
-                <c:if test="${index < endPage}">
-                    <button class="page-btn" onclick="window.location.href = 'curriculum?sid=${param.sid}&index=${index + 1}'">Next</button>
-                </c:if>
-            </div>
         </div>
     </body>
 </html>

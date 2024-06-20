@@ -98,26 +98,27 @@ public class SessionDetailDBContext extends DBContext {
 
     public void insertSession(String sid) {
         String sql = "INSERT INTO [dbo].[Session_Details] ([sid])\n"
-                + "                VALUES (?);\n"
-                + "                \n"
-                + "                INSERT INTO [dbo].[Curiculum] ([nameAct], [sdid], [isFix], [TimeStart], [TimeEnd])\n"
-                + "                SELECT DISTINCT\n"
-                + "                       nameact,\n"
-                + "                       (SELECT MAX(sdid) FROM Session_Details),\n"
-                + "                       isFix,\n"
-                + "                       TimeStart,\n"
-                + "                       TimeEnd\n"
-                + "               FROM Curiculum\n"
-                + "                WHERE isFix = 1;\n"
+                + "VALUES (?);\n"
                 + "\n"
+                + "INSERT INTO [dbo].[Curiculum] ([nameAct], [sdid], [isFix], [TimeStart], [TimeEnd], [statusCur], [statusSes])\n"
+                + "SELECT DISTINCT\n"
+                + "    c.nameact,\n"
+                + "    (SELECT MAX(sdid) FROM Session_Details),\n"
+                + "    c.isFix,\n"
+                + "    c.TimeStart,\n"
+                + "    c.TimeEnd,\n"
+                + "    c.statusCur,\n"
+                + "    c.statusSes\n"
+                + "FROM Curiculum c\n"
+                + "WHERE c.isFix = 1 and c.statusCur is not null and c.statusSes is not null;\n"
                 + "\n"
-                + "				WITH NumberedSessions AS (\n"
+                + "WITH NumberedSessions AS (\n"
                 + "    SELECT sdid, ROW_NUMBER() OVER(PARTITION BY sid ORDER BY sdid) AS row_number\n"
-                + "    FROM  Session_Details\n"
+                + "    FROM Session_Details\n"
                 + ")\n"
                 + "UPDATE sd\n"
-                + "SET sessionNumber = ns.row_number\n"
-                + "FROM  Session_Details sd\n"
+                + "SET sd.sessionNumber = ns.row_number\n"
+                + "FROM Session_Details sd\n"
                 + "JOIN NumberedSessions ns ON sd.sdid = ns.sdid;";
 
         try {
@@ -166,9 +167,9 @@ public class SessionDetailDBContext extends DBContext {
     public void deleteActivityOnSession(String curID) {
         try {
 
-            String sql = "UPDATE [dbo].[Curiculum]\n" +
-"                      SET statusSes = null\n" +
-"                     WHERE curID = ?";
+            String sql = "UPDATE [dbo].[Curiculum]\n"
+                    + "                      SET statusSes = null\n"
+                    + "                     WHERE curID = ?";
 
             PreparedStatement stm = connection.prepareStatement(sql);
             stm.setString(1, curID);

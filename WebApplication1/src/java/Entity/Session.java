@@ -9,22 +9,26 @@ package Entity;
  * @author admin
  */
 public class Session {
+
     private int sid;
     private String sname;
     private String sessionDescription;
     private int totalSession;
     private AgeCategory age;
-
+    private String status;
     public Session() {
     }
 
-    public Session(int sid, String sname, String sessionDescription, int totalSession, AgeCategory age) {
+    public Session(int sid, String sname, String sessionDescription, int totalSession, AgeCategory age, String status) {
         this.sid = sid;
         this.sname = sname;
         this.sessionDescription = sessionDescription;
         this.totalSession = totalSession;
         this.age = age;
+        this.status = status;
     }
+
+
 
     public int getSid() {
         return sid;
@@ -66,9 +70,20 @@ public class Session {
         this.age = age;
     }
 
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
     @Override
     public String toString() {
-        return super.toString(); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
+        return "Session{" + "sid=" + sid + ", sname=" + sname + ", sessionDescription=" + sessionDescription + ", totalSession=" + totalSession + ", age=" + age + ", status=" + status + '}';
     }
     
+
+    
+
 }

@@ -5,9 +5,8 @@
 
 package Controller.Admin;
 
-import DAO.AgeDBContext;
 import DAO.SessionDBContext;
-import Entity.AgeCategory;
+import Entity.Session;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -21,8 +20,8 @@ import java.util.List;
  *
  * @author admin
  */
-@WebServlet(name="AddSession", urlPatterns={"/add-sessions"})
-public class AddSession extends HttpServlet {
+@WebServlet(name="HistorySession", urlPatterns={"/history-session"})
+public class HistorySession extends HttpServlet {
    
     /** 
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -34,11 +33,10 @@ public class AddSession extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        AgeDBContext age = new AgeDBContext();
-        List<AgeCategory> list = age.getAge();
+        SessionDBContext s = new SessionDBContext();
+        List<Session> list = s.getAllSession2();
         request.setAttribute("list", list);
-        request.getRequestDispatcher("FE_Admin/AddSession.jsp").forward(request, response);
-                
+        request.getRequestDispatcher("FE_Admin/HistorySession.jsp").forward(request, response);                 
     } 
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -65,12 +63,7 @@ public class AddSession extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-        String sname = request.getParameter("sname");
-        String totalSession = request.getParameter("totalSession");
-        String ageid = request.getParameter("ageid");
-        SessionDBContext s = new SessionDBContext();
-        s.addSession(sname, totalSession, ageid);
-        response.sendRedirect("session");
+        processRequest(request, response);
     }
 
     /** 

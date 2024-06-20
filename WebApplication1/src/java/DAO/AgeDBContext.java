@@ -38,5 +38,34 @@ public class AgeDBContext extends DBContext {
         }
         return null;
     }
+    public List<AgeCategory> getAge() {
+    List<AgeCategory> list = new ArrayList<>();
+    PreparedStatement stm = null;
+    ResultSet rs = null;
+    
+    try {
+        String sql = "SELECT * FROM Age_Category";
+        stm = connection.prepareStatement(sql);
+        rs = stm.executeQuery();
+        
+        while (rs.next()) {
+            AgeCategory age = new AgeCategory();
+            age.setAgeid(rs.getInt("ageid"));
+            age.setAname(rs.getString("aname"));
+            list.add(age);
+        }
+    } catch (SQLException e) {
+            System.out.println(e);
+        }
+    
+    return list;
+}
+
+    
+    public static void main(String[] args) {
+        AgeDBContext age = new AgeDBContext();
+        List<AgeCategory> list = age.getAge();
+        System.out.println(list);
+    }
   
 }

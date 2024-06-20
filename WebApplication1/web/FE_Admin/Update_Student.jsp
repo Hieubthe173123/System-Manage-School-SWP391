@@ -1,8 +1,3 @@
-<%-- 
-    Document   : update-student
-    Created on : Jun 19, 2024, 3:00:00 PM
-    Author     : Your Name
---%>
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -18,27 +13,35 @@
                 background-color: #f8f9fa;
                 font-family: 'Arial', sans-serif;
             }
+            .container {
+                margin-top: 50px;
+                max-width: 600px; 
+                padding: 20px;
+                background-color: #ffffff;
+                border-radius: 8px;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            }
 
-            h2 {
+             h2 {
                 margin-bottom: 20px;
             }
-
-            .form-group label {
-                font-weight: bold;
+            .form-group {
+                margin-bottom: 20px; 
             }
-
-            .btn-secondary {
-                background-color: #6c757d;
-                border-color: #6c757d;
+            .modal-footer {
+                margin-top: 20px; 
+                text-align: right;
+            }
+            .btn-cancel {
+                margin-right: 10px; 
             }
         </style>
     </head>
     <body>
-        <div class="container mt-5">
+        <div class="container">
             <h2 class="text-center">Update Student</h2>
 
-            <div class="row mt-3">
-                <div class="col-sm-6 offset-sm-3">
+            
                     <form id="updateStudentForm" action="update-student" method="post">
                         <input type="hidden" id="editStudentId" name="stuid" value="${param.stuid}">
                         <div class="form-group">
@@ -108,9 +111,9 @@
                         </script>  
 
                     </form>
-                </div>
-            </div>
+               
         </div>
-
+        <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
     </body>
 </html>

@@ -66,7 +66,7 @@
                 </div>
                 <div class="form-group">
                     <label for="pid">Parent ID</label>
-                    <input type="text" class="form-control" id="pid" name="pid" required>
+                    <input type="number" class="form-control" id="pid" name="pid" required>
                 </div>
                 <div class="form-group">
                     <label for="classId">Class ID</label>

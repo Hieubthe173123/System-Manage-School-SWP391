@@ -7,26 +7,23 @@ package Controller.Admin;
 import DAO.ParentDBContext;
 import Entity.Parent;
 import java.io.IOException;
-import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 
 /**
  *
  * @author NGUYEN THI KHANH VI
  */
-@WebServlet(name = "AddNewParent", urlPatterns = {"/add-new-parent"})
+@WebServlet(name = "AddNewParent", urlPatterns = {"/add-parent"})
 public class AddNewParent extends HttpServlet {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        request.getRequestDispatcher("FE_Admin/Parent_Management.jsp").forward(request, response);
+        request.getRequestDispatcher("FE_Admin/AddNewParent.jsp").forward(request, response);
     }
 
     @Override
@@ -47,19 +44,38 @@ public class AddNewParent extends HttpServlet {
         String email = request.getParameter("email");
         String nickname = request.getParameter("nickname");
 
-        // Kiểm tra tính hợp lệ của email và ngày tháng năm sinh
-        if (!isValidEmail(email)) {
-            request.setAttribute("emailError", "Invalid email format!");
-            request.getRequestDispatcher("/WEB-INF/parentModal.jsp").forward(request, response);
+         if (pname == null || pname.trim().isEmpty()) {
+            request.setAttribute("Error", "Please enter your name.");
+            processRequest(request, response);
             return;
         }
-
-        if (!isValidDateOfBirth(dob)) {
-            request.setAttribute("dobError", "Invalid date of birth format! Please use YYYY-MM-DD.");
-            request.getRequestDispatcher("/WEB-INF/parentModal.jsp").forward(request, response);
+          // Validate Phone Number
+        if (!phoneNumber.matches("\\d{10}")) {
+            request.setAttribute("Error", "Phone number must be 10 digits.");
+            processRequest(request, response);
             return;
         }
-
+         if (address == null || address.trim().isEmpty()) {
+            request.setAttribute("Error", "Please enter your address.");
+            processRequest(request, response);
+            return;
+        }
+         if (nickname == null || nickname.trim().isEmpty()) {
+            request.setAttribute("Error", "Please enter your nickname.");
+            return;
+        }
+         if (!IDcard.matches("\\d{12}")) {
+            request.setAttribute("Error", "ID Card must be 12 digits.");
+             processRequest(request, response);
+            return;
+        } 
+         ParentDBContext parentDB = new ParentDBContext();
+        if (parentDB.isIDCardExists(IDcard)) {
+            request.setAttribute("Error", "ID Card already exists.");
+            processRequest(request, response);
+            return;
+        }
+     
         Parent parent = new Parent();
         parent.setPname(pname);
         parent.setGender(gender);
@@ -70,28 +86,13 @@ public class AddNewParent extends HttpServlet {
         parent.setEmail(email);
         parent.setNickname(nickname);
 
-        ParentDBContext parentDB = new ParentDBContext();
+       
         parentDB.addParent(parent);
 
         response.sendRedirect("parent");
     }
 
-    // Hàm kiểm tra tính hợp lệ của email 
-    private boolean isValidEmail(String email) {
-        String regex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
-        return email.matches(regex);
-    }
-
-    private boolean isValidDateOfBirth(String dob) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        sdf.setLenient(false);
-        try {
-            sdf.parse(dob);
-            return true;
-        } catch (ParseException e) {
-            return false;
-        }
-    }
+   
 
     @Override
     public String getServletInfo() {

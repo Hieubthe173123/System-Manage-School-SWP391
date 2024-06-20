@@ -86,6 +86,7 @@
             <table class="table table-bordered">
                 <thead>
                     <tr>
+                        <th>No</th>
                         <th>Student ID</th>
                         <th>Student Name</th>
                         <th>DOB</th>
@@ -97,8 +98,9 @@
                     </tr>
                 </thead>
                 <tbody id="studentTableBody">
-                    <c:forEach var="studentClass" items="${not empty search ? search : not empty allStudent ? allStudent : studentList}">
+                    <c:forEach var="studentClass" items="${not empty search ? search : not empty allStudent ? allStudent : studentList}" varStatus="status">
                         <tr>
+                            <td>${status.index + 1 + (index - 1) * 10}</td>
                             <td>${studentClass.stuid.stuid}</td>
                             <td>${studentClass.stuid.sname}</td>
                             <td>${studentClass.stuid.dob}</td>

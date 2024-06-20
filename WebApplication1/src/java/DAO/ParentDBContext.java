@@ -133,11 +133,15 @@ public class ParentDBContext extends DBContext {
         }
     }
 
-    public List<Parent> getAllParents() {
+    public List<Parent> getAllParents(int index) {
         List<Parent> parentList = new ArrayList<>();
         try {
-            String sql = "SELECT [pid], [pname], [gender], [dob], [phoneNumber], [IDcard], [Address], [Email], [NickName] FROM [SchoolManagement].[dbo].[Parent]";
+            String sql = "SELECT [pid], [pname], [gender], [dob], [phoneNumber], [IDcard], [Address], [Email], [NickName] "
+                    + "FROM [SchoolManagement].[dbo].[Parent] "
+                    + "ORDER BY [pid] "
+                    + "OFFSET ? ROWS FETCH NEXT 10 ROWS ONLY";
             PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setInt(1, (index - 1) * 10);
             ResultSet rs = stm.executeQuery();
             while (rs.next()) {
                 Parent p = new Parent();
@@ -189,6 +193,8 @@ public class ParentDBContext extends DBContext {
         return parentList;
     }
 
+    
+    //Check if parent exists
     public boolean checkParentIdExists(int pid) {
         try {
             String sql = "SELECT COUNT(*) AS count FROM Parent WHERE pid = ?";
@@ -202,5 +208,41 @@ public class ParentDBContext extends DBContext {
             Logger.getLogger(ParentDBContext.class.getName()).log(Level.SEVERE, null, ex);
         }
         return false;
+    }
+
+    //Check if IDCard exists
+    public boolean isIDCardExists(String idCard) {
+        boolean exists = false;
+        try {
+            String sql = "SELECT COUNT(*) AS count FROM [SchoolManagement].[dbo].[Parent] WHERE [IDcard] = ?";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setString(1, idCard);
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                int count = rs.getInt("count");
+                if (count > 0) {
+                    exists = true;
+                }
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ParentDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return exists;
+    }
+
+    //Count the number of parents for pagination
+    public int getTotalParent() {
+        int count = 0;
+        try {
+            String sql = "SELECT COUNT(*) AS count FROM [SchoolManagement].[dbo].[Parent]";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                count = rs.getInt("count");
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ParentDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return count;
     }
 }

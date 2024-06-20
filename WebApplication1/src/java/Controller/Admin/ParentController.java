@@ -26,11 +26,28 @@ public class ParentController extends HttpServlet {
     
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
+        String indexPage = request.getParameter("index");
         
         ParentDBContext pdb = new ParentDBContext();
-        List<Parent> parentList = pdb.getAllParents();
+        
+        
+        if (indexPage == null) {
+            indexPage = "1";
+        }
+        int index = Integer.parseInt(indexPage);
+        
+        
+            List<Parent> parentList = pdb.getAllParents(index);
+            int count = pdb.getTotalParent();
+            int endPage = count / 10;
+            if (count % 10 != 0) {
+                endPage++;
+            }
+            request.setAttribute("parentList", parentList); //Paginated List
+            request.setAttribute("index", index);
+            request.setAttribute("endPage", endPage);
+        
 
-        request.setAttribute("parentList", parentList);
        request.getRequestDispatcher("FE_Admin/Parent_Management.jsp").forward(request, response);
 
     }

@@ -121,7 +121,7 @@
                     </thead>
                     <tbody>
                         <c:forEach var="acc" items="${sessionScope.accountList}" varStatus="idex">
-                            <c:set var="hasRole" value="${not empty acc.role}" />
+                            <c:set var="hasRole" value="${not empty acc.status}" />
                             <tr>
                                 <td>${idex.index + 1}</td>
                                 <td>${acc.aid}</td>
@@ -144,19 +144,23 @@
                                 <td>${acc.lid != null ? acc.lid.lname : ''}</td>
 
                                 <td>
-                                    <button type="button" class="btn btn-danger" onclick="deleteAccount(${acc.aid})">Delete</button>
+                                    <button type="button" class="btn btn-danger" onclick="deleteAccount(${acc.aid}, ${acc.role})">Delete</button>
+
                                 </td>
+
 
                                 <td>
                                     <c:choose>
-                                        <c:when test="${hasRole}">
+                                        <c:when test="${acc.status == true}">
                                             <span class="badge badge-success">Active</span>
                                         </c:when>
                                         <c:otherwise>
-                                            <span class="badge badge-warning">Pending</span>
+                                            <span class="badge badge-warning">Inactive</span>
                                         </c:otherwise>
                                     </c:choose>
                                 </td>
+
+
 
                             </tr>
                         </c:forEach>
@@ -182,27 +186,38 @@
             }
 
             // Xóa tài khoản
-            function deleteAccount(aid) {
-                Swal.fire({
-                    title: "Are you sure?",
-                    text: "You won't be able to revert this!",
-                    icon: "warning",
-                    showCancelButton: true,
-                    confirmButtonColor: "#3085d6",
-                    cancelButtonColor: "#d33",
-                    confirmButtonText: "Yes, delete it!"
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        Swal.fire({
-                            title: "Deleted!",
-                            text: "Your Account has been deleted.",
-                            icon: "success"
-                        }).then(() => {
-                            window.location.href = 'account-list?action=delete&aid=' + aid;
-                        });
-                    }
-                });
+            function deleteAccount(aid, role) {
+                if (role === 3) {
+                    // Nếu vai trò là "Admin", hiển thị cảnh báo và không thực hiện xóa
+                    Swal.fire({
+                        title: "Unable to Delete",
+                        text: "You cannot delete an admin account.",
+                        icon: "error"
+                    });
+                } else {
+                    // Nếu vai trò không phải là "Admin", hiển thị cảnh báo và xác nhận xóa tài khoản
+                    Swal.fire({
+                        title: "Are you sure?",
+                        text: "You won't be able to revert this!",
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#3085d6",
+                        cancelButtonColor: "#d33",
+                        confirmButtonText: "Yes, delete it!"
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            Swal.fire({
+                                title: "Deleted!",
+                                text: "Your Account has been deleted.",
+                                icon: "success"
+                            }).then(() => {
+                                window.location.href = 'account-list?action=delete&aid=' + aid;
+                            });
+                        }
+                    });
+                }
             }
+
         </script>
     </body>
 </html>

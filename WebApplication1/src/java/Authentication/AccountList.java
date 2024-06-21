@@ -40,7 +40,7 @@ public class AccountList extends HttpServlet {
         try {
 
             if (action != null && action.equals("delete") && aid != null) {
-                // Nếu action là "delete" và có thông tin về aid, tiến hành xóa tài khoản
+                // Nếu action là "delete" và có thông tin về aid, xóa tài khoản
                 db.deleteAccount(aid);
             }
 

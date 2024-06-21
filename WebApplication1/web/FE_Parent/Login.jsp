@@ -128,32 +128,6 @@
                 transform: translateX(100%);
             }
 
-            .sign-up-container {
-                left: 0;
-                width: 50%;
-                opacity: 0;
-                z-index: 1;
-            }
-
-            .container.right-panel-active .sign-up-container {
-                transform: translateX(100%);
-                opacity: 1;
-                z-index: 5;
-                animation: show 0.6s;
-            }
-
-            @keyframes show {
-                0%, 49.99% {
-                    opacity: 0;
-                    z-index: 1;
-                }
-
-                50%, 100% {
-                    opacity: 1;
-                    z-index: 5;
-                }
-            }
-
             .overlay-container {
                 position: absolute;
                 top: 0;
@@ -218,45 +192,31 @@
             .container.right-panel-active .overlay-right {
                 transform: translateX(20%);
             }
+
+            .image-container {
+                width: 100%;
+                height: 100%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .image-container img {
+                max-width: 100%;
+                max-height: 100%;
+                border-radius: 10px;
+            }
         </style>
     </head>
     <body>
         <h2></h2>
         <div class="container" id="container">
-            <div class="form-container sign-up-container">
-                <form id="signUpForm" action="sign-up" method="POST">
-                    <h1>Create Account</h1>
-                    <input type="text" placeholder="Username" name="user" required />
-                    <input type="password" id="password" placeholder="Password" name="password" required />
-                    <input type="password" id="confirm_password" placeholder="Confirm password" name="confirm" required />
-                    <span id="error_message" style="color: red;">
-                        <c:choose>
-                            <c:when test="${not empty errorMessage}">
-                                ${errorMessage}
-                            </c:when>
-                            <c:otherwise>
-                                
-                            </c:otherwise>
-                        </c:choose>
-                    </span>
-                    <span id="success_message" style="color: green;">
-                        <c:choose>
-                            <c:when test="${not empty successMessage}">
-                                ${successMessage}
-                            </c:when>
-                            <c:otherwise>
-                                
-                            </c:otherwise>
-                        </c:choose>
-                    </span>
-                    <button type="submit" onclick="checkSignUp()">Sign Up</button>
-                </form>
-            </div>
             <div class="form-container sign-in-container">
                 <form action="login" method="POST">
                     <h1>Sign in</h1>
                     <input type="text" placeholder="Username" name="username" required />
                     <input type="password" placeholder="Password" name="password" required />
+                    <label><input type="checkbox" name="rememberMe"> Remember Me</label>
                     <a href="${pageContext.request.contextPath}/forgot">Forgot Password?</a>
                     <button type="submit">Sign In</button>
                     <h3 style="color: red;"><%= request.getAttribute("err") != null ? request.getAttribute("err") : "" %></h3>
@@ -270,48 +230,25 @@
                         <button class="ghost" id="signIn">Sign In</button>
                     </div>
                     <div class="overlay-panel overlay-right">
-                        <h1>Sakura Preschool</h1>
-                        <p>Enter your personal details and start journey with us</p>
-                        <button class="ghost" id="signUp">Sign Up</button>
+                        <div class="image-container">
+                            <img src="./Image/vlzgnx5mdmmusf6bgshp.jpg" alt="Image Description">
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
         <script>
-            const signUpButton = document.getElementById('signUp');
             const signInButton = document.getElementById('signIn');
             const container = document.getElementById('container');
-            const form = document.getElementById('signUpForm');
-            const password = document.getElementById('password');
-            const confirmPassword = document.getElementById('confirm_password');
-            const errorMessage = document.getElementById('error_message');
-
-            signUpButton.addEventListener('click', () => {
-                container.classList.add("right-panel-active");
-            });
 
             signInButton.addEventListener('click', () => {
                 container.classList.remove("right-panel-active");
             });
-
-            form.addEventListener('submit', (e) => {
-                if (password.value !== confirmPassword.value) {
-                    e.preventDefault();
-                    errorMessage.textContent = 'Passwords do not match';
-                }
-            });
-
-            function checkSignUp() {
-                Swal.fire({
-                    icon: 'info',
-                    title: 'SweetAlert2 is working!',
-                    text: 'This is a test message.',
-                });
-            }
         </script>
     </body>
 </html>
+
 
 
 

@@ -267,6 +267,49 @@ public class LecturersDBContext extends DBContext {
         }
         return list;
     }
+       
+       //update lecturers profile
+       public void updateLecturer(Lecturers lecturer) {
+        try {
+            String sql = "UPDATE [Lecturers] SET lname = ?, gender = ?, dob = ?, phoneNumber = ?, IDcard = ?, Email = ?, Address = ?, NickName = ? WHERE lid = ?";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            
+            stm.setString(1, lecturer.getLname());
+            stm.setBoolean(2, lecturer.isGender());
+            stm.setString(3, lecturer.getDob());
+            stm.setString(4, lecturer.getPhoneNumber());
+            stm.setString(5, lecturer.getIDcard());
+            stm.setString(6, lecturer.getAddress());
+            stm.setString(7, lecturer.getNickname());
+            stm.setString(8, lecturer.getEmail());
+            stm.setInt(9, lecturer.getLid());
+
+               stm.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(LecturerClassSession.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+       
+       //check id card
+        public boolean isIDCardLecExists(String idCard) {
+        boolean exists = false;
+        try {
+            String sql = "SELECT COUNT(*) AS count FROM [SchoolManagement].[dbo].[Lecturers] WHERE [IDcard] = ?";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setString(1, idCard);
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                int count = rs.getInt("count");
+                if (count > 0) {
+                    exists = true;
+                }
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(LecturerClassSession.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return exists;
+    }
+
 
     public static void main(String[] args) {
         LecturersDBContext ldb = new LecturersDBContext();

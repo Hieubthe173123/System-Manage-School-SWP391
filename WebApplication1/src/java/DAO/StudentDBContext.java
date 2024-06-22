@@ -146,72 +146,7 @@ public class StudentDBContext extends DBContext {
         }
         return list;
     }
-    
-
-  
-
-    public void deleteStudentAndParent(String stuid, String pid) {
-        try {
-            connection.setAutoCommit(false);
-
-            // Xóa các bản ghi liên quan trong bảng Student_Class_Session
-            String sql1 = "DELETE FROM Student_Class_Session WHERE stuid = ?";
-            PreparedStatement stm1 = connection.prepareStatement(sql1);
-            stm1.setString(1, stuid);
-            stm1.executeUpdate();
-
-            // Xóa các bản ghi liên quan trong bảng Account
-            String sql2 = "DELETE FROM Account WHERE pid = ?";
-            PreparedStatement stm2 = connection.prepareStatement(sql2);
-            stm2.setString(1, pid);
-            stm2.executeUpdate();
-
-            // Xóa bản ghi trong bảng Student
-            String sql3 = "DELETE FROM Student WHERE stuid = ?";
-            PreparedStatement stm3 = connection.prepareStatement(sql3);
-            stm3.setString(1, stuid);
-            stm3.executeUpdate();
-
-            // Xóa bản ghi trong bảng Feedback
-            String sql4 = "DELETE FROM Feedback WHERE stuid = ?";
-            PreparedStatement stm4 = connection.prepareStatement(sql4);
-            stm4.setString(1, stuid);
-            stm4.executeUpdate();
-
-            // Kiểm tra số lượng học sinh liên kết với phụ huynh
-            String sqlCheck = "SELECT COUNT(*) FROM Student WHERE pid = ?";
-            PreparedStatement stmCheck = connection.prepareStatement(sqlCheck);
-            stmCheck.setString(1, pid);
-            ResultSet rsCheck = stmCheck.executeQuery();
-            rsCheck.next();
-            int studentCount = rsCheck.getInt(1);
-
-            // Xóa các bản ghi liên quan trong bảng parent
-            if (studentCount == 0) {
-                String sql5 = "DELETE FROM Parent WHERE pid = ?";
-                PreparedStatement stm5 = connection.prepareStatement(sql5);
-                stm5.setString(1, pid);
-                stm5.executeUpdate();
-
-            }
-
-            connection.commit();
-        } catch (SQLException ex) {
-            try {
-                connection.rollback();
-            } catch (SQLException rollbackEx) {
-                Logger.getLogger(RoomDBContext.class.getName()).log(Level.SEVERE, null, rollbackEx);
-            }
-            Logger.getLogger(RoomDBContext.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            try {
-                connection.setAutoCommit(true);
-            } catch (SQLException ex) {
-                Logger.getLogger(RoomDBContext.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-    }
-    
+       
     public void updateStudent(Student student) {
         try {
             String sql
@@ -243,6 +178,22 @@ public class StudentDBContext extends DBContext {
             updateClassStmt.setInt(1, newClassId);
             updateClassStmt.setInt(2, stuid);
             updateClassStmt.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(RoomDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+     
+     
+      public void updateStudentStatus(int studentId, boolean status) {
+    try {
+        String sql = "UPDATE [SchoolManagement].[dbo].[Student] "
+                   + "SET status = ? "
+                   + "WHERE stuid = ?";
+        PreparedStatement stm = connection.prepareStatement(sql);
+        stm.setBoolean(1, status);
+        stm.setInt(2, studentId);
+   
+        stm.executeUpdate();
         } catch (SQLException ex) {
             Logger.getLogger(RoomDBContext.class.getName()).log(Level.SEVERE, null, ex);
         }

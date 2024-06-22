@@ -65,6 +65,7 @@
                 </div>
                 <div class="col-sm-6 text-right">
                     <a href="add-student" class="btn btn-primary" id="addNewStudentBtn">Add New Student</a>
+                    <a href="inactive-student" class="btn btn-primary" id="viewInactiveStudentsBtn">Inactive Students</a>
                 </div>
             </div>
             <div class="row mt-3">
@@ -83,7 +84,7 @@
                 </div>
             </div>
 
-            <table class="table table-bordered">
+            <table class="table table-bordered mt-3">
                 <thead>
                     <tr>
                         <th>No</th>
@@ -97,69 +98,64 @@
                         <th>Action</th>
                     </tr>
                 </thead>
-                <tbody id="studentTableBody">
-                    <c:forEach var="studentClass" items="${not empty search ? search : not empty allStudent ? allStudent : studentList}" varStatus="status">
-                        <tr>
-                            <td>${status.index + 1 + (index - 1) * 10}</td>
-                            <td>${studentClass.stuid.stuid}</td>
-                            <td>${studentClass.stuid.sname}</td>
-                            <td>${studentClass.stuid.dob}</td>
-                            <td>${studentClass.stuid.gender ? 'Male' : 'Female'}</td>
-                            <td>${studentClass.stuid.address}</td>
-                            <td>${studentClass.stuid.pid.pname}</td>
-                            <td>${studentClass.csid.classID.clname}</td>
-                            <td>
-                                  <a class="btn btn-warning btn-sm" href="update-student?stuid=${studentClass.stuid.stuid}&sname=${studentClass.stuid.sname}&dob=${studentClass.stuid.dob}&gender=${studentClass.stuid.gender}&address=${studentClass.stuid.address}&classid=${studentClass.csid.classID.classid}">Update</a>
-                                <button class="btn btn-danger btn-sm" onclick="showDeactivateModal('${studentClass.stuid.stuid}', '${studentClass.stuid.pid.pid}')">Status</button>
-                            </td>
-                        </tr>
-                    </c:forEach>
-
+                <tbody>
+                    <c:choose>
+                        <c:when test="${not empty search}">
+                            <c:forEach var="studentClass" items="${search}" varStatus="status">
+                                <tr>
+                                    <td>${status.index + 1}</td>
+                                    <td>${studentClass.stuid.stuid}</td>
+                                    <td>${studentClass.stuid.sname}</td>
+                                    <td>${studentClass.stuid.dob}</td>
+                                    <td>${studentClass.stuid.gender ? 'Male' : 'Female'}</td>
+                                    <td>${studentClass.stuid.address}</td>
+                                    <td>${studentClass.stuid.pid.pname}</td>
+                                    <td>${studentClass.csid.classID.clname}</td>
+                                    <td>
+                                        <a class="btn btn-warning btn-sm" href="update-student?stuid=${studentClass.stuid.stuid}&sname=${studentClass.stuid.sname}&dob=${studentClass.stuid.dob}&gender=${studentClass.stuid.gender}&address=${studentClass.stuid.address}&classid=${studentClass.csid.classID.classid}">Update</a>
+                                    </td>
+                                </tr>
+                            </c:forEach>
+                        </c:when>
+                        <c:when test="${not empty allStudent}">
+                            <c:forEach var="studentClass" items="${allStudent}" varStatus="status">
+                                <tr>
+                                    <td>${status.index + 1 + (index - 1) * 10}</td>
+                                    <td>${studentClass.stuid.stuid}</td>
+                                    <td>${studentClass.stuid.sname}</td>
+                                    <td>${studentClass.stuid.dob}</td>
+                                    <td>${studentClass.stuid.gender ? 'Male' : 'Female'}</td>
+                                    <td>${studentClass.stuid.address}</td>
+                                    <td>${studentClass.stuid.pid.pname}</td>
+                                    <td>${studentClass.csid.classID.clname}</td>
+                                    <td>
+                                        <a class="btn btn-warning btn-sm" href="update-student?stuid=${studentClass.stuid.stuid}&sname=${studentClass.stuid.sname}&dob=${studentClass.stuid.dob}&gender=${studentClass.stuid.gender}&address=${studentClass.stuid.address}&classid=${studentClass.csid.classID.classid}">Update</a>
+                                    </td>
+                                </tr>
+                            </c:forEach>
+                        </c:when>
+                        <c:when test="${not empty studentList}">
+                            <c:forEach var="studentClass" items="${studentList}" varStatus="status">
+                                <tr>
+                                    <td>${status.index + 1 + (index - 1) * 10}</td>
+                                    <td>${studentClass.stuid.stuid}</td>
+                                    <td>${studentClass.stuid.sname}</td>
+                                    <td>${studentClass.stuid.dob}</td>
+                                    <td>${studentClass.stuid.gender ? 'Male' : 'Female'}</td>
+                                    <td>${studentClass.stuid.address}</td>
+                                    <td>${studentClass.stuid.pid.pname}</td>
+                                    <td>${studentClass.csid.classID.clname}</td>
+                                    <td>
+                                        <a class="btn btn-warning btn-sm" href="update-student?stuid=${studentClass.stuid.stuid}&sname=${studentClass.stuid.sname}&dob=${studentClass.stuid.dob}&gender=${studentClass.stuid.gender}&address=${studentClass.stuid.address}&classid=${studentClass.csid.classID.classid}">Update</a>
+                                    </td>
+                                </tr>
+                            </c:forEach>
+                        </c:when>
+                    </c:choose>
                 </tbody>
             </table>
 
 
-            <!--             Delete Student Modal 
-                        <div class="modal fade" id="deleteStudentModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="exampleModalLabel">Confirm Delete</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <div class="modal-body">
-                                        Are you sure you want to delete this student and parent?
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                                        <button type="button" id="confirmDeleteBtn" class="btn btn-danger">Delete</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>-->
-
-            <!-- Delete Student Modal -->
-            <div class="modal fade" id="deleteStudentModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Confirm Deactivation</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            Are you sure you want to deactivate this student and parent?
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                            <button type="button" id="confirmDeactivateBtn" class="btn btn-danger">Deactivate</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
 
 
@@ -219,7 +215,7 @@
             <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
             <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
             <script src="script.js"></script>
-            
+
 
     </body>
 </html>

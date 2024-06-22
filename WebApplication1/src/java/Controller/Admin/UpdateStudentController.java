@@ -49,6 +49,7 @@ public class UpdateStudentController extends HttpServlet {
         boolean gender = Boolean.parseBoolean(request.getParameter("gender"));
         String address = request.getParameter("address");
         String className = request.getParameter("className");
+        boolean status = Boolean.parseBoolean(request.getParameter("status"));
 
         // Validate name, dob, address
         if (sname == null || sname.trim().isEmpty()) {
@@ -98,7 +99,7 @@ public class UpdateStudentController extends HttpServlet {
             processRequest(request, response);
             return;
         }
-
+        
         //// Create Student object
         Student updatedStudent = new Student();
         updatedStudent.setStuid(studentId);
@@ -111,7 +112,7 @@ public class UpdateStudentController extends HttpServlet {
         StudentDBContext studentDB = new StudentDBContext();
         studentDB.updateStudent(updatedStudent);
         studentDB.updateStudentClass(studentId, newClassId);
-
+        studentDB.updateStudentStatus(studentId, status);
         
         response.sendRedirect("student");
     }

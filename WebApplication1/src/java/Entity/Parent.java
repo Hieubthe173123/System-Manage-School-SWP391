@@ -18,11 +18,11 @@ public class Parent {
     private String address;
     private String email;
     private String nickname;
-
+    private Boolean status;
     public Parent() {
     }
 
-    public Parent(int pid, String pname, boolean gender, String dob, String phoneNumber, String IDcard, String address, String email, String nickname) {
+    public Parent(int pid, String pname, boolean gender, String dob, String phoneNumber, String IDcard, String address, String email, String nickname, Boolean status) {
         this.pid = pid;
         this.pname = pname;
         this.gender = gender;
@@ -32,6 +32,7 @@ public class Parent {
         this.address = address;
         this.email = email;
         this.nickname = nickname;
+        this.status = status;
     }
 
     public int getPid() {
@@ -105,10 +106,19 @@ public class Parent {
     public void setNickname(String nickname) {
         this.nickname = nickname;
     }
+    
+    public boolean isStatus() {
+        return gender;
+    }
+
+    public void setStatus(Boolean gender) {
+        this.gender = gender;
+    }
+
 
     @Override
     public String toString() {
-        return "Parent{" + "pid=" + pid + ", pname=" + pname + ", gender=" + gender + ", dob=" + dob + ", phoneNumber=" + phoneNumber + ", IDcard=" + IDcard + ", address=" + address + ", email=" + email + ", nickname=" + nickname + '}';
+        return "Parent{" + "pid=" + pid + ", pname=" + pname + ", gender=" + gender + ", dob=" + dob + ", phoneNumber=" + phoneNumber + ", IDcard=" + IDcard + ", address=" + address + ", email=" + email + ", nickname=" + nickname +", status=" + status + '}';
     }
     
 }

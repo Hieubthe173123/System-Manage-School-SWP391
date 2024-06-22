@@ -52,14 +52,13 @@
 
             <div class="row mt-3">
                 <div class="col-sm-6">
-                    <form class="form-inline" action="search-parent" method="post">
+                    <form class="form-inline" action="search-parent-inactive" method="post">
                         <input class="form-control mr-sm-2" type="search" name="searchInput" placeholder="Search parent..." required>
                         <button class="btn btn-success my-2 my-sm-0" type="submit">Search</button>
                     </form>
                 </div>
                 <div class="col-sm-6 text-right">
-                    <a href="add-parent" class="btn btn-primary" id="addNewParentBtn">Add New Parent</a>
-                    <a href="parent-inactive" class="btn btn-primary" id="viewInactiveParentBtn">Inactive Parent</a>
+                    <button class="btn btn-secondary" onclick="window.location.href = 'parent'">Back to Parent</button>
                 </div>
             </div>
 
@@ -81,8 +80,8 @@
                 </thead>
                 <tbody>
                     <c:choose>
-                        <c:when test="${not empty searchparent}">
-                            <c:forEach var="parent" items="${searchparent}" varStatus="status">
+                        <c:when test="${not empty searchparentInactive}">
+                            <c:forEach var="parent" items="${searchparentInactive}" varStatus="status">
                                 <tr>
                                     <td>${status.index + 1}</td>
                                     <td>${parent.pid}</td>
@@ -102,7 +101,7 @@
                             </c:forEach>
                         </c:when>
                         <c:otherwise>
-                            <c:forEach var="parent" items="${parentList}" varStatus="status">
+                            <c:forEach var="parent" items="${parentInactiveList}" varStatus="status">
                                 <tr>
                                     <td>${status.index + 1 + (index - 1) * 10}</td>
                                     <td>${parent.pid}</td>
@@ -156,17 +155,17 @@
             </div>
 
 
-            <!-- Paging controls for students of a specific class -->
+            <!-- Paging  -->
             <div class="d-flex justify-content-center Endpage">
-                <c:if test="${!empty parentList}">
+                <c:if test="${!empty parentInactiveList}">
                     <c:if test="${index > 1}">
-                        <button class="page-btn" onclick="window.location.href = 'parent?pid=${pid}&index=${index - 1}'">Previous</button>
+                        <button class="page-btn" onclick="window.location.href = 'parent-inactive?pid=${pid}&index=${index - 1}'">Previous</button>
                     </c:if>
                     <c:forEach begin="1" end="${endPage}" var="i">
-                        <button class="page-btn ${i == index ? 'active' : ''}" onclick="window.location.href = 'parent?pid=${pid}&index=${i}'">${i}</button>
+                        <button class="page-btn ${i == index ? 'active' : ''}" onclick="window.location.href = 'parent-inactive?pid=${pid}&index=${i}'">${i}</button>
                     </c:forEach>
                     <c:if test="${index < endPage}">
-                        <button class="page-btn" onclick="window.location.href = 'parent?pid=${pid}&index=${index + 1}'">Next</button>
+                        <button class="page-btn" onclick="window.location.href = 'parent-inactive?pid=${pid}&index=${index + 1}'">Next</button>
                     </c:if>
                 </c:if>
             </div>
@@ -195,14 +194,14 @@
             <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
             <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
             <script>
-                               let updateParentId; // store the ID of the parent to be updated
+                            let updateParentId; // store the ID of the parent to be updated
 
-                               // Function to display status update modal
-                               function showUpdateModal(pid) {
-                                   updateParentId = pid; // Save parent ID
-                                   $('#pid').val(pid); // Set the value of hidden input
-                                   $('#updateModal').modal('show'); // display modal
-                               }
+                            // Function to display status update modal
+                            function showUpdateModal(pid) {
+                                updateParentId = pid; // Save parent ID
+                                $('#pid').val(pid); // Set the value of hidden input
+                                $('#updateModal').modal('show'); // display modal
+                            }
             </script>
 
 

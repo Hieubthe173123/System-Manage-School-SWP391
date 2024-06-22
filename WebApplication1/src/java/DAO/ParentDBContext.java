@@ -30,7 +30,8 @@ public class ParentDBContext extends DBContext {
                     + "      ,[Address]\n"
                     + "      ,[Email]\n"
                     + "      ,[NickName]\n"
-                    + "  FROM [SchoolManagement].[dbo].[Parent] Where pid = ?";
+                    + "  FROM [SchoolManagement].[dbo].[Parent] Where pid = ? "
+                    + " AND [status] = 1";
 
             PreparedStatement stm = connection.prepareStatement(sql);
             stm.setInt(1, rid);
@@ -55,6 +56,44 @@ public class ParentDBContext extends DBContext {
         return null;
     }
 
+    //search parentInactive by id
+    public Parent getParentInactiveByid(int rid) {
+        try {
+            String sql = "SELECT [pid]\n"
+                    + "      ,[pname]\n"
+                    + "      ,[gender]\n"
+                    + "      ,[dob]\n"
+                    + "      ,[phoneNumber]\n"
+                    + "      ,[IDcard]\n"
+                    + "      ,[Address]\n"
+                    + "      ,[Email]\n"
+                    + "      ,[NickName]\n"
+                    + "  FROM [SchoolManagement].[dbo].[Parent] Where pid = ? "
+                    + " AND [status] = 0";
+
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setInt(1, rid);
+
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                Parent p = new Parent();
+                p.setPid(rs.getInt("pid"));
+                p.setPname(rs.getString("pname"));
+                p.setGender(rs.getBoolean("gender"));
+                p.setDob(rs.getString("dob"));
+                p.setPhoneNumber(rs.getString("phoneNumber"));
+                p.setIDcard(rs.getString("IDcard"));
+                p.setEmail(rs.getString("Email"));
+                p.setAddress(rs.getString("Address"));
+                p.setNickname(rs.getString("NickName"));
+                return p;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(RoomDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+    
     public Parent getParentByGmail(String gmail) {
         try {
             String sql = "SELECT [pid]\n"
@@ -112,10 +151,11 @@ public class ParentDBContext extends DBContext {
         }
     }
 
+    //add new parent
     public void addParent(Parent parent) {
         try {
-            String sql = "INSERT INTO Parent (pname, gender, dob, phoneNumber, IDcard, [Address], Email, NickName) "
-                    + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO Parent (pname, gender, dob, phoneNumber, IDcard, [Address], Email, NickName, status) "
+                    + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, 1)";
             PreparedStatement stm = connection.prepareStatement(sql);
 
             stm.setString(1, parent.getPname());
@@ -133,11 +173,44 @@ public class ParentDBContext extends DBContext {
         }
     }
 
+    //get all parent active
     public List<Parent> getAllParents(int index) {
         List<Parent> parentList = new ArrayList<>();
         try {
             String sql = "SELECT [pid], [pname], [gender], [dob], [phoneNumber], [IDcard], [Address], [Email], [NickName] "
                     + "FROM [SchoolManagement].[dbo].[Parent] "
+                    + "WHERE [status] = 1 "
+                    + "ORDER BY [pid] "
+                    + "OFFSET ? ROWS FETCH NEXT 10 ROWS ONLY";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setInt(1, (index - 1) * 10);
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                Parent p = new Parent();
+                p.setPid(rs.getInt("pid"));
+                p.setPname(rs.getString("pname"));
+                p.setGender(rs.getBoolean("gender"));
+                p.setDob(rs.getString("dob"));
+                p.setPhoneNumber(rs.getString("phoneNumber"));
+                p.setIDcard(rs.getString("IDcard"));
+                p.setEmail(rs.getString("Email"));
+                p.setAddress(rs.getString("Address"));
+                p.setNickname(rs.getString("NickName"));
+                parentList.add(p);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ParentDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return parentList;
+    }
+    
+    //get list parent inactive and paging
+    public List<Parent> getAllParentInactive(int index) {
+        List<Parent> parentList = new ArrayList<>();
+        try {
+            String sql = "SELECT [pid], [pname], [gender], [dob], [phoneNumber], [IDcard], [Address], [Email], [NickName] "
+                    + "FROM [SchoolManagement].[dbo].[Parent] "
+                    + "WHERE [status] = 0 "
                     + "ORDER BY [pid] "
                     + "OFFSET ? ROWS FETCH NEXT 10 ROWS ONLY";
             PreparedStatement stm = connection.prepareStatement(sql);
@@ -162,13 +235,47 @@ public class ParentDBContext extends DBContext {
         return parentList;
     }
 
+    
+    //get parent active by name
     public List<Parent> getParentByName(String pname) {
         List<Parent> parentList = new ArrayList<>();
         try {
             String sql = "SELECT [pid], [pname], [gender], [dob], [phoneNumber], [IDcard], [Address], [Email], [NickName] "
                     + "FROM [SchoolManagement].[dbo].[Parent] "
-                    + "WHERE [pname] LIKE ?";
+                    + "WHERE [pname] LIKE ? "
+                    + "AND [status] = 1";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setString(1, "%" + pname + "%");
 
+            ResultSet rs = stm.executeQuery();
+
+            while (rs.next()) {
+                Parent p = new Parent();
+                p.setPid(rs.getInt("pid"));
+                p.setPname(rs.getString("pname"));
+                p.setGender(rs.getBoolean("gender"));
+                p.setDob(rs.getString("dob"));
+                p.setPhoneNumber(rs.getString("phoneNumber"));
+                p.setIDcard(rs.getString("IDcard"));
+                p.setEmail(rs.getString("Email"));
+                p.setAddress(rs.getString("Address"));
+                p.setNickname(rs.getString("NickName"));
+                parentList.add(p);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ParentDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return parentList;
+    }
+    
+    //search parent inactive by name
+     public List<Parent> getParentInactiveByName(String pname) {
+        List<Parent> parentList = new ArrayList<>();
+        try {
+            String sql = "SELECT [pid], [pname], [gender], [dob], [phoneNumber], [IDcard], [Address], [Email], [NickName] "
+                    + "FROM [SchoolManagement].[dbo].[Parent] "
+                    + "WHERE [pname] LIKE ? "
+                    + "AND [status] = 0";
             PreparedStatement stm = connection.prepareStatement(sql);
             stm.setString(1, "%" + pname + "%");
 
@@ -234,7 +341,8 @@ public class ParentDBContext extends DBContext {
     public int getTotalParent() {
         int count = 0;
         try {
-            String sql = "SELECT COUNT(*) AS count FROM [SchoolManagement].[dbo].[Parent]";
+            String sql = "SELECT COUNT(*) AS count FROM [SchoolManagement].[dbo].[Parent] "
+                          + " Where [status] = 1";
             PreparedStatement stm = connection.prepareStatement(sql);
             ResultSet rs = stm.executeQuery();
             if (rs.next()) {
@@ -244,5 +352,36 @@ public class ParentDBContext extends DBContext {
             Logger.getLogger(ParentDBContext.class.getName()).log(Level.SEVERE, null, ex);
         }
         return count;
+    }
+    
+     //Count the number of parents inactive for pagination
+    public int getTotalParentInactive() {
+        int count = 0;
+        try {
+            String sql = "SELECT COUNT(*) AS count FROM [SchoolManagement].[dbo].[Parent] "
+                          + " Where [status] = 0";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                count = rs.getInt("count");
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ParentDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return count;
+    }
+    
+    //update parent status
+    public void updateParentStatus (int pid, boolean status) {
+        try {
+            String sql = "UPDATE Parent SET status = ? WHERE pid = ?";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            
+            stm.setBoolean(1, status);
+            stm.setInt(2, pid);
+            stm.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(ParentDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }

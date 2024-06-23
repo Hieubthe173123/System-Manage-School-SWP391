@@ -277,11 +277,61 @@ public class CuriculumDBContext extends DBContext {
         }
     }
 
+    public void addCuriculum(String nameAct,String sdid,String isFix,String timeStart,String timeEnd) {
+        try {
+            String sql = "INSERT INTO [dbo].[Curiculum]\n"
+                    + "           ([nameAct]\n"
+                    + "           ,[sdid]\n"
+                    + "           ,[isFix]\n"
+                    + "           ,[TimeStart]\n"
+                    + "           ,[TimeEnd]\n"
+                    + "           ,[statusSes])\n"
+                    + "     VALUES\n"
+                    + "           (? \n"
+                    + "           ,?\n"
+                    + "           ,?\n"
+                    + "           ,?\n"
+                    + "           ,?\n"
+                    + "           ,'active')";
+
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setString(1, nameAct);
+            stm.setString(2, sdid);
+            stm.setString(3,  isFix);
+            stm.setString(4, timeStart);
+            stm.setString(5, timeEnd);
+
+            stm.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(LecturerClassSession.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public boolean checkTimeSlotConflict(String sdid, String timeStart, String timeEnd) {
+        String sql = "SELECT COUNT(*) FROM Curiculum WHERE sdid = ? AND timeStart = ? AND timeEnd = ?";
+        try {
+             PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setString(1, sdid);
+            stm.setString(2, timeStart);
+            stm.setString(3, timeEnd);
+            try (ResultSet rs = stm.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+
+
     public static void main(String[] args) {
         CuriculumDBContext cur = new CuriculumDBContext();
-        List<Curiculum> list = cur.SearchByName("1", "Ăn Trưa");
-        System.out.println(list);
-
+        cur.checkTimeSlotConflict("1","14:30","15:00");
     }
+    
+    
 
 }

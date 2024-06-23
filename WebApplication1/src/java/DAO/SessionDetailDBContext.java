@@ -98,28 +98,29 @@ public class SessionDetailDBContext extends DBContext {
 
     public void insertSession(String sid) {
         String sql = "INSERT INTO [dbo].[Session_Details] ([sid])\n"
-                + "VALUES (?);\n"
-                + "\n"
-                + "INSERT INTO [dbo].[Curiculum] ([nameAct], [sdid], [isFix], [TimeStart], [TimeEnd], [statusCur], [statusSes])\n"
-                + "SELECT DISTINCT\n"
-                + "    c.nameact,\n"
-                + "    (SELECT MAX(sdid) FROM Session_Details),\n"
-                + "    c.isFix,\n"
-                + "    c.TimeStart,\n"
-                + "    c.TimeEnd,\n"
-                + "    c.statusCur,\n"
-                + "    c.statusSes\n"
-                + "FROM Curiculum c\n"
-                + "WHERE c.isFix = 1 and c.statusCur is not null and c.statusSes is not null;\n"
-                + "\n"
-                + "WITH NumberedSessions AS (\n"
-                + "    SELECT sdid, ROW_NUMBER() OVER(PARTITION BY sid ORDER BY sdid) AS row_number\n"
-                + "    FROM Session_Details\n"
-                + ")\n"
-                + "UPDATE sd\n"
-                + "SET sd.sessionNumber = ns.row_number\n"
-                + "FROM Session_Details sd\n"
-                + "JOIN NumberedSessions ns ON sd.sdid = ns.sdid;";
+                + "                VALUES (?);\n"
+                + "              \n"
+                + "                INSERT INTO [dbo].[Curiculum] ([nameAct], [sdid], [isFix], [TimeStart], [TimeEnd], [statusSes])\n"
+                + "                SELECT DISTINCT\n"
+                + "                    c.nameact,\n"
+                + "                    (SELECT MAX(sdid) FROM Session_Details),\n"
+                + "                    c.isFix,\n"
+                + "                    c.TimeStart,\n"
+                + "                    c.TimeEnd,\n"
+                + "                    c.statusSes\n"
+                + "                FROM Curiculum c\n"
+                + "                JOIN Session_Details sd ON c.sdid = sd.sdid\n"
+                + "                JOIN Session s ON s.sid = sd.sid\n"
+                + "                WHERE c.isFix = 1 AND s.sid = ? AND c.statusSes IS NOT NULL;\n"
+                + "                \n"
+                + "                WITH NumberedSessions AS (\n"
+                + "                    SELECT sdid, ROW_NUMBER() OVER(PARTITION BY sid ORDER BY sdid) AS row_number\n"
+                + "                    FROM Session_Details\n"
+                + "                )\n"
+                + "                UPDATE sd\n"
+                + "                SET sd.sessionNumber = ns.row_number\n"
+                + "                FROM Session_Details sd\n"
+                + "                JOIN NumberedSessions ns ON sd.sdid = ns.sdid;";
 
         try {
             connection.setAutoCommit(false);
@@ -127,22 +128,12 @@ public class SessionDetailDBContext extends DBContext {
             PreparedStatement stm = connection.prepareStatement(sql);
 
             stm.setString(1, sid);
+            stm.setString(2, sid); 
             stm.executeUpdate();
 
             connection.commit();
-        } catch (SQLException ex) {
-            try {
-                connection.rollback();
-            } catch (SQLException e) {
-                Logger.getLogger(DBContext.class.getName()).log(Level.SEVERE, null, e);
-            }
-            Logger.getLogger(DBContext.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            try {
-                connection.setAutoCommit(true);
-            } catch (SQLException ex) {
-                Logger.getLogger(DBContext.class.getName()).log(Level.SEVERE, null, ex);
-            }
+        } catch (SQLException e) {
+            System.err.println("SQL Exception: " + e.getMessage());
         }
     }
 
@@ -182,7 +173,7 @@ public class SessionDetailDBContext extends DBContext {
 
     public static void main(String[] args) {
         SessionDetailDBContext sd = new SessionDetailDBContext();
-        sd.deleteActivityOnSession("2");
+        sd.insertSession("1");
 
     }
 }

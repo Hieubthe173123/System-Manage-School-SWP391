@@ -5,6 +5,7 @@
 package DAO;
 
 import Entity.Curiculum;
+import Entity.SessionDetails;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -277,7 +278,7 @@ public class CuriculumDBContext extends DBContext {
         }
     }
 
-    public void addCuriculum(String nameAct,String sdid,String isFix,String timeStart,String timeEnd) {
+    public void addCuriculum(String nameAct, String sdid, String isFix, String timeStart, String timeEnd) {
         try {
             String sql = "INSERT INTO [dbo].[Curiculum]\n"
                     + "           ([nameAct]\n"
@@ -297,7 +298,7 @@ public class CuriculumDBContext extends DBContext {
             PreparedStatement stm = connection.prepareStatement(sql);
             stm.setString(1, nameAct);
             stm.setString(2, sdid);
-            stm.setString(3,  isFix);
+            stm.setString(3, isFix);
             stm.setString(4, timeStart);
             stm.setString(5, timeEnd);
 
@@ -306,11 +307,11 @@ public class CuriculumDBContext extends DBContext {
             Logger.getLogger(LecturerClassSession.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     public boolean checkTimeSlotConflict(String sdid, String timeStart, String timeEnd) {
         String sql = "SELECT COUNT(*) FROM Curiculum WHERE sdid = ? AND timeStart = ? AND timeEnd = ?";
         try {
-             PreparedStatement stm = connection.prepareStatement(sql);
+            PreparedStatement stm = connection.prepareStatement(sql);
             stm.setString(1, sdid);
             stm.setString(2, timeStart);
             stm.setString(3, timeEnd);
@@ -325,13 +326,41 @@ public class CuriculumDBContext extends DBContext {
         return false;
     }
 
+    public List<Curiculum> getAllActivity() {
+        List<Curiculum> list = new ArrayList<>();
+        try {
+            String sql = "select * from Curiculum\n"
+                    + "join Session_Details sd on Curiculum.sdid = sd.sdid\n"
+                    + "order by sessionNumber asc";
 
+            PreparedStatement stm = connection.prepareStatement(sql);
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                
+                SessionDetails sd = new SessionDetails();
+                sd.setSdid(rs.getInt("sdid"));
+                sd.setSessionNumber(rs.getInt("sessionNumber"));
+                
+                Curiculum cur = new Curiculum();
+                cur.setCurID(rs.getInt("curID"));
+                cur.setNameAct(rs.getString("nameAct"));
+                cur.setTimeStart(rs.getString("TimeStart")); 
+                cur.setTimeEnd(rs.getString("TimeEnd"));
+                cur.setIsFix(rs.getBoolean("isFix"));
+                cur.setSdid(sd);
+                
+                list.add(cur);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(RoomDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
+    }
 
     public static void main(String[] args) {
         CuriculumDBContext cur = new CuriculumDBContext();
-        cur.checkTimeSlotConflict("1","14:30","15:00");
+        List<Curiculum> list = cur.getAllActivity();
+        System.out.println(list);
     }
-    
-    
 
 }

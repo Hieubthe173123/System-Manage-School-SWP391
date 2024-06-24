@@ -79,6 +79,11 @@ public class Curiculum {
     public void setIsFix(boolean isFix) {
         this.isFix = isFix;
     }
+
+    @Override
+    public String toString() {
+        return "Curiculum{" + "curID=" + curID + ", timeStart=" + timeStart + ", timeEnd=" + timeEnd + ", nameAct=" + nameAct + ", sdid=" + sdid + ", isFix=" + isFix + '}';
+    }
     
     
 }

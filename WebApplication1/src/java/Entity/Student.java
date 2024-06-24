@@ -74,6 +74,11 @@ public class Student {
     public void setPid(Parent pid) {
         this.pid = pid;
     }
+
+    @Override
+    public String toString() {
+        return "Student{" + "stuid=" + stuid + ", sname=" + sname + ", gender=" + gender + ", dob=" + dob + ", address=" + address + ", pid=" + pid + '}';
+    }
     
     
 }

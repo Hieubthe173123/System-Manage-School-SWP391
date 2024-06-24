@@ -1,9 +1,12 @@
 package Controller.Admin;
 
+import DAO.ClassDBContext;
+import DAO.LecturerClassSession;
 import DAO.LecturersDBContext;
-import DAO.ParentDBContext;
 import Entity.Lecturers;
-import Entity.Parent;
+import Entity.Lecturers_Class_Session;
+import Entity.Class;
+import Entity.ClassSession;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -13,8 +16,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
- *
- * @author admin
+ * Servlet implementation class UpdateLecturers
  */
 @WebServlet(name = "UpdateLecturers", urlPatterns = {"/update-lecturers"})
 public class UpdateLecturers extends HttpServlet {
@@ -22,10 +24,17 @@ public class UpdateLecturers extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        LecturersDBContext ldb = new LecturersDBContext();
+        LecturerClassSession lcs = new LecturerClassSession();
         String id = request.getParameter("lid");
-        Lecturers lec = ldb.getLecturerById(id);
+        Lecturers_Class_Session lec = lcs.getLecturerByid(id);
         request.setAttribute("lec", lec);
+        
+        Lecturers_Class_Session lec1 = lcs.getLecturerByidClass(id);
+        request.setAttribute("lec1", lec1);
+        
+        ClassDBContext cl = new ClassDBContext();
+        List<Class> list = cl.getAllClass();
+        request.setAttribute("list1", list);
         request.getRequestDispatcher("FE_Admin/UpdateLecturer.jsp").forward(request, response);
     }
 
@@ -38,7 +47,7 @@ public class UpdateLecturers extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        int lid_raw = 0;
+               int lid_raw = 0;
         
         String lid = request.getParameter("lid");
         String lname = request.getParameter("lname");
@@ -67,7 +76,9 @@ public class UpdateLecturers extends HttpServlet {
         LecturersDBContext ldb = new LecturersDBContext();
         ldb.updateLecturers(lec);
 
-        response.sendRedirect("lecturers");
+      String referer = request.getHeader("referer");
+        response.sendRedirect(referer);
+
     }
 
     @Override

@@ -47,6 +47,11 @@ public class SchoolYear {
     public void setDateEnd(String dateEnd) {
         this.dateEnd = dateEnd;
     }
+
+    @Override
+    public String toString() {
+        return "SchoolYear{" + "yid=" + yid + ", dateStart=" + dateStart + ", dateEnd=" + dateEnd + '}';
+    }
     
     
 }

@@ -17,56 +17,21 @@ import jakarta.servlet.http.HttpServletResponse;
 @WebServlet(name = "LecturersController", urlPatterns = {"/lecturers"})
 public class LecturersController extends HttpServlet {
 
-   protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException {
-    response.setContentType("text/html;charset=UTF-8");
-    SchoolYearDBContext sy = new SchoolYearDBContext();
-    LecturerClassSession lcs = new LecturerClassSession();
-    LecturersDBContext ldb = new LecturersDBContext();
-    String timeStart = request.getParameter("timeStart");
-    String timeEnd = request.getParameter("timeEnd");
-
-    String indexPage = request.getParameter("index");
-
-    if (timeStart != null && timeEnd != null) {
-        if (indexPage == null) {
-            indexPage = "1";
-        }
-        int index = Integer.parseInt(indexPage);
-        int count = ldb.getTotalLecturersBySchoolYear(timeStart, timeEnd);
-        int endPage = count / 10;
-        if (count % 10 != 0) {
-            endPage++;
-        }
-        List<Lecturers_Class_Session> list = lcs.getLecturersBySchoolYearWithPaging(timeStart, timeEnd, index);
-        request.setAttribute("listC", list);
-        request.setAttribute("index", index);
-        request.setAttribute("endPage", endPage);
-    } else {
-        if (indexPage == null) {
-            indexPage = "1";
-        }
-        int index = Integer.parseInt(indexPage);
-        int count = ldb.getTotalLecturers();
-        int endPage = count / 10;
-        if (count % 10 != 0) {
-            endPage++;
-        }
-        List<Lecturers> list1 = ldb.pagingLecturers(index);
-        request.setAttribute("listA", list1);
-        request.setAttribute("index", index);
-        request.setAttribute("endPage", endPage);
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        LecturerClassSession lcs = new LecturerClassSession();
+        List<Lecturers_Class_Session> list = lcs.getAllLecturerInNewSchoolYear();
+        SchoolYear sc = lcs.getNewSchoolYear();
+        request.setAttribute("sc", sc);
+        request.setAttribute("list", list);
+        request.getRequestDispatcher("FE_Admin/Lecturers.jsp").forward(request, response);
     }
-
-    List<SchoolYear> list2 = sy.getAllSchoolYear();
-    request.setAttribute("listB", list2);
-    request.getRequestDispatcher("FE_Admin/CRUD_Lecturers.jsp").forward(request, response);
-}
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+            processRequest(request, response);
     }
 
     @Override

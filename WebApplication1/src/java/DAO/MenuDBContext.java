@@ -19,7 +19,7 @@ public class MenuDBContext extends DBContext {
 
     public static void main(String[] args) {
         MenuDBContext m = new MenuDBContext();
-        System.out.println(m.update("2024-06-04", "Cá, Sữa, Canh, Ngũ Cốc", 2, 1));
+        System.out.println(m.getMenuByAgeAndDate(3, "2024-06-18").size());
     }
 
     public Menu getMenuByAgeidAndate(int id, String date) {

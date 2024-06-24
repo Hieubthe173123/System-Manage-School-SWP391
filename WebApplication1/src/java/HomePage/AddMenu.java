@@ -10,12 +10,6 @@ import Entity.MealTime;
 import Entity.Menu;
 import Entity.MenuFood;
 import java.io.IOException;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -25,32 +19,37 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
-@WebServlet(name = "Menu", urlPatterns = {"/menu"})
+@WebServlet(name = "AddMenu", urlPatterns = {"/menu"})
 public class AddMenu extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        HttpSession session = request.getSession();
+        Date currentDate = new Date();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat dateFormat2 = new SimpleDateFormat("dd/MM/yyyy");
         FoodDBContext foodDB = new FoodDBContext();
         MealTimeDBContext mealDB = new MealTimeDBContext();
-        Date date = new Date();
-        HttpSession session = request.getSession();
-        SimpleDateFormat dateF = new SimpleDateFormat("yyyy-MM-dd");
-        AgeDBContext age = new AgeDBContext();
-        List<AgeCategory> listAge = age.getAllAgeCategory();
+        AgeDBContext ageDB = new AgeDBContext();
+        MenuDBContext menuDB = new MenuDBContext();
+
         List<Food> listFood = foodDB.getAllFood();
         List<MealTime> listMeal = mealDB.getAllMealTime();
-        MenuDBContext menu = new MenuDBContext();
-        List<Menu> listMenu = menu.getMenuByDate(dateF.format(date));
-        if (listFood == null || listMeal == null) {
-            request.setAttribute("Mess", "Các món ăn trong danh sách food đang bị trống. Vui lòng nhập vào các món ăn trước khi nhập menu");
-        } else {
-            request.setAttribute("listFood", listFood);
-            session.setAttribute("listMeal", listMeal);
-            session.setAttribute("listAgeCategory", listAge);
-            session.setAttribute("listMenu", listMenu);
-        }
+        List<AgeCategory> listAge = ageDB.getAllAgeCategory();
+        List<Menu> listMenu = menuDB.getMenuByDate(dateFormat.format(currentDate));
+
+        request.setAttribute("listFood", listFood);
+        session.setAttribute("listMeal", listMeal);
+        session.setAttribute("listAgeCategory", listAge);
+        session.setAttribute("listMenu", listMenu);
 
         List<MenuFood> listMenuFood = (List<MenuFood>) session.getAttribute("listMenuFood");
         if (listMenuFood == null) {
@@ -62,137 +61,125 @@ public class AddMenu extends HttpServlet {
         if (foodid != null) {
             request.setAttribute("fid", Integer.parseInt(foodid));
         }
-
+        request.setAttribute("dateN", dateFormat2.format(currentDate));
         request.getRequestDispatcher("FE_Parent/Menu.jsp").forward(request, response);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        Date date = new Date();
         HttpSession session = request.getSession();
-        SimpleDateFormat dateF = new SimpleDateFormat("yyyy-MM-dd");
+        Date currentDate = new Date();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
         String mealID = request.getParameter("mealID");
         String foodid = request.getParameter("foodid");
         String save = request.getParameter("save");
         String age_raw = request.getParameter("ageid");
         String age = (String) session.getAttribute("ageid");
-        MenuDBContext menuDB = new MenuDBContext();
-        session.setAttribute("Err", "");
-        session.setAttribute("warn", "");
-        session.setAttribute("Mess", "");
 
         if (age_raw != null) {
             age = age_raw;
             session.setAttribute("ageid", age_raw);
         }
 
+        MenuDBContext menuDB = new MenuDBContext();
+        MealTimeDBContext mealDB = new MealTimeDBContext();
         FoodDBContext foodDB = new FoodDBContext();
+        
+        List<MealTime> listMeal = mealDB.getAllMealTime();
         List<MenuFood> listMenuFood = (List<MenuFood>) session.getAttribute("listMenuFood");
+
         if (listMenuFood == null) {
             listMenuFood = new ArrayList<>();
         }
 
-        if (save != null && "1".equals(save)) {
-            StringBuilder menuF = new StringBuilder();
+        session.setAttribute("Err", "");
+        session.setAttribute("Mess", "");
 
-            if (!listMenuFood.isEmpty()) {
-                for (MenuFood menuFood : listMenuFood) {
-                    if (menuFood.getMealid() == Integer.parseInt(mealID)) {
-                        Food food = menuFood.getFood();
-                        if (food != null) {
-                            menuF.append(food.getFname()).append(", ");
-                        } else {
-                            request.setAttribute("Mess", "Không có thực phẩm trong thực đơn. ");
-                        }
-                    }
-                }
-                
-                if (menuF.length() > 0 && menuF.toString().endsWith(", ")) {
-                    menuF.setLength(menuF.length() - 2);
-                }
-
-                boolean exists = false;
-                List<Menu> listSubMenu = menuDB.getMenuByDate(dateF.format(date));
-                if (age != null && mealID != null && !age.equalsIgnoreCase("0")) {
-                    for (Menu menuFood : listSubMenu) {
-                        if (menuFood.getMealID().getMealID() == Integer.parseInt(mealID)
-                                && menuFood.getAgeid().getAgeid() == Integer.parseInt(age)) {
-                            exists = true;
-                            break;
-                        }
-                    }
-                    if (exists == true) {
-                        menuDB.update(dateF.format(date), menuF.toString(), Integer.parseInt(age), Integer.parseInt(mealID));
-                        session.setAttribute("Mess", "Bữa ăn này đã tồn tại và được thay thế bằng bữa ăn bạn vừa nhập.");
-                    } else if (exists == false) {
-                        menuDB.insertMenu(Integer.parseInt(age), dateF.format(date), menuF.toString(), Integer.parseInt(mealID));
-                        session.setAttribute("Mess", "Thêm thành công 1 bữa ăn!");
-                    }
-                    listMenuFood.clear();
-                } else {
-                    session.setAttribute("Err", "Bạn chưa nhập độ tuổi.");
-                    listMenuFood.clear();
-                }
-            } else {
-                session.setAttribute("Mess", "Danh sách thực đơn trống!");
-                listMenuFood.clear();
-            }
-        }
-
-        if (mealID != null && foodid != null && !foodid.equals("0")) {
-            Food selectedFood = foodDB.getFoodById(Integer.parseInt(foodid));
-            if (selectedFood != null) {
-                int fid = selectedFood.getFoodid();
-                boolean foodExists = false;
-
-                // Check if the food already exists in the list for the given mealID
-                for (MenuFood menuFood : listMenuFood) {
-                    if (menuFood.getMealid() == Integer.parseInt(mealID) && menuFood.getFood().getFoodid() == fid) {
-                        foodExists = true;
-                        break;
-                    }
-                }
-
-                if (foodExists) {
-                    session.setAttribute("Err", "Món ăn đã tồn tại trong danh sách!");
-                } else {
-                    MenuFood mf = new MenuFood(Integer.parseInt(mealID), selectedFood);
-                    listMenuFood.add(mf);
-                    session.setAttribute("listMenuFood", listMenuFood);
-                }
-            }
+        if ("1".equals(save) && listMenuFood != null && !listMenuFood.isEmpty()) {
+            saveMenu(listMenuFood, age, dateFormat.format(currentDate), listMeal, menuDB, session, request);
+        } else if (mealID != null && foodid != null && !foodid.equals("0")) {
+            addFoodToMenu(mealID, foodid, listMenuFood, foodDB, session);
         }
 
         response.sendRedirect("menu");
     }
 
+    private void saveMenu(List<MenuFood> listMenuFood, String age, String currentDate, List<MealTime> listMeal, MenuDBContext menuDB, HttpSession session, HttpServletRequest request) {
+        if (age != null && !age.equalsIgnoreCase("0")) {
+            List<Menu> existingMenus = menuDB.getMenuByAgeAndDate(Integer.parseInt(age), currentDate);
+
+            for (MealTime mealTime : listMeal) {
+                StringBuilder menuBuilder = new StringBuilder();
+                for (MenuFood menuFood : listMenuFood) {
+                    if (menuFood.getMealid() == mealTime.getMealID()) {
+                        Food food = menuFood.getFood();
+                        if (food != null) {
+                            menuBuilder.append(food.getFname()).append(", ");
+                        }
+                    }
+                }
+                if (menuBuilder.length() > 0 && menuBuilder.toString().endsWith(", ")) {
+                    menuBuilder.setLength(menuBuilder.length() - 2);
+                }
+
+                if (!menuBuilder.toString().isEmpty()) {
+                    boolean menuExists = false;
+                    for (Menu menu : existingMenus) {
+                        if (menu.getMealID().getMealID() == mealTime.getMealID()) {
+                            menuDB.update(currentDate, menuBuilder.toString(), Integer.parseInt(age), mealTime.getMealID());
+                            session.setAttribute("Mess", "Cập nhật thành công bữa ăn.");
+                            menuExists = true;
+                            break;
+                        }
+                    }
+                    if (!menuExists) {
+                        menuDB.insertMenu(Integer.parseInt(age), currentDate, menuBuilder.toString(), mealTime.getMealID());
+                        session.setAttribute("Mess", "Thêm thành công bữa ăn");
+                    }
+                }
+            }
+            listMenuFood.clear();
+        } else {
+            session.setAttribute("Err", "Bạn chưa nhập độ tuổi.");
+        }
+    }
+
+    private void addFoodToMenu(String mealID, String foodid, List<MenuFood> listMenuFood, FoodDBContext foodDB, HttpSession session) {
+        Food selectedFood = foodDB.getFoodById(Integer.parseInt(foodid));
+        if (selectedFood != null) {
+            boolean foodExists = listMenuFood.stream()
+                .anyMatch(menuFood -> menuFood.getMealid() == Integer.parseInt(mealID) && menuFood.getFood().getFoodid() == selectedFood.getFoodid());
+
+            if (foodExists) {
+                session.setAttribute("Err", "Món ăn đã tồn tại trong danh sách!");
+            } else {
+                listMenuFood.add(new MenuFood(Integer.parseInt(mealID), selectedFood));
+                session.setAttribute("listMenuFood", listMenuFood);
+            }
+        }
+    }
+
     public String convertToStandardFormat(String dateString) {
         List<String> dateFormats = Arrays.asList(
-                "yyyy-MM-dd",
-                "dd-MM-yyyy",
-                "MM-dd-yyyy",
-                "dd/MM/yyyy",
-                "MM/dd/yyyy",
-                "yyyy/MM/dd",
-                "yyyy.MM.dd",
-                "dd.MM.yyyy",
+                "yyyy-MM-dd", "dd-MM-yyyy", "MM-dd-yyyy", "dd/MM/yyyy", 
+                "MM/dd/yyyy", "yyyy/MM/dd", "yyyy.MM.dd", "dd.MM.yyyy", 
                 "MM.dd.yyyy"
         );
 
         DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
         for (String format : dateFormats) {
-            DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern(format);
             try {
-                LocalDate date = LocalDate.parse(dateString, inputFormatter);
+                LocalDate date = LocalDate.parse(dateString, DateTimeFormatter.ofPattern(format));
                 return date.format(outputFormatter);
             } catch (DateTimeParseException e) {
                 // Ignore and try the next format
             }
         }
 
-        return null; // Nếu không định dạng nào phù hợp
+        return null; // If no format matches
     }
 
     private final List<DateTimeFormatter> DATE_FORMATTERS = Arrays.asList(
@@ -201,7 +188,6 @@ public class AddMenu extends HttpServlet {
             DateTimeFormatter.ofPattern("MM/dd/yyyy"),
             DateTimeFormatter.ofPattern("dd-MM-yyyy"),
             DateTimeFormatter.ofPattern("yyyy/MM/dd")
-    // Add more formats as needed
     );
 
     public LocalDateTime parseDate(String dateString) {
@@ -224,7 +210,6 @@ public class AddMenu extends HttpServlet {
         try {
             LocalDateTime date1 = parseDate(dateStr1);
             LocalDateTime date2 = parseDate(dateStr2);
-
             return date1.compareTo(date2);
         } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());

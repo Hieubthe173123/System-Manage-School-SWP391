@@ -12,18 +12,46 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Search Menu</title>
         <style>
+            body {
+                background-color: skyblue;
+                font-family: Arial, sans-serif;
+                color: #fff;
+                margin: 0;
+                padding: 0;
+            }
+
+            h2 {
+                text-align: center;
+                margin-top: 20px;
+            }
+
+            .table-container-wrapper {
+                display: flex;
+                justify-content: center;
+                padding: 20px;
+            }
+
             .table-container {
                 display: flex;
                 flex-wrap: wrap;
-                gap: 20px; /* Adjust the gap as needed */
-                justify-content: center; /* Center the tables horizontally */
-                padding: 20px; /* Optional: Add padding to the container */
+                gap: 20px;
+                justify-content: center;
+                padding: 20px;
+            }
+
+            .table-container .table-wrapper {
+                background-color: rgba(255, 255, 255, 0.2);
+                border-radius: 10px;
+                overflow: hidden;
+                padding: 10px;
+                text-align: center;
+                width: 300px; /* Adjust the width as needed */
             }
 
             .table-container table {
-                display: inline-block;
-                margin-bottom: 20px; /* Adjust the margin as needed */
+                width: 100%;
                 border-collapse: collapse;
+                margin-bottom: 20px;
             }
 
             .table-container th, .table-container td {
@@ -31,28 +59,46 @@
                 text-align: left;
             }
 
-            /* Optional: Style for the container holding each table and heading */
-            .table-wrapper {
-                text-align: center; /* Center align the heading */
-            }
-            .table-container-wrapper {
-                display: flex;
-                justify-content: center;
-                padding: 20px;
-            }
-
             .table-container th {
                 background-color: #f2f2f2;
+                color: #333;
+            }
+
+            .table-container td {
+                background-color: white;
+                color: #000;
+            }
+
+            button a {
+                color: #fff;
+                text-decoration: none;
+            }
+
+            button {
+                background-color: #00b8ec;
+                border: none;
+                border-radius: 5px;
+                color: #fff;
+                cursor: pointer;
+                display: block;
+                margin: 20px auto;
+                padding: 10px 20px;
+                text-align: center;
+            }
+
+            button:hover {
+                background-color: #555;
             }
         </style>
     </head>
     <body>
-        <h2 style="text-align: center"> Bữa ăn ngày ${requestScope.date_raw} của các bé</h2>
-        <button><a href="menu" style="text-decoration: none">Quay lại</a></button>
+        <h2>Bữa ăn ngày ${requestScope.date_raw} của các bé</h2>
+        <button><a href="menu">Quay lại</a></button>
         <c:if test="${requestScope.listMenu != null}">
+            <div class="table-container-wrapper">
                 <div class="table-container">
                     <c:forEach items="${requestScope.listAgeCategory}" var="age">
-                    <div>
+                    <div class="table-wrapper">
                         <h3>Bữa ăn của ${age.aname}</h3>
                         <table border="1">
                             <thead>
@@ -76,8 +122,8 @@
                         </table>
                     </div>
                 </c:forEach>
+                </div>
             </div>
         </c:if>
-        
     </body>
 </html>

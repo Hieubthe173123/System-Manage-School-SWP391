@@ -155,8 +155,7 @@ public class LecturersDBContext extends DBContext {
 
     public Lecturers getLecturerById(String lid) {
         try {
-            String sql = "SELECT [lid], [lname], [gender], [dob], [phoneNumber], [IDcard], [Address], [Email], [NickName] "
-                    + "FROM [SchoolManagement].[dbo].[Lecturers] WHERE [lid] = ?";
+            String sql = "select * from Lecturers where lid = ?";
 
             PreparedStatement stm = connection.prepareStatement(sql);
             stm.setString(1, lid);
@@ -173,6 +172,7 @@ public class LecturersDBContext extends DBContext {
                 lec.setEmail(rs.getString("Email"));
                 lec.setAddress(rs.getString("Address"));
                 lec.setNickname(rs.getString("NickName"));
+                lec.setStatus(rs.getString("status"));
                 return lec;
             }
         } catch (SQLException ex) {

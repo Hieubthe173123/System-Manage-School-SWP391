@@ -181,11 +181,11 @@ public class LecturerClassSession extends DBContext {
                     + "LEFT JOIN Class cl ON cs.classID = cl.classID\n"
                     + "LEFT JOIN SchoolYear sy ON cs.yid = sy.yid\n"
                     + "where l.status is not null\n"
-                    + "ORDER BY l.lid ASC;";    
+                    + "ORDER BY l.lid ASC;";
             PreparedStatement stm = connection.prepareStatement(sql);
             ResultSet rs = stm.executeQuery();
             while (rs.next()) {
-                    Lecturers l = new Lecturers();
+                Lecturers l = new Lecturers();
                 l.setLid(rs.getInt("lid"));
                 l.setLname(rs.getString("lname"));
                 l.setGender(rs.getBoolean("gender"));
@@ -222,40 +222,138 @@ public class LecturerClassSession extends DBContext {
         return list;
     }
 
-   public void addLecturer(String lname, String gender, String dob, String phoneNumber, String IDcard, String address, String email, String classID) {
-    String sql = "INSERT INTO [dbo].[Lecturers] \n"
-            + "([lname],[gender],[dob],[phoneNumber],[IDcard],[Address],[Email],[status])\n"
-            + "VALUES (?,?,?,?,?,?,?,'active');\n"
-            + "\n"
-            + "INSERT INTO [dbo].[Account]([username],[password],[role],[lid])\n"
-            + "SELECT phoneNumber, FLOOR(RAND()*100000),'2',lid\n"
-            + "FROM Lecturers WHERE lid = (SELECT MAX(lid) FROM Lecturers);\n"
-            + "\n"
-            + "INSERT INTO [dbo].[Lecturers_Class_Session]([lid],[csid],[status])\n"
-            + "VALUES ((select max(lid) from Lecturers)\n"
-            + ",(SELECT csid FROM Class_Session WHERE classID = ? AND yid = (SELECT MAX(yid) FROM Class_Session)),'active');";
+    public List<Lecturers_Class_Session> getHistoryAllLecturer(String yid) {
+        List<Lecturers_Class_Session> list = new ArrayList<>();
+        try {
+            String sql = "WITH RankedClasses AS (SELECT l.lid,l.lname,l.Address,l.dob,l.gender,l.IDcard,l.phoneNumber,l.Email,lcs.csid,\n"
+                    + "    ROW_NUMBER() OVER (PARTITION BY l.lid ORDER BY lcs.lclassID DESC) AS rn\n"
+                    + "    FROM lecturers l\n"
+                    + "    LEFT JOIN lecturers_class_session lcs ON l.lid = lcs.lid\n"
+                    + "    LEFT JOIN Class_Session cs ON cs.csid = lcs.csid\n"
+                    + "    LEFT JOIN SchoolYear sy ON sy.yid = cs.yid\n"
+                    + "    WHERE sy.yid = ? and lcs.status is not null\n"
+                    + ")\n"
+                    + "SELECT *\n"
+                    + "FROM lecturers l\n"
+                    + "LEFT JOIN RankedClasses rc ON l.lid = rc.lid AND rc.rn = 1\n"
+                    + "LEFT JOIN Class_Session cs ON rc.csid = cs.csid\n"
+                    + "LEFT JOIN Class cl ON cs.classID = cl.classID\n"
+                    + "LEFT JOIN SchoolYear sy ON cs.yid = sy.yid\n"
+                    + "ORDER BY l.lid ASC;\n"
+                    + "";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setString(1, yid);
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                Lecturers l = new Lecturers();
+                l.setLid(rs.getInt("lid"));
+                l.setLname(rs.getString("lname"));
+                l.setGender(rs.getBoolean("gender"));
+                l.setAddress(rs.getString("address"));
+                l.setDob(rs.getString("dob"));
+                l.setEmail(rs.getString("email"));
+                l.setPhoneNumber(rs.getString("phoneNumber"));
+                l.setIDcard(rs.getString("IDcard"));
+                l.setEmail(rs.getString("email"));
+                l.setStatus(rs.getString("status"));
 
-    try {
-        connection.setAutoCommit(false);
+                Class cl = new Class();
+                cl.setClassid(rs.getInt("classID"));
+                cl.setClname(rs.getString("clname"));
 
-        PreparedStatement stm = connection.prepareStatement(sql);
-        stm.setString(1, lname);
-        stm.setString(2, gender);
-        stm.setString(3, dob);
-        stm.setString(4, phoneNumber);
-        stm.setString(5, IDcard);
-        stm.setString(6, address);
-        stm.setString(7, email);
-        stm.setString(8, classID);
+                SchoolYear sy = new SchoolYear();
+                sy.setYid(rs.getInt("yid"));
+                sy.setDateStart(rs.getString("dateStart"));
+                sy.setDateEnd(rs.getString("dateEnd"));
 
-        stm.executeUpdate();
+                ClassSession cs = new ClassSession();
+                cs.setCsid(rs.getInt("csid"));
+                cs.setYid(sy);
+                cs.setClassID(cl);
 
-        connection.commit();
-    } catch (SQLException e) {
-        System.out.println("SQL Error: " + e.getMessage());
+                Lecturers_Class_Session lcs = new Lecturers_Class_Session();
+
+                lcs.setLid(l);
+                lcs.setCsid(cs);
+
+                list.add(lcs);
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return list;
     }
-}
 
+    public List<Lecturers_Class_Session> getHistoryAllLecturerUpdate(String lid, String yid) {
+        List<Lecturers_Class_Session> list = new ArrayList<>();
+        try {
+            String sql = "select l.lname,lcs.Status,cl.clname from Lecturers l \n"
+                    + "left join Lecturers_Class_Session lcs on l.lid = lcs.lid\n"
+                    + "left join Class_Session cs on cs.csid = lcs.csid \n"
+                    + "left join Class cl on cl.classID = cs.classID\n"
+                    + "left join SchoolYear sy on sy.yid = cs.yid \n"
+                    + "where l.lid = ? and sy.yid = ? and lcs.Status is null;\n"
+                    + " ";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setString(1, lid);
+            stm.setString(2, yid);
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                Lecturers l = new Lecturers();
+                l.setLname(rs.getString("lname"));
+                Class cl = new Class();
+                cl.setClname(rs.getString("clname"));
+                SchoolYear sy = new SchoolYear();
+                ClassSession cs = new ClassSession();
+                cs.setYid(sy);
+                cs.setClassID(cl);
+
+                Lecturers_Class_Session lcs = new Lecturers_Class_Session();
+                lcs.setStatus(rs.getString("Status"));
+                lcs.setLid(l);
+                lcs.setCsid(cs);
+
+                list.add(lcs);
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return list;
+    }
+
+    public void addLecturer(String lname, String gender, String dob, String phoneNumber, String IDcard, String address, String email, String classID) {
+        String sql = "INSERT INTO [dbo].[Lecturers] \n"
+                + "([lname],[gender],[dob],[phoneNumber],[IDcard],[Address],[Email],[status])\n"
+                + "VALUES (?,?,?,?,?,?,?,'active');\n"
+                + "\n"
+                + "INSERT INTO [dbo].[Account]([username],[password],[role],[lid])\n"
+                + "SELECT phoneNumber, FLOOR(RAND()*100000),'2',lid\n"
+                + "FROM Lecturers WHERE lid = (SELECT MAX(lid) FROM Lecturers);\n"
+                + "\n"
+                + "INSERT INTO [dbo].[Lecturers_Class_Session]([lid],[csid],[status])\n"
+                + "VALUES ((select max(lid) from Lecturers)\n"
+                + ",(SELECT csid FROM Class_Session WHERE classID = ? AND yid = (SELECT MAX(yid) FROM Class_Session)),'active');";
+
+        try {
+            connection.setAutoCommit(false);
+
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setString(1, lname);
+            stm.setString(2, gender);
+            stm.setString(3, dob);
+            stm.setString(4, phoneNumber);
+            stm.setString(5, IDcard);
+            stm.setString(6, address);
+            stm.setString(7, email);
+            stm.setString(8, classID);
+
+            stm.executeUpdate();
+
+            connection.commit();
+        } catch (SQLException e) {
+            System.out.println("SQL Error: " + e.getMessage());
+        }
+    }
 
     public SchoolYear getNewSchoolYear() {
         SchoolYear sc = new SchoolYear();
@@ -397,7 +495,8 @@ public class LecturerClassSession extends DBContext {
 
     public static void main(String[] args) {
         LecturerClassSession lc = new LecturerClassSession();
-        
+        List<Lecturers_Class_Session> list = lc.getHistoryAllLecturerUpdate("2", "1");
+        System.out.println(list);
     }
 
 }

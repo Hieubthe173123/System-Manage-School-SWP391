@@ -18,11 +18,12 @@ public class Lecturers {
     private String address;
     private String email;
     private String nickname;
+    private String status;
 
     public Lecturers() {
     }
 
-    public Lecturers(int lid, String lname, boolean gender, String dob, String phoneNumber, String IDcard, String address, String email, String nickname) {
+    public Lecturers(int lid, String lname, boolean gender, String dob, String phoneNumber, String IDcard, String address, String email, String nickname, String status) {
         this.lid = lid;
         this.lname = lname;
         this.gender = gender;
@@ -32,7 +33,9 @@ public class Lecturers {
         this.address = address;
         this.email = email;
         this.nickname = nickname;
+        this.status = status;
     }
+
 
     public int getLid() {
         return lid;
@@ -105,6 +108,15 @@ public class Lecturers {
     public void setNickname(String nickname) {
         this.nickname = nickname;
     }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+    
 
     @Override
     public String toString() {

@@ -12,15 +12,18 @@ public class Lecturers_Class_Session {
     private int lclassID;
     private Lecturers lid;
     private ClassSession csid;
+    private String status;
 
     public Lecturers_Class_Session() {
     }
 
-    public Lecturers_Class_Session(int lclassID, Lecturers lid, ClassSession csid) {
+    public Lecturers_Class_Session(int lclassID, Lecturers lid, ClassSession csid, String status) {
         this.lclassID = lclassID;
         this.lid = lid;
         this.csid = csid;
+        this.status = status;
     }
+
 
     public int getLclassID() {
         return lclassID;
@@ -46,10 +49,21 @@ public class Lecturers_Class_Session {
         this.csid = csid;
     }
 
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
     @Override
     public String toString() {
-        return "Lecturers_Class_Session{" + "lclassID=" + lclassID + ", lid=" + lid + ", csid=" + csid + '}';
+        return "Lecturers_Class_Session{" + "lclassID=" + lclassID + ", lid=" + lid + ", csid=" + csid + ", status=" + status + '}';
     }
+    
+
+   
     
     
     

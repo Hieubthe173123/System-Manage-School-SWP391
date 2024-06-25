@@ -45,6 +45,7 @@
                         <div class="card-header">
                             <h2>Add Curriculum</h2>
                         </div>
+                        <button onclick="window.location.href = 'session-detail'">Back To Session Detail</button>
                         <div class="card-body">
                             <c:if test="${not empty errorMessage}">
                                 <div class="alert alert-danger">${errorMessage}</div>

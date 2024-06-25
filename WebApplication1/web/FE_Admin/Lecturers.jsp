@@ -35,7 +35,7 @@
                     <button class="btn btn-success" onclick="search()">Search</button>
                 </div>
                 <button class="btn btn-primary mx-2" onclick="window.location.href = 'add-lecturer'">Add</button>
-                <button class="btn btn-secondary" onclick="history()">History</button>
+                <button class="btn btn-secondary" onclick="window.location.href = 'history?yid=${sc.yid}'">History</button>
             </div>
         </header>
         <main class="mt-4">   

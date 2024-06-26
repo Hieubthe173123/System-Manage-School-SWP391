@@ -173,7 +173,8 @@ public class SessionDetailDBContext extends DBContext {
 
     public static void main(String[] args) {
         SessionDetailDBContext sd = new SessionDetailDBContext();
-        sd.insertSession("1");
+        List<SessionDetails> list = sd.getAllSessionDetails("1");
+        System.out.println(list);
 
     }
 }

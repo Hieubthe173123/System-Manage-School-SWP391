@@ -67,9 +67,10 @@
     </head>
     <body>
         <div class="container">
-            <h1>Select a Historical Period</h1>
+            <h1>Select a year</h1>
             <button class="btn btn-primary mb-3" onclick="window.location.href='lecturers'">Back to Lecturer</button>
-            <select class="form-control">
+            <select class="form-control" id="year-select">
+                <option value="">Select a period</option>
                 <c:forEach var="year" items="${requestScope.year}">
                     <option value="${year.yid}">${year.dateStart} - ${year.dateEnd}</option>
                 </c:forEach>
@@ -108,5 +109,13 @@
         <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+        <script>
+            document.getElementById('year-select').addEventListener('change', function() {
+                var yid = this.value;
+                if (yid) {
+                    window.location.href = 'history?yid=' + yid;
+                }
+            });
+        </script>
     </body>
 </html>

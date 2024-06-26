@@ -336,19 +336,52 @@ public class CuriculumDBContext extends DBContext {
             PreparedStatement stm = connection.prepareStatement(sql);
             ResultSet rs = stm.executeQuery();
             while (rs.next()) {
-                
+
                 SessionDetails sd = new SessionDetails();
                 sd.setSdid(rs.getInt("sdid"));
                 sd.setSessionNumber(rs.getInt("sessionNumber"));
-                
+
                 Curiculum cur = new Curiculum();
                 cur.setCurID(rs.getInt("curID"));
                 cur.setNameAct(rs.getString("nameAct"));
-                cur.setTimeStart(rs.getString("TimeStart")); 
+                cur.setTimeStart(rs.getString("TimeStart"));
                 cur.setTimeEnd(rs.getString("TimeEnd"));
                 cur.setIsFix(rs.getBoolean("isFix"));
                 cur.setSdid(sd);
-                
+
+                list.add(cur);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(RoomDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return list;
+    }
+
+    public List<Curiculum> getAllActivityHistory(String sid, String sdid) {
+        List<Curiculum> list = new ArrayList<>();
+        try {
+            String sql = "select * from curiculum cur\n" +
+"                    left join session_details sd on cur.sdid = sd.sdid\n" +
+"                    where sd.sid = ? and sd.sdid = ? and cur.statusSes is not null";
+
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setString(1, sid);
+            stm.setString(2, sdid);
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+
+                SessionDetails sd = new SessionDetails();
+                sd.setSdid(rs.getInt("sdid"));
+                sd.setSessionNumber(rs.getInt("sessionNumber"));
+
+                Curiculum cur = new Curiculum();
+                cur.setCurID(rs.getInt("curID"));
+                cur.setNameAct(rs.getString("nameAct"));
+                cur.setTimeStart(rs.getString("TimeStart"));
+                cur.setTimeEnd(rs.getString("TimeEnd"));
+                cur.setIsFix(rs.getBoolean("isFix"));
+                cur.setSdid(sd);
+
                 list.add(cur);
             }
         } catch (SQLException ex) {
@@ -359,7 +392,7 @@ public class CuriculumDBContext extends DBContext {
 
     public static void main(String[] args) {
         CuriculumDBContext cur = new CuriculumDBContext();
-        List<Curiculum> list = cur.getAllActivity();
+        List<Curiculum> list = cur.getAllActivityHistory("1", "1");
         System.out.println(list);
     }
 

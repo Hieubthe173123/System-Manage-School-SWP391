@@ -23,7 +23,7 @@ import java.util.ArrayList;
  *
  * @author DELL
  */
-@WebServlet(name = "SchoolYearHistory", urlPatterns = {"/historyschoolyear"})
+@WebServlet(name = "SchoolYearHistory", urlPatterns = {"/admin/historyschoolyear"})
 public class SchoolYearHistory extends HttpServlet {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
@@ -60,7 +60,7 @@ public class SchoolYearHistory extends HttpServlet {
         }
 
         // Forward to JSP page
-        request.getRequestDispatcher("FE_Admin/SchoolYearHistory.jsp").forward(request, response);
+        request.getRequestDispatcher("/FE_Admin/SchoolYearHistory.jsp").forward(request, response);
     }
 
     @Override

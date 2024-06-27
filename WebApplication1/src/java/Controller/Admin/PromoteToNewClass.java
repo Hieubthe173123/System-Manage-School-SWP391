@@ -24,7 +24,7 @@ import java.util.ArrayList;
  *
  * @author DELL
  */
-@WebServlet(name = "PromoteToNewClass", urlPatterns = {"/promote"})
+@WebServlet(name = "PromoteToNewClass", urlPatterns = {"/admin/promote"})
 public class PromoteToNewClass extends HttpServlet {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
@@ -88,7 +88,7 @@ public class PromoteToNewClass extends HttpServlet {
 
             // Nếu có yid được chọn từ request
             if (yid != null) {
-                ArrayList<ClassSession> listClassSession = db.getClassSessionByYid(yid);
+                ArrayList<ClassSession> listClassSession = db.getClassSessionByYid(yid, true);
                 session.setAttribute("listClassSession", listClassSession);
 
                 ArrayList<SchoolYear> selectedYear = db.getSchoolYearById(yid);
@@ -131,11 +131,11 @@ public class PromoteToNewClass extends HttpServlet {
             }
         } catch (Exception e) {
             System.out.println(e);
-            response.sendRedirect("Error/404.jsp");
+            response.sendRedirect("/Error/404.jsp");
             return;
         }
 
-        request.getRequestDispatcher("FE_Admin/PromoteStudent.jsp").forward(request, response);
+        request.getRequestDispatcher("/FE_Admin/PromoteStudent.jsp").forward(request, response);
     }
 
     @Override

@@ -30,7 +30,7 @@ public class ClassDBContext extends DBContext {
             if (rs.next()) {
                 cla.setClassid(rs.getInt("classID"));
                 cla.setClname(rs.getString("clname"));
-              
+
                 return cla;
             }
         } catch (SQLException e) {
@@ -38,69 +38,75 @@ public class ClassDBContext extends DBContext {
         }
         return null;
     }
-    public List<Class> getAllClass() {
-        List<Class> list = new ArrayList<>();
+
+    public List<ClassSession> getAllClass() {
+        List<ClassSession> list = new ArrayList<>();
         try {
-            String sql = "SELECT * FROM Class";
+            String sql = "select * from Class_Session cs\n"
+                    + "inner join Class cl on cs.classID = cl.classID\n"
+                    + "where cs.status = '1'";
             PreparedStatement stm = connection.prepareStatement(sql);
             ResultSet rs = stm.executeQuery();
             while (rs.next()) {
+
                 Class cl = new Class();
                 cl.setClassid(rs.getInt("classID"));
                 cl.setClname(rs.getString("clname"));
-                list.add(cl);
+                ClassSession cs = new ClassSession();
+                cs.setClassID(cl);
+                list.add(cs);
             }
         } catch (SQLException e) {
             System.out.println(e);
         }
         return list;
     }
+
     public List<Class> getAllLecturersContain() {
-    List<Class> list = new ArrayList<>();
+        List<Class> list = new ArrayList<>();
 
-    try {
-        String sql = "SELECT\n"
-                + "    C.classID,\n"
-                + "    C.clname\n"
-                + "FROM\n"
-                + "    Class C\n"
-                + "LEFT JOIN (\n"
-                + "    SELECT DISTINCT\n"
-                + "        C.classID\n"
-                + "    FROM\n"
-                + "        Lecturers L\n"
-                + "    LEFT JOIN\n"
-                + "        Lecturers_Class_Session LCS ON L.lid = LCS.lid\n"
-                + "    LEFT JOIN\n"
-                + "        Class_Session CS ON LCS.csid = CS.csid\n"
-                + "    LEFT JOIN\n"
-                + "        SchoolYear sy ON CS.yid = sy.yid\n"
-                + "    LEFT JOIN\n"
-                + "        Class C ON CS.classID = C.classID\n"
-                + "    WHERE\n"
-                + "        sy.yid = (SELECT MAX(yid) FROM SchoolYear)\n"
-                + ") AS T ON C.classID = T.classID\n"
-                + "WHERE\n"
-                + "    T.classID IS NULL;";
-        PreparedStatement stm = connection.prepareStatement(sql);
-        ResultSet rs = stm.executeQuery();
+        try {
+            String sql = "SELECT\n"
+                    + "    C.classID,\n"
+                    + "    C.clname\n"
+                    + "FROM\n"
+                    + "    Class C\n"
+                    + "LEFT JOIN (\n"
+                    + "    SELECT DISTINCT\n"
+                    + "        C.classID\n"
+                    + "    FROM\n"
+                    + "        Lecturers L\n"
+                    + "    LEFT JOIN\n"
+                    + "        Lecturers_Class_Session LCS ON L.lid = LCS.lid\n"
+                    + "    LEFT JOIN\n"
+                    + "        Class_Session CS ON LCS.csid = CS.csid\n"
+                    + "    LEFT JOIN\n"
+                    + "        SchoolYear sy ON CS.yid = sy.yid\n"
+                    + "    LEFT JOIN\n"
+                    + "        Class C ON CS.classID = C.classID\n"
+                    + "    WHERE\n"
+                    + "        sy.yid = (SELECT MAX(yid) FROM SchoolYear)\n"
+                    + ") AS T ON C.classID = T.classID\n"
+                    + "WHERE\n"
+                    + "    T.classID IS NULL;";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            ResultSet rs = stm.executeQuery();
 
-        while (rs.next()) {
-            Class cl = new Class();
-            cl.setClassid(rs.getInt("classID"));
-            cl.setClname(rs.getString("clname"));
-            list.add(cl);
+            while (rs.next()) {
+                Class cl = new Class();
+                cl.setClassid(rs.getInt("classID"));
+                cl.setClname(rs.getString("clname"));
+                list.add(cl);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(RoomDBContext.class.getName()).log(Level.SEVERE, null, ex);
         }
-    } catch (SQLException ex) {
-        Logger.getLogger(RoomDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        return list;
     }
-    return list;
-}
 
-    
     public static void main(String[] args) {
         ClassDBContext cl = new ClassDBContext();
-        List<Class> list = cl.getAllClass();
+        List<ClassSession> list = cl.getAllClass();
         System.out.println(list);
     }
 }

@@ -33,7 +33,7 @@ public class UpdateLecturers extends HttpServlet {
         request.setAttribute("lec1", lec1);
         
         ClassDBContext cl = new ClassDBContext();
-        List<Class> list = cl.getAllClass();
+        List<ClassSession> list = cl.getAllClass();
         request.setAttribute("list1", list);
         request.getRequestDispatcher("FE_Admin/UpdateLecturer.jsp").forward(request, response);
     }

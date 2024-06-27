@@ -3,6 +3,7 @@ package Controller.Admin;
 import Entity.Class;
 import DAO.ClassDBContext;
 import DAO.LecturerClassSession;
+import Entity.ClassSession;
 import Entity.Lecturers_Class_Session;
 import java.io.IOException;
 import java.util.List;
@@ -19,7 +20,7 @@ public class AddLecturers extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         ClassDBContext cl = new ClassDBContext();
-        List<Class> list = cl.getAllClass();
+        List<ClassSession> list = cl.getAllClass();
         request.setAttribute("listA", list);
         request.getRequestDispatcher("FE_Admin/AddLecturer.jsp").forward(request, response);
     }

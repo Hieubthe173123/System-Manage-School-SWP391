@@ -166,22 +166,22 @@ public class LecturerClassSession extends DBContext {
         List<Lecturers_Class_Session> list = new ArrayList<>();
         try {
             String sql = "WITH RankedClasses AS (SELECT l.lid,l.lname,l.Address,l.dob,l.gender,l.IDcard,l.phoneNumber,l.Email,lcs.csid,\n"
-                    + "    ROW_NUMBER() OVER (PARTITION BY l.lid ORDER BY lcs.lclassID DESC) AS rn\n"
-                    + "    FROM lecturers l\n"
-                    + "    LEFT JOIN lecturers_class_session lcs ON l.lid = lcs.lid\n"
-                    + "    LEFT JOIN Class_Session cs ON cs.csid = lcs.csid\n"
-                    + "    LEFT JOIN SchoolYear sy ON sy.yid = cs.yid\n"
-                    + "    WHERE l.status IS NOT NULL\n"
-                    + "    AND sy.yid = (SELECT MAX(yid) FROM SchoolYear) and lcs.status is not null\n"
-                    + ")\n"
-                    + "SELECT *\n"
-                    + "FROM lecturers l\n"
-                    + "LEFT JOIN RankedClasses rc ON l.lid = rc.lid AND rc.rn = 1\n"
-                    + "LEFT JOIN Class_Session cs ON rc.csid = cs.csid\n"
-                    + "LEFT JOIN Class cl ON cs.classID = cl.classID\n"
-                    + "LEFT JOIN SchoolYear sy ON cs.yid = sy.yid\n"
-                    + "where l.status is not null\n"
-                    + "ORDER BY l.lid ASC;";
+                    + "ROW_NUMBER() OVER (PARTITION BY l.lid ORDER BY lcs.lclassID DESC) AS rn\n"
+                    + "                        FROM lecturers l\n"
+                    + "                      LEFT JOIN lecturers_class_session lcs ON l.lid = lcs.lid\n"
+                    + "                      LEFT JOIN Class_Session cs ON cs.csid = lcs.csid\n"
+                    + "                        LEFT JOIN SchoolYear sy ON sy.yid = cs.yid\n"
+                    + "                       WHERE l.status IS NOT NULL and cs.status = '1'\n"
+                    + "                        AND sy.yid = (SELECT MAX(yid) FROM SchoolYear) and lcs.status is not null )\n"
+                    + "                    \n"
+                    + "                    SELECT *\n"
+                    + "                    FROM lecturers l\n"
+                    + "                    LEFT JOIN RankedClasses rc ON l.lid = rc.lid AND rc.rn = 1\n"
+                    + "                    LEFT JOIN Class_Session cs ON rc.csid = cs.csid\n"
+                    + "                    LEFT JOIN Class cl ON cs.classID = cl.classID\n"
+                    + "                    LEFT JOIN SchoolYear sy ON cs.yid = sy.yid\n"
+                    + "                    where l.status is not null \n"
+                    + "                    ORDER BY l.lid ASC;";
             PreparedStatement stm = connection.prepareStatement(sql);
             ResultSet rs = stm.executeQuery();
             while (rs.next()) {
@@ -323,16 +323,16 @@ public class LecturerClassSession extends DBContext {
 
     public void addLecturer(String lname, String gender, String dob, String phoneNumber, String IDcard, String address, String email, String classID) {
         String sql = "INSERT INTO [dbo].[Lecturers] \n"
-                + "([lname],[gender],[dob],[phoneNumber],[IDcard],[Address],[Email],[status])\n"
-                + "VALUES (?,?,?,?,?,?,?,'active');\n"
-                + "\n"
-                + "INSERT INTO [dbo].[Account]([username],[password],[role],[lid])\n"
-                + "SELECT phoneNumber, FLOOR(RAND()*100000),'2',lid\n"
-                + "FROM Lecturers WHERE lid = (SELECT MAX(lid) FROM Lecturers);\n"
-                + "\n"
-                + "INSERT INTO [dbo].[Lecturers_Class_Session]([lid],[csid],[status])\n"
-                + "VALUES ((select max(lid) from Lecturers)\n"
-                + ",(SELECT csid FROM Class_Session WHERE classID = ? AND yid = (SELECT MAX(yid) FROM Class_Session)),'active');";
+                + "                ([lname],[gender],[dob],[phoneNumber],[IDcard],[Address],[Email],[status])\n"
+                + "                VALUES (?,?,?,?,?,?,?,'active');\n"
+                + "                \n"
+                + "                INSERT INTO [dbo].[Account]([username],[password],[role],[lid],[status])\n"
+                + "                SELECT phoneNumber, FLOOR(RAND()*100000),'2',lid,'1'\n"
+                + "                FROM Lecturers WHERE lid = (SELECT MAX(lid) FROM Lecturers);\n"
+                + "                \n"
+                + "                INSERT INTO [dbo].[Lecturers_Class_Session]([lid],[csid],[status])\n"
+                + "                VALUES ((select max(lid) from Lecturers)\n"
+                + "                ,(SELECT csid FROM Class_Session WHERE classID = ? AND yid = (SELECT MAX(yid) FROM Class_Session)),'active');";
 
         try {
             connection.setAutoCommit(false);
@@ -495,8 +495,7 @@ public class LecturerClassSession extends DBContext {
 
     public static void main(String[] args) {
         LecturerClassSession lc = new LecturerClassSession();
-        List<Lecturers_Class_Session> list = lc.getHistoryAllLecturerUpdate("2", "1");
-        System.out.println(list);
+        lc.addLecturer("Bùi Trung Hiếu","1","2003-12-03", "0128383435","7842377478238","Hà Nội","trunghieubui@gmail.com","3");
     }
 
 }

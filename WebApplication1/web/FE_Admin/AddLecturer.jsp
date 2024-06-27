@@ -88,7 +88,7 @@
                                     <select class="form-control" id="classID" name="classID">
                                         <option value="">Chọn Lớp Học</option>
                                         <c:forEach items="${requestScope.listA}" var="cla">
-                                            <option value="${cla.classid}" >${cla.clname}</option>
+                                             <option value="${cla.classID.classid}">${cla.classID.clname}</option>
                                         </c:forEach>
                                     </select>
                                 </div>

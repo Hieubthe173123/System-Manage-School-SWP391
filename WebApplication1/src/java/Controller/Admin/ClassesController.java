@@ -4,7 +4,9 @@
  */
 package Controller.Admin;
 
+import Authentication.BaseRBACController;
 import DAO.SchoolYearDBContext;
+import Entity.Account;
 import Entity.ClassSession;
 import Entity.Lecturers_Class_Session;
 import Entity.SchoolYear;
@@ -22,10 +24,10 @@ import java.util.ArrayList;
  *
  * @author DELL
  */
-@WebServlet(name = "ClassesController", urlPatterns = {"/classController"})
-public class ClassesController extends HttpServlet {
+@WebServlet(name = "ClassesController", urlPatterns = {"/admin/classController"})
+public class ClassesController extends BaseRBACController {
 
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response, Account account)
             throws ServletException, IOException {
         SchoolYearDBContext yearDB = new SchoolYearDBContext();
         // Lấy danh sách tất cả các năm học
@@ -50,8 +52,8 @@ public class ClassesController extends HttpServlet {
                 ArrayList<SchoolYear> selectedYear = yearDB.getSchoolYearById(yid);
                 request.setAttribute("selectedYear", selectedYear);
 
-                // Lấy danh sách các lớp học trong năm học đã chọn
-                ArrayList<ClassSession> listClassSession = yearDB.getClassSessionByYid(yid);
+                // Lấy danh sách các lớp học trong năm học đã chọn và có status 'Active'
+                ArrayList<ClassSession> listClassSession = yearDB.getClassSessionByYid(yid, true);
                 request.setAttribute("listClassSession", listClassSession);
 
             }
@@ -61,9 +63,6 @@ public class ClassesController extends HttpServlet {
 
                 ArrayList<Lecturers_Class_Session> lecClassSessionbyCsid2 = yearDB.getLecturersByCsid(Integer.parseInt(csid));
                 request.setAttribute("lecClassSessionbyCsid2", lecClassSessionbyCsid2);
-
-                Lecturers_Class_Session lecClassSessionbyCsid = yearDB.getLecturerByCsid(Integer.parseInt(csid));
-                request.setAttribute("lecClassSessionbyCsid", lecClassSessionbyCsid);
 
                 ArrayList<StudentClassSession> studentClassSessionbyCsid = yearDB.getStudentClassSessionbyCsid(Integer.parseInt(csid));
                 request.setAttribute("studentClassSessionbyCsid", studentClassSessionbyCsid);
@@ -77,19 +76,19 @@ public class ClassesController extends HttpServlet {
 
         request.setAttribute("yid", yid);
         request.setAttribute("listYear", listYear);
-        request.getRequestDispatcher("FE_Admin/Classes_function.jsp").forward(request, response);
+        request.getRequestDispatcher("/FE_Admin/Classes_function.jsp").forward(request, response);
     }
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+    protected void doGet(HttpServletRequest request, HttpServletResponse response, Account account)
             throws ServletException, IOException {
-        processRequest(request, response);
+        processRequest(request, response, account);
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+    protected void doPost(HttpServletRequest request, HttpServletResponse response, Account account)
             throws ServletException, IOException {
-        processRequest(request, response);
+        processRequest(request, response,account);
     }
 
     @Override

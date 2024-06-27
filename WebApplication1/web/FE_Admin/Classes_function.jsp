@@ -49,6 +49,7 @@
         <div class="content-wrapper">
             <div class="mb-3">
                 <button class="btn btn-campus" onclick="window.location.href = 'newyear'">Create New School Year</button>
+                <button class="btn btn-campus" onclick="window.location.href = 'classSession-add'">Add/Update Class Session</button>
                 <button class="btn btn-campus" onclick="window.location.href = 'promote'">Promote Student</button>
                 <button class="btn btn-campus" onclick="window.location.href = 'historyschoolyear'">School Year History</button>
             </div>

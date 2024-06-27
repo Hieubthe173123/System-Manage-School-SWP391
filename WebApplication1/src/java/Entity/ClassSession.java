@@ -15,16 +15,18 @@ public class ClassSession {
     private SchoolYear yid;
     private Session sid;
     private Room rid;
+    private boolean status;
 
     public ClassSession() {
     }
 
-    public ClassSession(int csid, Class classID, SchoolYear yid, Session sid, Room rid) {
+    public ClassSession(int csid, Class classID, SchoolYear yid, Session sid, Room rid, boolean status) {
         this.csid = csid;
         this.classID = classID;
         this.yid = yid;
         this.sid = sid;
         this.rid = rid;
+        this.status = status;
     }
 
     public int getCsid() {
@@ -59,17 +61,25 @@ public class ClassSession {
         this.sid = sid;
     }
 
-    public void setRid(Room rid) {
-        this.rid = rid;
-    }
-
     public Room getRid() {
         return rid;
     }
 
+    public void setRid(Room rid) {
+        this.rid = rid;
+    }
+
+    public boolean getStatus() {
+        return status;
+    }
+
+    public void setStatus(boolean status) {
+        this.status = status;
+    }
+
     @Override
     public String toString() {
-        return "ClassSession{" + "csid=" + csid + ", classID=" + classID + ", yid=" + yid + ", sid=" + sid + ", rid=" + rid + '}';
+        return "ClassSession{" + "csid=" + csid + ", classID=" + classID + ", yid=" + yid + ", sid=" + sid + ", rid=" + rid + ", status=" + status + '}';
     }
 
 }

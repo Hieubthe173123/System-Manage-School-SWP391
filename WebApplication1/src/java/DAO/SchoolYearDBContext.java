@@ -28,6 +28,33 @@ import java.util.logging.Logger;
  */
 public class SchoolYearDBContext extends DBContext {
 
+    SchoolYear s = new SchoolYear();
+
+    public SchoolYear getSchoolYearByDateNow(String date) {
+        SchoolYear school = new SchoolYear();
+        try {
+            String sql = " SELECT yid, dateStart, dateEnd FROM [SchoolManagement].[dbo].[SchoolYear] Where dateStart <= ? and dateEnd >= ?";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setString(1, date);
+            stm.setString(2, date);
+
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                FoodDBContext food = new FoodDBContext();
+                MealTimeDBContext meal = new MealTimeDBContext();
+                AgeDBContext age = new AgeDBContext();
+                school.setYid(rs.getInt("yid"));
+                school.setDateStart(s.formatDate(rs.getString("dateStart")));
+                school.setDateEnd(s.formatDate(rs.getString("dateEnd")));
+                return school;
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return null;
+    }
+
+    //Hàm lấy tất Cả Session
     public ArrayList<Session> getAllSession() {
         ArrayList<Session> list = new ArrayList<>();
         try {
@@ -49,6 +76,7 @@ public class SchoolYearDBContext extends DBContext {
         return list;
     }
 
+    //Lấy tất cả phòng học
     public ArrayList<Room> getAllRoom() {
         ArrayList<Room> list = new ArrayList<>();
         try {
@@ -67,6 +95,7 @@ public class SchoolYearDBContext extends DBContext {
         return list;
     }
 
+    //Lấy tất cả các lớp
     public ArrayList<Class> getAllClass() {
         ArrayList<Class> list = new ArrayList<>();
         try {
@@ -86,6 +115,7 @@ public class SchoolYearDBContext extends DBContext {
         return list;
     }
 
+    //Lấy năm học theo yid dạng object
     public SchoolYear getSchoolYearById(int id) {
         SchoolYear school = new SchoolYear();
         try {
@@ -98,9 +128,6 @@ public class SchoolYearDBContext extends DBContext {
 
             ResultSet rs = stm.executeQuery();
             if (rs.next()) {
-                FoodDBContext food = new FoodDBContext();
-                MealTimeDBContext meal = new MealTimeDBContext();
-                AgeDBContext age = new AgeDBContext();
                 school.setYid(rs.getInt("yid"));
                 school.setDateStart(rs.getString("dateStart"));
                 school.setDateEnd(rs.getString("dateEnd"));
@@ -112,7 +139,32 @@ public class SchoolYearDBContext extends DBContext {
         return null;
     }
 
-    //List  Function getAll Class in SchoolYear
+    //Lấy năm học theo yid dạng List
+    public ArrayList<SchoolYear> getSchoolYearById(String id) {
+        ArrayList<SchoolYear> list = new ArrayList<>();
+        try {
+            String sql = "SELECT [yid]\n"
+                    + "      ,[dateStart]\n"
+                    + "      ,[dateEnd]\n"
+                    + "  FROM [SchoolManagement].[dbo].[SchoolYear]\n"
+                    + "  WHERE yid = ?";
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, id);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                SchoolYear year = new SchoolYear();
+                year.setYid(rs.getInt("yid"));
+                year.setDateStart(rs.getString("dateStart"));
+                year.setDateEnd(rs.getString("dateEnd"));
+                list.add(year);
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex);
+        }
+        return list;
+    }
+
+    //lấy toàn bộ năm học
     public ArrayList<SchoolYear> getAllSchoolYear() {
         ArrayList<SchoolYear> list = new ArrayList<>();
         try {
@@ -138,31 +190,8 @@ public class SchoolYearDBContext extends DBContext {
 
     }
 
-    public ArrayList<SchoolYear> getSchoolYearById(String id) {
-        ArrayList<SchoolYear> list = new ArrayList<>();
-        try {
-            String sql = "SELECT [yid]\n"
-                    + "      ,[dateStart]\n"
-                    + "      ,[dateEnd]\n"
-                    + "  FROM [SchoolManagement].[dbo].[SchoolYear]\n"
-                    + "  WHERE yid = ?";
-            PreparedStatement ps = connection.prepareStatement(sql);
-            ps.setString(1, id);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                SchoolYear year = new SchoolYear();
-                year.setYid(rs.getInt("yid"));
-                year.setDateStart(rs.getString("dateStart"));
-                year.setDateEnd(rs.getString("dateEnd"));
-                list.add(year);
-            }
-        } catch (SQLException ex) {
-            System.out.println(ex);
-        }
-        return list;
-    }
-
-    public ArrayList<ClassSession> getClassSessionByYid(String id) {
+    //Lấy Class Session theo yid và status
+    public ArrayList<ClassSession> getClassSessionByYid(String id, boolean status) {
         ArrayList<ClassSession> list = new ArrayList<>();
         try {
             String sql = "SELECT [csid]\n"
@@ -170,10 +199,12 @@ public class SchoolYearDBContext extends DBContext {
                     + "      ,[yid]\n"
                     + "      ,[sid]\n"
                     + "      ,[rid]\n"
+                    + "      ,[status]\n"
                     + "  FROM [SchoolManagement].[dbo].[Class_Session]\n"
-                    + "  WHERE yid = ?";
+                    + "  WHERE yid = ? AND status = ? ";
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, id);
+            ps.setBoolean(2, status);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 ClassSession cls = new ClassSession();
@@ -187,6 +218,44 @@ public class SchoolYearDBContext extends DBContext {
                 cls.setRid(rdb.getRoomByRid(rs.getInt("rid")));
                 cls.setSid(sedb.getSessionById(rs.getInt("sid")));
                 cls.setYid(yearDB.getSchoolYearById(rs.getInt("yid")));
+                cls.setStatus(rs.getBoolean("status"));
+
+                list.add(cls);
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex);
+        }
+        return list;
+
+    }
+
+    public ArrayList<ClassSession> getClassSessionByYid2(int id) {
+        ArrayList<ClassSession> list = new ArrayList<>();
+        try {
+            String sql = "SELECT [csid]\n"
+                    + "      ,[classID]\n"
+                    + "      ,[yid]\n"
+                    + "      ,[sid]\n"
+                    + "      ,[rid]\n"
+                    + "      ,[status]\n"
+                    + "  FROM [SchoolManagement].[dbo].[Class_Session]\n"
+                    + "  WHERE yid = ?";
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                ClassSession cls = new ClassSession();
+                ClassDBContext cldb = new ClassDBContext();
+                RoomDBContext rdb = new RoomDBContext();
+                SessionDBContext sedb = new SessionDBContext();
+                SchoolYearDBContext yearDB = new SchoolYearDBContext();
+
+                cls.setCsid(rs.getInt("csid"));
+                cls.setClassID(cldb.getClassById(rs.getInt("classID")));
+                cls.setRid(rdb.getRoomByRid(rs.getInt("rid")));
+                cls.setSid(sedb.getSessionById(rs.getInt("sid")));
+                cls.setYid(yearDB.getSchoolYearById(rs.getInt("yid")));
+                cls.setStatus(rs.getBoolean("status"));
 
                 list.add(cls);
             }
@@ -649,7 +718,7 @@ public class SchoolYearDBContext extends DBContext {
         return null;
     }
 
-    // Tạo Năm học mới
+    // Tạo Năm học mới và lấy những lớp học có trạng thái status : active
     public int createNewSchoolYearForClassSession(String dateStart, String dateEnd) {
         int newYid = 0;  // tạo biến để lưu năm học mới khi được tạo
         int previousYid = 0; // tạo biến để lưu năm học gần nhất
@@ -688,10 +757,10 @@ public class SchoolYearDBContext extends DBContext {
             // Nếu có năm học gần nhất, insert tiếp vào Class_Session
             if (newYid != 0 && previousYid != 0) {
                 // Thêm các bản ghi vào Class_Session cho năm học mới
-                String insertNewCsid = "INSERT INTO Class_Session (classID, yid, sid, rid) "
-                        + "SELECT cs.classID, ?, cs.sid, cs.rid "
+                String insertNewCsid = "INSERT INTO Class_Session (classID, yid, sid, rid, status) "
+                        + "SELECT cs.classID, ?, cs.sid, cs.rid, cs.status "
                         + "FROM Class_Session cs "
-                        + "WHERE cs.yid = ? "
+                        + "WHERE cs.yid = ? AND cs.status = 1 OR cs.status = 0"
                         + "AND NOT EXISTS ( "
                         + "    SELECT 1 "
                         + "    FROM Class_Session cs2 "
@@ -758,6 +827,40 @@ public class SchoolYearDBContext extends DBContext {
         return count;
     }
 
+    //Hàm kiểm tra xem lớp học đó có học sinh không
+    public boolean getStudentCountByClassSession2(int classID) {
+
+        try {
+            String sql = "SELECT COUNT(*) AS student_count FROM [dbo].[Student_Class_Session] WHERE csid = ?";
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, classID);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                return rs.getInt("student_count") > 0;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(SchoolYearDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+
+    //Hàm Kiểm tra xem lớp học đó đã có giáo viên chưa
+    public boolean getLecturersCountByClassSession2(int classID) {
+        try {
+            String sql = "SELECT COUNT(*) AS lecturers_count FROM [dbo].[Lecturers_Class_Session] WHERE csid = ?";
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, classID);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                return rs.getInt("lecturers_count") > 0;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(SchoolYearDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+
+    //Lấy ra ngày kết thúc năm học gần nhất
     public ArrayList<SchoolYear> getMostRecentSchoolYearEndDate() {
         ArrayList<SchoolYear> list = new ArrayList<>();
         try {
@@ -790,9 +893,72 @@ public class SchoolYearDBContext extends DBContext {
         return null;
     }
 
+    //Hàm insert new ClassSession 
+    public void insertClassSession(ClassSession cls) {
+        try {
+            String sql = "INSERT INTO [dbo].[Class_Session] "
+                    + "([classID], [yid], [sid], [rid], [status]) "
+                    + "VALUES (?, ?, ?, ?, ?)";
+            PreparedStatement ps = connection.prepareStatement(sql);
+
+            ps.setInt(1, cls.getClassID().getClassid());
+
+            ps.setInt(2, cls.getYid().getYid());
+
+            if (cls.getSid() != null) {
+                ps.setInt(3, cls.getSid().getSid());
+            } else {
+                ps.setNull(3, java.sql.Types.INTEGER);
+            }
+
+            if (cls.getRid() != null) {
+                ps.setInt(4, cls.getRid().getRid());
+            } else {
+                ps.setNull(4, java.sql.Types.INTEGER);
+            }
+
+            ps.setBoolean(5, cls.getStatus());
+
+            ps.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(SchoolYearDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    //Hàm update ClassSession
+    public void updateClassSessionRoom(ClassSession cls) {
+        try {
+            String sql = "UPDATE [dbo].[Class_Session] "
+                    + "SET [rid] = ?, [sid] = ?, [status] = ? "
+                    + "WHERE [classID] = ? AND [yid] = ?";
+            PreparedStatement ps = connection.prepareStatement(sql);
+
+            // Set rid (room ID) or NULL
+            if (cls.getRid() != null) {
+                ps.setInt(1, cls.getRid().getRid());
+            } else {
+                ps.setNull(1, java.sql.Types.INTEGER);
+            }
+
+            // Set sid (session ID) or NULL
+            if (cls.getSid() != null) {
+                ps.setInt(2, cls.getSid().getSid());
+            } else {
+                ps.setNull(2, java.sql.Types.INTEGER);
+            }
+
+            ps.setBoolean(3, cls.getStatus());
+            ps.setInt(4, cls.getClassID().getClassid());
+            ps.setInt(5, cls.getYid().getYid());
+            ps.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(SchoolYearDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
     public static void main(String[] args) {
         SchoolYearDBContext db = new SchoolYearDBContext();
-        int student = db.getStudentCountByClassSession(1);
-        System.out.println(student);
+        ArrayList<Class> list = db.getAllClass();
+        System.out.println(list);
     }
 }

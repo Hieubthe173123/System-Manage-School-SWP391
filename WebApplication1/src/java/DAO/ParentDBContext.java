@@ -152,26 +152,76 @@ public class ParentDBContext extends DBContext {
     }
 
     //add new parent
+//    public void addParent(Parent parent) {
+//        try {
+//            String sql = "INSERT INTO Parent (pname, gender, dob, phoneNumber, IDcard, [Address], Email, NickName, status) "
+//                    + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, 1)";
+//            PreparedStatement stm = connection.prepareStatement(sql);
+//
+//            stm.setString(1, parent.getPname());
+//            stm.setBoolean(2, parent.isGender());
+//            stm.setString(3, parent.getDob());
+//            stm.setString(4, parent.getPhoneNumber());
+//            stm.setString(5, parent.getIDcard());
+//            stm.setString(6, parent.getAddress());
+//            stm.setString(7, parent.getEmail());
+//            stm.setString(8, parent.getNickname());
+//
+//            stm.executeUpdate();
+//        } catch (SQLException ex) {
+//            Logger.getLogger(ParentDBContext.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//    }
+    
     public void addParent(Parent parent) {
+    try {
+        // Bắt đầu giao dịch
+        connection.setAutoCommit(false);
+        
+        // add Parent
+        String sqlParent = "INSERT INTO Parent (pname, gender, dob, phoneNumber, IDcard, [Address], Email, NickName, status) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, 1)";
+        PreparedStatement stmInsertParent = connection.prepareStatement(sqlParent);
+
+        stmInsertParent.setString(1, parent.getPname());
+        stmInsertParent.setBoolean(2, parent.isGender());
+        stmInsertParent.setString(3, parent.getDob());
+        stmInsertParent.setString(4, parent.getPhoneNumber());
+        stmInsertParent.setString(5, parent.getIDcard());
+        stmInsertParent.setString(6, parent.getAddress());
+        stmInsertParent.setString(7, parent.getEmail());
+        stmInsertParent.setString(8, parent.getNickname());
+
+        stmInsertParent.executeUpdate();
+        
+        //add account
+        String sqlAccount = "INSERT INTO [dbo].[Account]([username],[password],[role],[pid],[status]) "
+                + "SELECT phoneNumber, FLOOR(RAND()*100000),'1',pid,'1' "
+                + "FROM Parent WHERE pid = (SELECT MAX(pid) FROM Parent)";
+        PreparedStatement stmInsertAccount = connection.prepareStatement(sqlAccount);
+        
+        stmInsertAccount.executeUpdate();
+        
+        connection.commit();
+        
+    } catch (SQLException ex) {
         try {
-            String sql = "INSERT INTO Parent (pname, gender, dob, phoneNumber, IDcard, [Address], Email, NickName, status) "
-                    + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, 1)";
-            PreparedStatement stm = connection.prepareStatement(sql);
-
-            stm.setString(1, parent.getPname());
-            stm.setBoolean(2, parent.isGender());
-            stm.setString(3, parent.getDob());
-            stm.setString(4, parent.getPhoneNumber());
-            stm.setString(5, parent.getIDcard());
-            stm.setString(6, parent.getAddress());
-            stm.setString(7, parent.getEmail());
-            stm.setString(8, parent.getNickname());
-
-            stm.executeUpdate();
+            // If there is an error, rollback the transaction.
+            connection.rollback();
+        } catch (SQLException rollbackEx) {
+            Logger.getLogger(ParentDBContext.class.getName()).log(Level.SEVERE, null, rollbackEx);
+        }
+        Logger.getLogger(ParentDBContext.class.getName()).log(Level.SEVERE, null, ex);
+    } finally {
+        try {
+            //auto-commit
+            connection.setAutoCommit(true);
         } catch (SQLException ex) {
             Logger.getLogger(ParentDBContext.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+}
+
 
     //get all parent active
     public List<Parent> getAllParents(int index) {

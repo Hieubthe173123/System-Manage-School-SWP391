@@ -64,7 +64,7 @@ public class ClassSessionAdd extends HttpServlet {
 
         } catch (Exception e) {
             System.out.println(e);
-            response.sendRedirect("Error/404.jsp");
+            request.getRequestDispatcher("/Error/404.jsp").forward(request, response);
             return;
         }
     }
@@ -91,7 +91,7 @@ public class ClassSessionAdd extends HttpServlet {
             String[] sidsStr = request.getParameterValues("sid");
             String[] statusStr = request.getParameterValues("status");
 
-            // Fetch the newest school year
+            // Lấy ra năm học mới nhất
             SchoolYear newestYear = db.getNewestSchoolYear();
 
             // nếu là năm học cũ => chặn update
@@ -110,11 +110,6 @@ public class ClassSessionAdd extends HttpServlet {
                         Integer sid = (sidsStr[i] != null && !sidsStr[i].isEmpty()) ? Integer.parseInt(sidsStr[i]) : null;
                         boolean status = Boolean.parseBoolean(statusStr[i]);
 
-                        // Check nếu lớp học đã có sinh viên thì không cập nhật được
-                        if (db.getStudentCountByClassSession2(classID)) {
-                            continue;
-                        }
-
                         //Tạo ClassSession và SetValue
                         ClassSession cls = new ClassSession();
                         cls.setClassID(classDB.getClassById(classID));
@@ -123,9 +118,23 @@ public class ClassSessionAdd extends HttpServlet {
                         cls.setRid((rid != null) ? roomDB.getRoomByRid(rid) : null);
                         cls.setStatus(status);
 
+                        //lớp đó đã có học sinh không thể thay đổi status
+                        if (db.getStudentCountByClassSession2(classID)) {
+                            //continue;
+                            cls.setStatus(true);
+                        }
+
+                        //Action == Update
                         if ("update".equals(action)) {
-                            db.updateClassSessionRoom(cls);
+
+                            //update khi chưa có học sinh or có thể update khi có học sinh (only room and session)
+                            if (!db.getStudentCountByClassSession2(classID) || rid != null || sid != null) {
+                                db.updateClassSession(cls);
+                            }
+
+                            //Action == Save
                         } else if ("save".equals(action)) {
+                            //Thêm lớp vào năm học mới
                             db.insertClassSession(cls);
                         }
 
@@ -139,7 +148,7 @@ public class ClassSessionAdd extends HttpServlet {
 
         } catch (Exception e) {
             System.out.println(e);
-            response.sendRedirect("Error/404.jsp");
+            request.getRequestDispatcher("/Error/404.jsp").forward(request, response);
             return;
         }
     }

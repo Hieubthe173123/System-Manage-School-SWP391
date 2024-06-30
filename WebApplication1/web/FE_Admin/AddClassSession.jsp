@@ -128,8 +128,9 @@
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script>
             document.addEventListener('DOMContentLoaded', function () {
-                // Check if there's an attempt to update an old school year
+                // nếu 1 năm học đã qua sử dụng
             <c:if test="${oldYearUpdateAttempt}">
+                    //hiện thông báo không thể update
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops...',
@@ -141,18 +142,26 @@
                 const sessionSelects = document.querySelectorAll('select[name="sid"]');
                 const statusSelects = document.querySelectorAll('select[name="status"]');
 
+                //Hàm update phòng học, mỗi lớp chỉ chọn đc 1 room
                 function updateRoomOptions() {
+                    //tạo array có các room đã chọn
                     const selectedRooms = new Set(Array.from(roomSelects)
                             .map(select => select.value)
                             .filter(value => value !== ""));
 
+                    //Duyệt qua các thẻ select khi chọn room
                     roomSelects.forEach(select => {
+                        //lưu các giá trị hiện tại của room
                         const currentValue = select.value;
+                        //lấy các selected
                         const options = Array.from(select.options);
+                        // Duyệt qua tất cả các tùy chọn của thẻ select
                         options.forEach(option => {
+                            //nếu room đã được chọn ở thẻ select khác thì => ẩn
                             if (option.value !== "" && selectedRooms.has(option.value) && option.value !== currentValue) {
                                 option.style.display = 'none';
                             } else {
+                                 // Show tùy chọn nếu nó chưa được chọn ở thẻ khác
                                 option.style.display = 'block';
                             }
                         });

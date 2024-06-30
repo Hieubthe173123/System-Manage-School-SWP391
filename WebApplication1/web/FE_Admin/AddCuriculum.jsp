@@ -45,12 +45,20 @@
                         <div class="card-header">
                             <h2>Add Curriculum</h2>
                         </div>
-                        <button onclick="window.location.href = 'session-detail'">Back To Session Detail</button>
+                        <button onclick="window.location.href = 'session-detail?sid=${param.sid}&sdid=${param.sdid}'">Back To Session Detail</button>
                         <div class="card-body">
                             <c:if test="${not empty errorMessage}">
                                 <div class="alert alert-danger">${errorMessage}</div>
                             </c:if>
                             <form action="add-curiculum" method="POST">
+                                 <c:if test="${not empty requestScope.success}">
+                                    <div class="alert alert-success" role="alert">
+                                        ${requestScope.success}
+                                    </div>
+                                </c:if>
+                                <c:if test="${not empty param.sid}">
+                                    <input type="hidden" name="sid" value="${param.sid}" >
+                                 </c:if>
                                 <c:if test="${not empty param.sdid}">
                                     <input type="hidden" name="sdid" value="${param.sdid}">
                                 </c:if>

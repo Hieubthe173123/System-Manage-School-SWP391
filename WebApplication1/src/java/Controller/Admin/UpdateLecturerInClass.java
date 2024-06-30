@@ -29,13 +29,16 @@ public class UpdateLecturerInClass extends HttpServlet {
         String classid = request.getParameter("classid");
         LecturerClassSession lcs = new LecturerClassSession();
         int total = lcs.getTotalLecturerInClass(classid);
-        if (total < 5) {
-            lcs.updateClass(lid, classid);
-            response.sendRedirect("lecturers");
+        if (total >= 5) {
+            request.setAttribute("errorMessage", "Khai Báo Không Hợp Lệ,Vui Lòng Thử Lại.");
+            request.setAttribute("lid", lid);
+            request.getRequestDispatcher("update-lecturers?lid=" + lid).forward(request, response);
         } else {
-            request.setAttribute("errorMessage", "Cannot update class. The class already has 5 lecturers.");
-            request.getRequestDispatcher("FE_Admin/UpdateLecturer.jsp").forward(request, response);
+
+            lcs.updateClass(lid, classid);
+            response.sendRedirect("update-lecturers?lid=" + lid + "&successMessage=Lecturer updated successfully.");
         }
+
     }
 
     @Override

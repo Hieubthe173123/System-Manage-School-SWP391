@@ -301,6 +301,7 @@ public class CuriculumDBContext extends DBContext {
             stm.setString(3, isFix);
             stm.setString(4, timeStart);
             stm.setString(5, timeEnd);
+        
 
             stm.executeUpdate();
         } catch (SQLException ex) {

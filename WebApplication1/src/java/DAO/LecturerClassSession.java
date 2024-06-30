@@ -428,6 +428,21 @@ public class LecturerClassSession extends DBContext {
         }
         return false;
     }
+    public boolean isEmailExits(String email){
+        String sql="select count(*) as count from lecturers where email= ? and status is not null";
+         try (PreparedStatement stm = connection.prepareStatement(sql)) {
+            stm.setString(1,email);
+            try (ResultSet rs = stm.executeQuery()) {
+                if (rs.next()) {
+                    int count = rs.getInt("count");
+                    return count > 0;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 
     public void updateLecturers(String lname, String gender, String dob, String phoneNumber, String IDcard, String address, String email, String classid, String lid) {
         String updateLecturerSQL = "UPDATE [dbo].[Lecturers] "

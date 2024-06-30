@@ -33,12 +33,16 @@ public class AddSessionDetail extends HttpServlet {
         int totalSession = s.SessionNumber(sid);
         if (count < totalSession) {
             sdb.insertSession(sid);
+            // Redirect to the referer URL
+            String referer = request.getHeader("referer");
+            response.sendRedirect(referer);
         } else {
-            System.out.println("Error: Maximum number of sessions reached.");
+            // Append the error message as a query parameter and redirect back to referer
+            String referer = request.getHeader("referer");
+            String errorMessage = "Error: Maximum number of sessions reached.";
+            String redirectUrl = referer + (referer.contains("?") ? "&" : "?") + "errorMessage=" + java.net.URLEncoder.encode(errorMessage, "UTF-8");
+            response.sendRedirect(redirectUrl);
         }
-        String referer = request.getHeader("referer");
-        response.sendRedirect(referer);
-
     }
 
     @Override

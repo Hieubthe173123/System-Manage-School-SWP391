@@ -245,10 +245,14 @@ public class LecturersDBContext extends DBContext {
 
             String sql = "UPDATE [dbo].[Lecturers]\n"
                     + "   SET [status] = null\n"
-                    + " WHERE lid = ? ";
+                    + " WHERE lid = ? "
+                    + "UPDATE [dbo].[Account]\n"
+                    + "   SET [status] = '0'\n"
+                    + " WHERE lid = ?";
 
             PreparedStatement stm = connection.prepareStatement(sql);
             stm.setString(1, lid);
+            stm.setString(2, lid);
             stm.executeUpdate();
 
         } catch (SQLException ex) {
@@ -258,7 +262,7 @@ public class LecturersDBContext extends DBContext {
 
     public static void main(String[] args) {
         LecturersDBContext ldb = new LecturersDBContext();
-       ldb.deleteLecturers("1");
+        ldb.deleteLecturers("2");
 
     }
 }

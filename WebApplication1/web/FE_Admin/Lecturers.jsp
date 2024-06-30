@@ -22,6 +22,13 @@
             width: 100%;
         }
     </style>
+    <script>
+        function confirmDelete(lid) {
+            if (confirm("Are you sure you want to delete this lecturer?")) {
+                window.location.href = 'delete-lecturer?lid=' + lid;
+            }
+        }
+    </script>
 </head>
 <body>
     <div class="container">
@@ -38,7 +45,7 @@
                 <button class="btn btn-secondary" onclick="window.location.href = 'history?yid=${sc.yid}'">History</button>
             </div>
         </header>
-        <main class="mt-4">   
+        <main class="mt-4">
             <table class="table table-bordered table-hover">
                 <thead class="thead-light">
                     <tr>
@@ -78,7 +85,7 @@
                             <td class="actions text-center">
                                 <div class="btn-group" role="group">
                                     <button class="btn btn-sm btn-warning" onclick="window.location.href = 'update-lecturers?lid=${lcs.lid.lid}'">Update</button>
-                                    <button class="btn btn-sm btn-danger ml-2" onclick="window.location.href = 'delete-lecturer?lid=${lcs.lid.lid}'">Delete</button>
+                                    <button class="btn btn-sm btn-danger ml-2" onclick="confirmDelete('${lcs.lid.lid}')">Delete</button>
                                 </div>
                             </td>
                         </tr>

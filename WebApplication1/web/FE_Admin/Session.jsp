@@ -1,5 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -140,6 +140,13 @@
             background-color: #c82333;
         }
     </style>
+    <script>
+        function confirmDelete(sid) {
+            if (confirm("Are you sure you want to delete this session?")) {
+                window.location.href = 'delete-session?sid=' + sid;
+            }
+        }
+    </script>
 </head>
 <body>
     <div class="container">
@@ -178,7 +185,7 @@
                                 <td>${ses.age.aname}</td>
                                 <td class="table-actions">
                                     <button class="update-button" onclick="window.location.href = 'update-session?sid=${ses.sid}'">Update</button>
-                                    <button class="delete-button" onclick="window.location.href = 'delete-session?sid=${ses.sid}'">Delete</button>
+                                    <button class="delete-button" onclick="confirmDelete('${ses.sid}')">Delete</button>
                                 </td>
                             </tr>
                         </c:forEach>
@@ -191,7 +198,7 @@
                                 <td>${ses.age.aname}</td>
                                 <td class="table-actions">
                                     <button class="update-button" onclick="window.location.href = 'update-session?sid=${ses.sid}'">Update</button>
-                                    <button class="delete-button" onclick="window.location.href = 'delete-session?sid=${ses.sid}'">Delete</button>
+                                    <button class="delete-button" onclick="confirmDelete('${ses.sid}')">Delete</button>
                                 </td>
                             </tr>
                         </c:forEach>

@@ -55,6 +55,7 @@ public class AddLecturers extends HttpServlet {
         LecturerClassSession lcs = new LecturerClassSession();
         boolean isNumberPhone = lcs.isPhoneNumberExists(phoneNumber);
         boolean isIDCard = lcs.isIDCardExists(IDcard);
+        boolean isEmail = lcs.isEmailExits(email);
         if (isNumberPhone) {
             request.setAttribute("errorMessage", "Số điện thoại đã tồn tại. Vui lòng nhập lại.");
               processRequest(request, response);
@@ -63,6 +64,10 @@ public class AddLecturers extends HttpServlet {
         if (isIDCard) {
             request.setAttribute("errorMessage", "Số căn cước công dân đã tồn tại. Vui lòng nhập lại.");
               processRequest(request, response);
+        }
+        if(isEmail){
+           request.setAttribute("errorMessage", "Email đã tồn tại. Vui lòng nhập lại.");
+            processRequest(request, response);
         }
 
         int total = lcs.getTotalLecturerInClass(classID);

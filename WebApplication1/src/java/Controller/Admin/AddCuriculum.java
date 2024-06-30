@@ -84,6 +84,9 @@ public class AddCuriculum extends HttpServlet {
             request.getRequestDispatcher("FE_Admin/AddCuriculum.jsp").forward(request, response);
         } else {
             cur.addCuriculum(nameAct, sdid, isFix, timeStart, timeEnd);
+            request.setAttribute("success","Add succesfully");
+            request.getRequestDispatcher("FE_Admin/AddCuriculum.jsp").forward(request, response);
+                    
             String referer = request.getHeader("referer");
             response.sendRedirect(referer);
         }

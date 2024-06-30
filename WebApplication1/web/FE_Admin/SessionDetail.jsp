@@ -88,6 +88,13 @@
             margin-left: 10px;
         }
     </style>
+    <script>
+        function confirmDelete(curID) {
+            if (confirm("Are you sure you want to delete this activity?")) {
+                window.location.href = 'delete-curiculum-day?curid=' + curID;
+            }
+        }
+    </script>
 </head>
 <body>
     <div class="container mt-5">
@@ -153,7 +160,7 @@
                                     <td>${activity.isFix ? 'Fixed Activity' : 'Normal Activity'}</td>
                                     <td colspan="2">
                                         <c:if test="${!activity.isFix}">
-                                            <button class="btn btn-danger" onclick="window.location.href = 'delete-curiculum-day?curid=${activity.curID}'">Delete</button>
+                                            <button class="btn btn-danger" onclick="confirmDelete('${activity.curID}')">Delete</button>
                                         </c:if>
                                     </td>
                                 </tr>
@@ -172,10 +179,18 @@
         document.getElementById('addActivityButton').onclick = function() {
             const urlParams = new URLSearchParams(window.location.search);
             const sdid = urlParams.get('sdid');
-            if (sdid) {
-                window.location.href = `add-curiculum?sdid=${param.sdid}`;
+            if (sdid > 0) {
+                window.location.href = `add-curiculum?sdid=${param.sdid}&sid=${param.sid}`;
             } else {
                 alert('Please select a session detail before adding an activity.');
+            }
+        };
+        
+          window.onload = function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const errorMessage = urlParams.get('errorMessage');
+            if (errorMessage) {
+                alert(decodeURIComponent(errorMessage));
             }
         };
     </script>

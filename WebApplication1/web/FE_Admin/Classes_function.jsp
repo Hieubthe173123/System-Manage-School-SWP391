@@ -1,9 +1,3 @@
-<%-- 
-    Document   : Classes_function
-    Created on : May 24, 2024, 7:07:58 PM
-    Author     : DELL
---%>
-
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html; charset=UTF-8" %>
@@ -14,6 +8,8 @@
         <title>JSP Page</title>
         <!-- Bootstrap CSS -->
         <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+        <!-- SweetAlert2 CSS -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
         <style>
             .btn-campus {
                 background-color: #39BACD;
@@ -29,7 +25,7 @@
                 transition: all 0.3s ease;
             }
             .btn-campus:hover {
-                background-color: #39BACD;
+                background-color: #2c9aa8;
             }
             .custom-link:active {
                 font-weight: bold;
@@ -48,9 +44,12 @@
     <body class="container mt-5">
         <div class="content-wrapper">
             <div class="mb-3">
+                <!-- Thêm nút tạo năm học mới -->
                 <button class="btn btn-campus" onclick="window.location.href = 'newyear'">Create New School Year</button>
-                <button class="btn btn-campus" onclick="window.location.href = 'classSession-add'">Add/Update Class Session</button>
-                <button class="btn btn-campus" onclick="window.location.href = 'promote'">Promote Student</button>
+                <!-- Nút Add/Update Class Session với kiểm tra JavaScript -->
+                <button class="btn btn-campus" onclick="checkSchoolYearAndRedirect('classSession-add')">Add/Update Class Session</button>
+                <!-- Nút Promote với kiểm tra JavaScript -->
+                <button class="btn btn-campus" onclick="checkSchoolYearAndRedirect('promote')">Promote Student</button>
                 <button class="btn btn-campus" onclick="window.location.href = 'historyschoolyear'">School Year History</button>
             </div>
 
@@ -109,7 +108,7 @@
                                         <td>${s.stuid.stuid}</td>
                                         <td>${s.stuid.sname}</td>
                                         <td>${s.stuid.dob}</td>
-                                        <td>${s.csid.sid.sid} tuổi</td>
+                                        <td>${s.csid.sid.age.ageid} tuổi</td>
                                         <td>${s.csid.rid.rname}</td>
                                         <td>${s.csid.sid.sname}</td>
                                         <td>
@@ -143,5 +142,25 @@
         <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        <!-- SweetAlert2 library -->
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script>
+                    // Hàm kiểm tra và điều hướng đến trang tương ứng
+                    function checkSchoolYearAndRedirect(action) {
+                        // Kiểm tra xem đã chọn năm học chưa
+                        var selectedYear = document.getElementById('yearSelect').value;
+                        if (!selectedYear || selectedYear === "") {
+                            // Hiển thị thông báo lỗi
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: 'Please create a new school year before using this functionality!'
+                            });
+                        } else {
+                            // Chuyển hướng đến trang tương ứng
+                            window.location.href = action;
+                        }
+                    }
+        </script>
     </body>
 </html>

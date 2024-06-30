@@ -88,7 +88,7 @@ public class ClassesController extends BaseRBACController {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response, Account account)
             throws ServletException, IOException {
-        processRequest(request, response,account);
+        processRequest(request, response, account);
     }
 
     @Override

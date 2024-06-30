@@ -4,9 +4,10 @@
  */
 package Controller.Admin;
 
+import Authentication.BaseRBACController;
 import DAO.SchoolYearDBContext;
 import DAO.StudentDBContext;
-import Entity.Lecturers_Class_Session;
+import Entity.Account;
 import Entity.Student;
 import Entity.StudentClassSession;
 import java.io.IOException;
@@ -24,15 +25,15 @@ import java.util.ArrayList;
  * @author DELL
  */
 @WebServlet(name = "SchoolYearHistory", urlPatterns = {"/admin/historyschoolyear"})
-public class SchoolYearHistory extends HttpServlet {
+public class SchoolYearHistory extends BaseRBACController {
 
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response, Account account)
             throws ServletException, IOException {
 
     }
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+    protected void doGet(HttpServletRequest request, HttpServletResponse response, Account account)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
         SchoolYearDBContext db = new SchoolYearDBContext();
@@ -64,9 +65,9 @@ public class SchoolYearHistory extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+    protected void doPost(HttpServletRequest request, HttpServletResponse response, Account account)
             throws ServletException, IOException {
-        processRequest(request, response);
+        processRequest(request, response, account);
 
     }
 

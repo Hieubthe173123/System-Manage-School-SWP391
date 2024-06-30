@@ -89,5 +89,11 @@
                 </tbody>
             </table>
         </c:if>
+
+        <c:if test="${empty sessionScope.history}">
+            <div class="alert alert-info" role="alert">
+                There is no school year history available for this student.
+            </div>
+        </c:if>
     </body>
 </html>

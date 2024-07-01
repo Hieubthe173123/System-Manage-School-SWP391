@@ -74,9 +74,9 @@
                         <label for="classSelect" class="mr-2">Select Class:</label>
                         <select name="classId" id="classSelect" class="form-control" onchange="this.form.submit()">
                             <option value="">Select Class</option>
-                            <c:forEach var="classObj" items="${classList}">
-                                <option value="${classObj.classid}" <c:if test="${param.classId == classObj.classid}">selected</c:if>>
-                                    ${classObj.clname}
+                            <c:forEach var="classSession" items="${classIDs}">
+                                <option value="${classSession.classID.classid}" <c:if test="${param.classId == classSession.classID.classid}">selected</c:if>>
+                                    ${classSession.classID.clname}
                                 </option>
                             </c:forEach>
                         </select>

@@ -147,6 +147,7 @@ public class StudentDBContext extends DBContext {
         return list;
     }
        
+    //update student information
     public void updateStudent(Student student) {
         try {
             String sql
@@ -170,20 +171,26 @@ public class StudentDBContext extends DBContext {
             Logger.getLogger(RoomDBContext.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
+    
+    //Update student to new class
      public void updateStudentClass(int stuid, int newClassId) {
         try {
-            String updateClassSQL = "UPDATE Student_Class_Session SET csid = ? WHERE stuid = ?";
+            String updateClassSQL
+                    = "UPDATE Student_Class_Session SET csid = "
+                    + "(SELECT cs.csid FROM Class_Session cs "
+                    + "INNER JOIN SchoolYear sy ON cs.yid = sy.yid "
+                    + "WHERE sy.dateEnd = (SELECT MAX(dateEnd) FROM SchoolYear) AND cs.classID = ?) "
+                    + "WHERE stuid = ?";
             PreparedStatement updateClassStmt = connection.prepareStatement(updateClassSQL);
             updateClassStmt.setInt(1, newClassId);
             updateClassStmt.setInt(2, stuid);
             updateClassStmt.executeUpdate();
         } catch (SQLException ex) {
-            Logger.getLogger(RoomDBContext.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
+           Logger.getLogger(RoomDBContext.class.getName()).log(Level.SEVERE, null, ex);
+      }
+   }
      
-     
+
       public void updateStudentStatus(int studentId, boolean status) {
     try {
         String sql = "UPDATE [SchoolManagement].[dbo].[Student] "

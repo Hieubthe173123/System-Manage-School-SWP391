@@ -72,9 +72,11 @@
                     <label for="classId">Class ID</label>
                     <select class="form-control" id="classId" name="classId" required>
                         <option value="">Select Class</option>
-                        <c:forEach var="classObj" items="${clasList}">
-                            <option value="${classObj.classid}">${classObj.clname}</option>
-                        </c:forEach>
+                         <c:forEach var="classSession" items="${classIDs}">
+                                <option value="${classSession.classID.classid}" <c:if test="${param.classID == classSession.classID.classid}">selected</c:if>>
+                                    ${classSession.classID.clname}
+                                </option>
+                            </c:forEach>
                     </select>
                 </div>
                 <% String error = (String) request.getAttribute("error");

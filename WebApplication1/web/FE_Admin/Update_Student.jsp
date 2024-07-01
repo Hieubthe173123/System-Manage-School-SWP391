@@ -78,11 +78,11 @@
                 <div class="form-group">
                     <label for="editStudentClassName">Class</label>
                     <select class="form-control" id="editStudentClassName" name="className" required>
-                        <c:forEach var="classObj" items="${clList}">
-                            <option value="${classObj.classid}" <c:if test="${param.classid == classObj.classid}">selected</c:if>>
-                                ${classObj.clname}
-                            </option>
-                        </c:forEach>
+                      <c:forEach var="classSession" items="${classIDs}">
+                                <option value="${classSession.classID.classid}" <c:if test="${param.classid == classSession.classID.classid}">selected</c:if>>
+                                    ${classSession.classID.clname} 
+                                </option>
+                            </c:forEach>
                     </select>
                 </div>
                 <div class="form-group">

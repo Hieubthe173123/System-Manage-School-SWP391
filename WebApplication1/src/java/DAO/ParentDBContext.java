@@ -93,7 +93,7 @@ public class ParentDBContext extends DBContext {
         }
         return null;
     }
-    
+
     public Parent getParentByGmail(String gmail) {
         try {
             String sql = "SELECT [pid]\n"
@@ -172,56 +172,53 @@ public class ParentDBContext extends DBContext {
 //            Logger.getLogger(ParentDBContext.class.getName()).log(Level.SEVERE, null, ex);
 //        }
 //    }
-    
     public void addParent(Parent parent) {
-    try {
-        // Bắt đầu giao dịch
-        connection.setAutoCommit(false);
-        
-        // add Parent
-        String sqlParent = "INSERT INTO Parent (pname, gender, dob, phoneNumber, IDcard, [Address], Email, NickName, status) "
-                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, 1)";
-        PreparedStatement stmInsertParent = connection.prepareStatement(sqlParent);
-
-        stmInsertParent.setString(1, parent.getPname());
-        stmInsertParent.setBoolean(2, parent.isGender());
-        stmInsertParent.setString(3, parent.getDob());
-        stmInsertParent.setString(4, parent.getPhoneNumber());
-        stmInsertParent.setString(5, parent.getIDcard());
-        stmInsertParent.setString(6, parent.getAddress());
-        stmInsertParent.setString(7, parent.getEmail());
-        stmInsertParent.setString(8, parent.getNickname());
-
-        stmInsertParent.executeUpdate();
-        
-        //add account
-        String sqlAccount = "INSERT INTO [dbo].[Account]([username],[password],[role],[pid],[status]) "
-                + "SELECT phoneNumber, FLOOR(RAND()*100000),'1',pid,'1' "
-                + "FROM Parent WHERE pid = (SELECT MAX(pid) FROM Parent)";
-        PreparedStatement stmInsertAccount = connection.prepareStatement(sqlAccount);
-        
-        stmInsertAccount.executeUpdate();
-        
-        connection.commit();
-        
-    } catch (SQLException ex) {
         try {
-            // If there is an error, rollback the transaction.
-            connection.rollback();
-        } catch (SQLException rollbackEx) {
-            Logger.getLogger(ParentDBContext.class.getName()).log(Level.SEVERE, null, rollbackEx);
-        }
-        Logger.getLogger(ParentDBContext.class.getName()).log(Level.SEVERE, null, ex);
-    } finally {
-        try {
-            //auto-commit
-            connection.setAutoCommit(true);
+            connection.setAutoCommit(false);
+
+            // add Parent
+            String sqlParent = "INSERT INTO Parent (pname, gender, dob, phoneNumber, IDcard, [Address], Email, NickName, status) "
+                    + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, 1)";
+            PreparedStatement stmInsertParent = connection.prepareStatement(sqlParent);
+
+            stmInsertParent.setString(1, parent.getPname());
+            stmInsertParent.setBoolean(2, parent.isGender());
+            stmInsertParent.setString(3, parent.getDob());
+            stmInsertParent.setString(4, parent.getPhoneNumber());
+            stmInsertParent.setString(5, parent.getIDcard());
+            stmInsertParent.setString(6, parent.getAddress());
+            stmInsertParent.setString(7, parent.getEmail());
+            stmInsertParent.setString(8, parent.getNickname());
+
+            stmInsertParent.executeUpdate();
+
+            //add account
+            String sqlAccount = "INSERT INTO [dbo].[Account]([username],[password],[role],[pid],[status]) "
+                    + "SELECT phoneNumber, FLOOR(RAND()*100000),'1',pid,'1' "
+                    + "FROM Parent WHERE pid = (SELECT MAX(pid) FROM Parent)";
+            PreparedStatement stmInsertAccount = connection.prepareStatement(sqlAccount);
+
+            stmInsertAccount.executeUpdate();
+
+            connection.commit();
+
         } catch (SQLException ex) {
+            try {
+                // If there is an error, rollback the transaction.
+                connection.rollback();
+            } catch (SQLException rollbackEx) {
+                Logger.getLogger(ParentDBContext.class.getName()).log(Level.SEVERE, null, rollbackEx);
+            }
             Logger.getLogger(ParentDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                //auto-commit
+                connection.setAutoCommit(true);
+            } catch (SQLException ex) {
+                Logger.getLogger(ParentDBContext.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
-}
-
 
     //get all parent active
     public List<Parent> getAllParents(int index) {
@@ -253,7 +250,7 @@ public class ParentDBContext extends DBContext {
         }
         return parentList;
     }
-    
+
     //get list parent inactive and paging
     public List<Parent> getAllParentInactive(int index) {
         List<Parent> parentList = new ArrayList<>();
@@ -285,7 +282,6 @@ public class ParentDBContext extends DBContext {
         return parentList;
     }
 
-    
     //get parent active by name
     public List<Parent> getParentByName(String pname) {
         List<Parent> parentList = new ArrayList<>();
@@ -317,9 +313,9 @@ public class ParentDBContext extends DBContext {
         }
         return parentList;
     }
-    
+
     //search parent inactive by name
-     public List<Parent> getParentInactiveByName(String pname) {
+    public List<Parent> getParentInactiveByName(String pname) {
         List<Parent> parentList = new ArrayList<>();
         try {
             String sql = "SELECT [pid], [pname], [gender], [dob], [phoneNumber], [IDcard], [Address], [Email], [NickName] "
@@ -350,7 +346,6 @@ public class ParentDBContext extends DBContext {
         return parentList;
     }
 
-    
     //Check if parent exists
     public boolean checkParentIdExists(int pid) {
         try {
@@ -392,7 +387,7 @@ public class ParentDBContext extends DBContext {
         int count = 0;
         try {
             String sql = "SELECT COUNT(*) AS count FROM [SchoolManagement].[dbo].[Parent] "
-                          + " Where [status] = 1";
+                    + " Where [status] = 1";
             PreparedStatement stm = connection.prepareStatement(sql);
             ResultSet rs = stm.executeQuery();
             if (rs.next()) {
@@ -403,13 +398,13 @@ public class ParentDBContext extends DBContext {
         }
         return count;
     }
-    
-     //Count the number of parents inactive for pagination
+
+    //Count the number of parents inactive for pagination
     public int getTotalParentInactive() {
         int count = 0;
         try {
             String sql = "SELECT COUNT(*) AS count FROM [SchoolManagement].[dbo].[Parent] "
-                          + " Where [status] = 0";
+                    + " Where [status] = 0";
             PreparedStatement stm = connection.prepareStatement(sql);
             ResultSet rs = stm.executeQuery();
             if (rs.next()) {
@@ -420,13 +415,13 @@ public class ParentDBContext extends DBContext {
         }
         return count;
     }
-    
+
     //update parent status
-    public void updateParentStatus (int pid, boolean status) {
+    public void updateParentStatus(int pid, boolean status) {
         try {
             String sql = "UPDATE Parent SET status = ? WHERE pid = ?";
             PreparedStatement stm = connection.prepareStatement(sql);
-            
+
             stm.setBoolean(1, status);
             stm.setInt(2, pid);
             stm.executeUpdate();

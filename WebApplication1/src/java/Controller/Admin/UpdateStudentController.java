@@ -4,9 +4,10 @@
  */
 package Controller.Admin;
 
-import DAO.ClassDBContext;
+import DAO.Class_SessionDBContext;
 import DAO.StudentClassSessionDBContext;
 import DAO.StudentDBContext;
+import Entity.ClassSession;
 import Entity.Student;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
@@ -28,9 +29,13 @@ public class UpdateStudentController extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        ClassDBContext clDB = new ClassDBContext();
-        List<Entity.Class> clList = clDB.getAllClasses();
-        request.setAttribute("clList", clList);
+//        ClassDBContext clDB = new ClassDBContext();
+//        List<Entity.Class> clList = clDB.getAllClasses();
+//        request.setAttribute("clList", clList);
+
+        Class_SessionDBContext cl = new Class_SessionDBContext();
+          List<ClassSession> classIDs = cl.getAllClass();
+        request.setAttribute("classIDs", classIDs);
 
         request.getRequestDispatcher("/FE_Admin/Update_Student.jsp").forward(request, response);
     }
@@ -113,7 +118,7 @@ public class UpdateStudentController extends HttpServlet {
         studentDB.updateStudent(updatedStudent);
         studentDB.updateStudentClass(studentId, newClassId);
         studentDB.updateStudentStatus(studentId, status);
-        
+
         response.sendRedirect("student");
     }
 

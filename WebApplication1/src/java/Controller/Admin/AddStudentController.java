@@ -4,10 +4,11 @@
  */
 package Controller.Admin;
 
-
 import DAO.ClassDBContext;
+import DAO.Class_SessionDBContext;
 import DAO.ParentDBContext;
 import DAO.StudentClassSessionDBContext;
+import Entity.ClassSession;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -23,11 +24,14 @@ public class AddStudentController extends HttpServlet {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         //list class
-         ClassDBContext clDB = new ClassDBContext();
-        List<Entity.Class> clList = clDB.getAllClasses();
-        request.setAttribute("clasList", clList);
+//         ClassDBContext clDB = new ClassDBContext();
+//        List<Entity.Class> clList = clDB.getAllClasses();
+//        request.setAttribute("clasList", clList);
+        Class_SessionDBContext cl = new Class_SessionDBContext();
+        List<ClassSession> classIDs = cl.getAllClass();
+        request.setAttribute("classIDs", classIDs);
         request.getRequestDispatcher("FE_Admin/AddNewStudent.jsp").forward(request, response);
     }
 
@@ -40,43 +44,42 @@ public class AddStudentController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-         String sName = request.getParameter("sName");
+        String sName = request.getParameter("sName");
         String sDob = request.getParameter("sDob");
         boolean sGender = Boolean.parseBoolean(request.getParameter("sGender"));
         String sAddress = request.getParameter("sAddress");
         int pid = Integer.parseInt(request.getParameter("pid"));
         int classId = Integer.parseInt(request.getParameter("classId"));
-        
 
         //Check validate name, dob, address
-         if (sName == null || sName.trim().isEmpty() ||
-        sDob == null || sDob.trim().isEmpty() ||
-        sAddress == null || sAddress.trim().isEmpty()) {
-        request.setAttribute("error", "Please fill out all required fields.");
-        processRequest(request, response);
-        return;
-    }
-         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-    sdf.setLenient(false);
+        if (sName == null || sName.trim().isEmpty()
+                || sDob == null || sDob.trim().isEmpty()
+                || sAddress == null || sAddress.trim().isEmpty()) {
+            request.setAttribute("error", "Please fill out all required fields.");
+            processRequest(request, response);
+            return;
+        }
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        sdf.setLenient(false);
 
-    try {
-        sdf.parse(sDob);
-    } catch (ParseException e) {
-        request.setAttribute("error", "Invalid date format for Date of Birth. Please use yyyy-MM-dd format.");
-        processRequest(request, response);
-        return;
-    }
-    
+        try {
+            sdf.parse(sDob);
+        } catch (ParseException e) {
+            request.setAttribute("error", "Invalid date format for Date of Birth. Please use yyyy-MM-dd format.");
+            processRequest(request, response);
+            return;
+        }
+
         //Check if parent exists
         ParentDBContext parentDB = new ParentDBContext();
         boolean pidExists = parentDB.checkParentIdExists(pid);
         if (!pidExists) {
-        request.setAttribute("error", "Parent ID does not exist.");
-        processRequest(request, response);
-        return;
-    }
+            request.setAttribute("error", "Parent ID does not exist.");
+            processRequest(request, response);
+            return;
+        }
         //Check if class is empty
-        int maxStuInClass = 20; 
+        int maxStuInClass = 20;
         StudentClassSessionDBContext stuDB = new StudentClassSessionDBContext();
         int totalStudentsInClass = stuDB.getTotalStudentsByClassId(String.valueOf(classId));
         if (totalStudentsInClass >= maxStuInClass) {
@@ -84,11 +87,16 @@ public class AddStudentController extends HttpServlet {
             processRequest(request, response);
             return;
         }
-        
-      
+
         StudentClassSessionDBContext stu = new StudentClassSessionDBContext();
-        
+
         boolean success = stu.addNewtudent(sName, sDob, sGender, sAddress, pid, classId);
         response.sendRedirect("student");
-        }
     }
+
+    @Override
+    public String getServletInfo() {
+        return "Short description";
+    }// </editor-fold>
+
+}

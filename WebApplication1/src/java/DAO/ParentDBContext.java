@@ -381,6 +381,22 @@ public class ParentDBContext extends DBContext {
         }
         return exists;
     }
+    
+      public boolean isPhoneNumberExists(String phoneNumber) {
+        try {
+            String sql = "SELECT COUNT(*) FROM Parent WHERE phoneNumber = ?";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setString(1, phoneNumber);
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ParentDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+
 
     //Count the number of parents for pagination
     public int getTotalParent() {

@@ -4,7 +4,9 @@
  */
 package Controller.Admin;
 
+import DAO.AccountDBContext;
 import DAO.ParentDBContext;
+import Entity.Account;
 import Entity.Parent;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
@@ -43,6 +45,8 @@ public class AddNewParent extends HttpServlet {
         String address = request.getParameter("address");
         String email = request.getParameter("email");
         String nickname = request.getParameter("nickname");
+        
+         ParentDBContext parentDB = new ParentDBContext();
 
          if (pname == null || pname.trim().isEmpty()) {
             request.setAttribute("Error", "Please enter your name.");
@@ -54,6 +58,11 @@ public class AddNewParent extends HttpServlet {
             request.setAttribute("Error", "Phone number must be 10 digits.");
             processRequest(request, response);
             return;
+        }
+        if (parentDB.isPhoneNumberExists(phoneNumber)) {
+        request.setAttribute("Error", "Phone number already exists.");
+        processRequest(request, response);
+        return;
         }
          if (address == null || address.trim().isEmpty()) {
             request.setAttribute("Error", "Please enter your address.");
@@ -69,7 +78,7 @@ public class AddNewParent extends HttpServlet {
              processRequest(request, response);
             return;
         } 
-         ParentDBContext parentDB = new ParentDBContext();
+        
         if (parentDB.isIDCardExists(IDcard)) {
             request.setAttribute("Error", "ID Card already exists.");
             processRequest(request, response);
@@ -88,11 +97,11 @@ public class AddNewParent extends HttpServlet {
 
        
         parentDB.addParent(parent);
-
+       
         response.sendRedirect("parent");
     }
 
-   
+      
 
     @Override
     public String getServletInfo() {

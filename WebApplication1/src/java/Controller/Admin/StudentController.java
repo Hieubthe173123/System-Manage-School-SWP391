@@ -5,11 +5,13 @@
 package Controller.Admin;
 
 import DAO.ClassDBContext;
+import DAO.Class_SessionDBContext;
 import DAO.SchoolYearDBContext;
 import DAO.StudentClassSessionDBContext;
 import DAO.StudentDBContext;
 import Entity.Student;
 import Entity.Class;
+import Entity.ClassSession;
 import Entity.StudentClassSession;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -34,7 +36,8 @@ public class StudentController extends HttpServlet {
 
         StudentClassSessionDBContext stuDB = new StudentClassSessionDBContext();
         StudentDBContext sdc = new StudentDBContext();
-        ClassDBContext cdb = new ClassDBContext();
+        //ClassDBContext cdb = new ClassDBContext();
+        Class_SessionDBContext cl = new Class_SessionDBContext();
         SchoolYearDBContext sy = new SchoolYearDBContext();
 
         String classId = request.getParameter("classId");
@@ -45,8 +48,9 @@ public class StudentController extends HttpServlet {
         }
         int index = Integer.parseInt(indexPage);
 
-        List<Class> classList = cdb.getAllClasses();
-        request.setAttribute("classList", classList);
+        //List<Class> classList = cdb.getAllClasses();
+        List<ClassSession> classIDs = cl.getAllClass();
+        request.setAttribute("classIDs", classIDs);
 
         if (classId != null && !classId.isEmpty()) {
             List<StudentClassSession> studentList = stuDB.getStudentsByClassIdWithPaging(classId, index);

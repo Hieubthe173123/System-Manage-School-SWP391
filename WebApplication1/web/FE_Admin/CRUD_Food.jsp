@@ -75,7 +75,6 @@
                     <tr>
                         <th>FoodID</th>
                         <th>Name</th>
-                        <th>Calories</th>
                         <th>Actions</th>
                     </tr>
                 </thead>           
@@ -83,12 +82,11 @@
                     <c:choose>
                         <c:when test="${not empty searchResults}">
                             <c:forEach var="food" items="${searchResults}">
-                                <tr data-foodid="${food.foodid}" data-foodname="${food.fname}" data-calo="${food.calo}">
+                                <tr data-foodid="${food.foodid}" data-foodname="${food.fname}" >
                                     <td>${food.foodid}</td>
                                     <td>${food.fname}</td>
-                                    <td>${food.calo}</td>
                                     <td>
-                                        <button class="btn btn-warning btn-sm" onclick="editFood('${food.foodid}', '${food.fname}', '${food.calo}')">Update</button>
+                                        <button class="btn btn-warning btn-sm" onclick="editFood('${food.foodid}', '${food.fname}')">Update</button>
                                         <button type="button" class="btn btn-danger btn-sm" onclick="deleteFood('${food.foodid}')">Delete</button>
                                     </td>
                                 </tr>
@@ -96,12 +94,11 @@
                         </c:when>
                         <c:otherwise>
                             <c:forEach var="food" items="${foodList}">
-                                <tr data-foodid="${food.foodid}" data-foodname="${food.fname}" data-calo="${food.calo}">
+                                <tr data-foodid="${food.foodid}" data-foodname="${food.fname}">
                                     <td>${food.foodid}</td>
-                                    <td>${food.fname}</td>
-                                    <td>${food.calo}</td>
+                                    <td>${food.fname}</td>                                   
                                     <td>
-                                        <button class="btn btn-warning btn-sm" onclick="editFood('${food.foodid}', '${food.fname}', '${food.calo}')">Update</button>
+                                        <button class="btn btn-warning btn-sm" onclick="editFood('${food.foodid}', '${food.fname}')">Update</button>
                                         <button type="button" class="btn btn-danger btn-sm" onclick="deleteFood('${food.foodid}')">Delete</button>
                                     </td>
                                 </tr>
@@ -126,11 +123,7 @@
                             <div class="form-group">
                                 <label for="foodname">Food Name</label>
                                 <input type="text" class="form-control" name="fname" id="fname" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="calo">Calo</label>                               
-                                <input type="text" class="form-control" id="calo" name="calo" required>
-                            </div>
+                            </div>                          
                             <button type="submit" class="btn btn-primary mt-3">Submit</button>
                         </form>
 
@@ -158,11 +151,7 @@
                             <div class="form-group">
                                 <label for="updateFoodName">Food Name</label>
                                 <input type="text" class="form-control" name="fname" id="updateFoodName" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="updateCalo">Calo</label>
-                                <input type="number" class="form-control" name="calo" id="updateCalo" required>
-                            </div>
+                            </div>                         
                             <button type="submit" class="btn btn-primary mt-3">Submit</button>
                         </form>
                     </div>
@@ -202,7 +191,6 @@
                                                 document.getElementById('displayFoodId').innerText = foodId;
                                                 document.getElementById('updateFoodId').value = foodId;
                                                 document.getElementById('updateFoodName').value = foodName;
-                                                document.getElementById('updateCalo').value = calo;
 
                                                 $('#updateFoodModal').modal('show');
                                             }

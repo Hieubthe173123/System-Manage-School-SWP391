@@ -22,7 +22,6 @@ public class FoodDBContext extends DBContext {
         try {
             String sql = "SELECT [foodid]\n"
                     + "      ,[fname]\n"
-                    + "      ,[calo]\n"
                     + "  FROM [SchoolManagement].[dbo].[Food]\n"
                     + "  Where foodid = ?";
             PreparedStatement stm = connection.prepareStatement(sql);
@@ -31,7 +30,6 @@ public class FoodDBContext extends DBContext {
             if (rs.next()) {
                 food.setFoodid(rs.getInt("foodid"));
                 food.setFname(rs.getString("fname"));
-                food.setCalo(rs.getInt("calo"));
                 return food;
             }
         } catch (SQLException e) {
@@ -45,7 +43,6 @@ public class FoodDBContext extends DBContext {
         try {
             String sql = "SELECT [foodid]\n"
                     + "      ,[fname]\n"
-                    + "      ,[calo]\n"
                     + "  FROM [SchoolManagement].[dbo].[Food]";
             PreparedStatement stm = connection.prepareStatement(sql);
             ResultSet rs = stm.executeQuery();
@@ -53,7 +50,6 @@ public class FoodDBContext extends DBContext {
                 Food f = new Food();
                 f.setFoodid(rs.getInt("foodid"));
                 f.setFname(rs.getString("fname"));
-                f.setCalo(rs.getInt("calo"));
                 food.add(f);
             }
         } catch (SQLException e) {
@@ -64,11 +60,10 @@ public class FoodDBContext extends DBContext {
 
     public void addFood(Food food) {
         try {
-            String sql = "INSERT INTO [SchoolManagement].[dbo].[Food] ([fname], [calo]) VALUES (?, ?)";
+            String sql = "INSERT INTO [SchoolManagement].[dbo].[Food] ([fname]) VALUES (?)";
             PreparedStatement stm = connection.prepareStatement(sql);
 
             stm.setString(1, food.getFname());
-            stm.setInt(2, food.getCalo());
             stm.executeUpdate();
         } catch (SQLException e) {
             System.out.println(e);
@@ -91,13 +86,12 @@ public class FoodDBContext extends DBContext {
         return false;
     }
 
-    public boolean updateFood(int foodId, String foodName, int calo) throws SQLException {
-        String sql = "UPDATE Food SET fname = ?, calo = ? WHERE foodid = ?";
+    public boolean updateFood(int foodId, String foodName) throws SQLException {
+        String sql = "UPDATE Food SET fname = ? WHERE foodid = ?";
         try (
                 PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setString(1, foodName);
-            pstmt.setInt(2, calo);
-            pstmt.setInt(3, foodId);
+            pstmt.setInt(2, foodId);
             return pstmt.executeUpdate() > 0;
         }
     }
@@ -124,7 +118,6 @@ public class FoodDBContext extends DBContext {
                 Food food = new Food();
                 food.setFoodid(rs.getInt("foodid"));
                 food.setFname(rs.getString("fname"));
-                food.setCalo(rs.getInt("calo"));
                 list.add(food);
             }
         } catch (SQLException ex) {
@@ -145,11 +138,16 @@ public class FoodDBContext extends DBContext {
                 Food food = new Food();
                 food.setFoodid(rs.getInt("foodid"));
                 food.setFname(rs.getString("fname"));
-                food.setCalo(rs.getInt("calo"));
                 list.add(food);
             }
         } catch (SQLException ex) {
         }
         return list;
     }
+    public static void main(String[] args) {
+        FoodDBContext db = new FoodDBContext();
+        List<Food> food   = db.getAllFood();
+        System.out.println(food);
+    }
+    
 }

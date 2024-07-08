@@ -11,15 +11,14 @@ package Entity;
 public class Food {
     private int foodid;
     private String fname;
-    private int calo;
 
     public Food() {
     }
 
-    public Food(int foodid, String fname, int calo) {
+    public Food(int foodid, String fname) {
         this.foodid = foodid;
         this.fname = fname;
-        this.calo = calo;
+
     }
 
     public int getFoodid() {
@@ -37,15 +36,5 @@ public class Food {
     public void setFname(String fname) {
         this.fname = fname;
     }
-
-    public int getCalo() {
-        return calo;
-    }
-
-    public void setCalo(int calo) {
-        this.calo = calo;
-    }
-
-  
-    
+   
 }

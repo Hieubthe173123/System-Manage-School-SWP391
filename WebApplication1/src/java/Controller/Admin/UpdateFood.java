@@ -75,10 +75,9 @@ public class UpdateFood extends HttpServlet {
             throws ServletException, IOException {
         int foodId = Integer.parseInt(request.getParameter("foodid"));
         String foodName = request.getParameter("fname");
-        int calo = Integer.parseInt(request.getParameter("calo"));
         FoodDBContext fooddb = new FoodDBContext();
         try {
-            boolean isUpdated = fooddb.updateFood(foodId, foodName, calo);
+            boolean isUpdated = fooddb.updateFood(foodId, foodName);
             if (isUpdated) {
                 request.getRequestDispatcher("/food").forward(request, response);
             }

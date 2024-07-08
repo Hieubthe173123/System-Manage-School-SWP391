@@ -77,26 +77,11 @@ public class AddFood extends HttpServlet {
             throws ServletException, IOException {
         try {
             String fname = request.getParameter("fname");
-            String caloStr = request.getParameter("calo");
-            // Kiểm tra nếu calo là số nguyên hợp lệ
-            int calo;
-            try {
-                calo = Integer.parseInt(caloStr);
-                if (calo < 0) {
-                    request.setAttribute("errorMessage", "Calories cannot be negative.");
-                    request.getRequestDispatcher("/food").forward(request, response);
-                    return;
-                }
-            } catch (NumberFormatException e) {
-                request.setAttribute("errorMessage", "Calories must be an integer.");
-                request.getRequestDispatcher("/food").forward(request, response);
-                return;
-            }
+            // Kiểm tra nếu calo là số nguyên hợp lệ           
 
             // Tạo đối tượng food mới
             Food newFood = new Food();
             newFood.setFname(fname);
-            newFood.setCalo(calo);
             // Kiểm tra xem món ăn đã tồn tại hay chưa
             FoodDBContext foodDBContext = new FoodDBContext();
             if (foodDBContext.foodExists(fname)) {

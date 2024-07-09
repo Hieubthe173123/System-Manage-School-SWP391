@@ -13,13 +13,13 @@
         <title>Search Menu</title>
         <style>
             body {
-                background-color: skyblue;
-                font-family: Arial, sans-serif;
-                color: #fff;
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
                 margin: 0;
                 padding: 0;
+                background-color: #f0f2f5;
+                color: #333;
             }
-
+            
             h2 {
                 text-align: center;
                 margin-top: 20px;
@@ -40,7 +40,7 @@
             }
 
             .table-container .table-wrapper {
-                background-color: rgba(255, 255, 255, 0.2);
+                background-color: skyblue;
                 border-radius: 10px;
                 overflow: hidden;
                 padding: 10px;
@@ -92,36 +92,39 @@
         </style>
     </head>
     <body>
-        <h2>Bữa ăn ngày ${requestScope.date_raw} của các bé</h2>
-        <button><a href="menu">Quay lại</a></button>
+        <h2>Meals for Children on ${requestScope.date_raw}</h2>
+        <div style="display: block">
+            <button><a href="menu">Enter Today's Meals for All Ages</a></button>
+        </div>
+        
         <c:if test="${requestScope.listMenu != null}">
             <div class="table-container-wrapper">
                 <div class="table-container">
                     <c:forEach items="${requestScope.listAgeCategory}" var="age">
-                    <div class="table-wrapper">
-                        <h3>Bữa ăn của ${age.aname}</h3>
-                        <table border="1">
-                            <thead>
-                                <tr>
-                                    <th>Bữa ăn</th>
-                                    <th>Tên các món ăn</th>
-                                    <th>Ngày</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <c:forEach items="${requestScope.listMenu}" var="m">
-                                    <c:if test="${age.ageid == m.ageid.ageid}">
-                                        <tr>
-                                            <td>${m.mealID.mealName}</td>
-                                            <td>${m.menu}</td>
-                                            <td>${m.date}</td>
-                                        </tr>
-                                    </c:if>
-                                </c:forEach>
-                            </tbody>
-                        </table>
-                    </div>
-                </c:forEach>
+                        <div class="table-wrapper">
+                            <h3>Meals for ${age.aname}</h3>
+                            <table border="1">
+                                <thead>
+                                    <tr>
+                                        <th>Meal</th>
+                                        <th>Food Names</th>
+                                        <th>Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <c:forEach items="${requestScope.listMenu}" var="m">
+                                        <c:if test="${age.ageid == m.ageid.ageid}">
+                                            <tr>
+                                                <td>${m.mealID.mealName}</td>
+                                                <td>${m.menu}</td>
+                                                <td>${m.date}</td>
+                                            </tr>
+                                        </c:if>
+                                    </c:forEach>
+                                </tbody>
+                            </table>
+                        </div>
+                    </c:forEach>
                 </div>
             </div>
         </c:if>

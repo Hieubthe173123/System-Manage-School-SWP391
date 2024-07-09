@@ -27,7 +27,6 @@ public class FoodDBContext extends DBContext {
         try {
             String sql = "SELECT [foodid]\n"
                     + "      ,[fname]\n"
-                    + "      ,[calo]\n"
                     + "  FROM [SchoolManagement].[dbo].[Food]\n"
                     + "  Where foodid = ?";
             PreparedStatement stm = connection.prepareStatement(sql);
@@ -35,8 +34,7 @@ public class FoodDBContext extends DBContext {
             ResultSet rs = stm.executeQuery();
             if (rs.next()) {
                 food.setFoodid(rs.getInt("foodid"));
-                food.setFname(rs.getString("fname"));
-                food.setCalo(rs.getInt("calo"));
+                food.setFname(rs.getString("fname"));;
                 return food;
             }
         } catch (SQLException e) {
@@ -50,7 +48,6 @@ public class FoodDBContext extends DBContext {
         try {
             String sql = "SELECT [foodid]\n"
                     + "      ,[fname]\n"
-                    + "      ,[calo]\n"
                     + "  FROM [SchoolManagement].[dbo].[Food]";
             PreparedStatement stm = connection.prepareStatement(sql);
             ResultSet rs = stm.executeQuery();
@@ -58,7 +55,6 @@ public class FoodDBContext extends DBContext {
                 Food f = new Food();
                 f.setFoodid(rs.getInt("foodid"));
                 f.setFname(rs.getString("fname"));
-                f.setCalo(rs.getInt("calo"));
                 food.add(f);
             }
         } catch (SQLException e) {

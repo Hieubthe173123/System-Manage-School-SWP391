@@ -16,7 +16,10 @@ import java.util.List;
  * @author admin
  */
 public class MealTimeDBContext extends DBContext {
-
+    public static void main(String[] args) {
+        MealTimeDBContext d = new MealTimeDBContext();
+        System.out.println(d.getAllMealTime().get(0).getMealID());
+    }
     public MealTime getMealTimeById(int id) {
         MealTime meal = new MealTime();
         try {

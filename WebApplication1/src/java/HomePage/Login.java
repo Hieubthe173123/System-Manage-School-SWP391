@@ -6,10 +6,12 @@ package HomePage;
 
 import DAO.AccountDBContext;
 import DAO.Class_SessionDBContext;
+import DAO.LecturersDBContext;
 import DAO.SchoolYearDBContext;
 import DAO.SessionDBContext;
 import DAO.StudentDBContext;
 import Entity.Account;
+import Entity.Lecturers;
 import Entity.SchoolYear;
 import Entity.Student;
 import java.io.IOException;
@@ -51,7 +53,7 @@ public class Login extends HttpServlet {
         SchoolYear sch = school.getSchoolYearByDateNow(dateF.format(date));
         Class_SessionDBContext classSession = new Class_SessionDBContext();
         Account acc = db.getByUsernamePassword(user_raw, pass_raw);
-
+         LecturersDBContext lec = new LecturersDBContext();
         HttpSession session = request.getSession();
         if (acc != null) {
            if (acc.getRole() == 1) {
@@ -60,10 +62,13 @@ public class Login extends HttpServlet {
                 session.setAttribute("pid", acc.getPid()); 
                 
                 response.sendRedirect("timetable?stuid=" + list.get(0).getStuid());
-            } else if (acc.getRole() == 2) {
-
+            } else if (acc.getRole() == 2 ) {
+                Lecturers lectu = lec.getLecturerByid(acc.getLid());
+                session.setAttribute("role", acc.getRole());
+                session.setAttribute("lid", lectu.getLid());
+               response.sendRedirect("timeTableLecturer?lid=" + lectu.getLid()); 
             } else if (acc.getRole() == 3) {
-                response.sendRedirect("schedules?yid=" + sch.getYid() +"&csid=" + classSession.getClassSessionByYid(sch.getYid()).get(0).getCsid());
+                response.sendRedirect("menu");
             }          
         } else {
             request.setAttribute("err", "username or password invalid!!! Please try again.");

@@ -27,7 +27,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
+   import java.util.Calendar;
 /**
  *
  * @author Admin
@@ -70,53 +70,63 @@ public class TimeTableLecturers extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        Date date = new Date();
-        HttpSession session = request.getSession();
-        SimpleDateFormat dateF = new SimpleDateFormat("yyyy-MM-dd");
-        SimpleDateFormat dateFor = new SimpleDateFormat("dd/MM/yyyy");
-        LecturersDBContext lec = new LecturersDBContext();
-        SchoolYearDBContext school = new SchoolYearDBContext();
-        MenuDBContext menu = new MenuDBContext();
-        SchedulesDBContext scheDB = new SchedulesDBContext();
-        Class_SessionDBContext classSession = new Class_SessionDBContext();
-        List<Menu> menuInDay = new ArrayList<>();
-        SchedulesDBContext sche = new SchedulesDBContext();
 
-        CuriculumDBContext cur = new CuriculumDBContext();
-        List<Curiculum> curi = cur.getAllCuriculum();
-        ClassSession listClass = new ClassSession();
-        String lid_raw = request.getParameter("lid");
-        if ((!lid_raw.isEmpty() || lid_raw != null) && school.getSchoolYearByDateNow(dateF.format(date)) != null) {
-            listClass = classSession.getClassSessionByLidAndDateNow(Integer.parseInt(lid_raw), school.getSchoolYearByDateNow(dateF.format(date)).getYid());
-            if (listClass != null ) {
-                List<Schedules> listSchedulesUnlearn = sche.getAllUnclassifiedSessionsDetail(listClass.getCsid());             
-                Schedules schedules = scheDB.getSchedulesByCsIdAndDate(listClass.getCsid(), dateF.format(date));
-                if (!listSchedulesUnlearn.isEmpty() && schedules == null) {
-                    sche.insert(listSchedulesUnlearn.get(0).getSdid().getSdid(), dateF.format(date), listClass.getCsid());
-                }
-                session.setAttribute("lid", Integer.parseInt(lid_raw));
-                session.setAttribute("csid", listClass.getCsid());
-                Lecturers lectu = lec.getLecturerByid(Integer.parseInt(lid_raw));
-                request.setAttribute("infoLecturer", lectu);
-                request.setAttribute("curi", curi);
-                request.setAttribute("dateNow", dateFor.format(date));
-                menuInDay = menu.getMenuByAgeAndDate(listClass.getSid().getAge().getAgeid(), dateF.format(date));           
-                Schedules schedules2 = scheDB.getSchedulesByCsIdAndDate(listClass.getCsid(), dateF.format(date));
-                if (schedules2 != null) {
-                    request.setAttribute("schedulesToDay", schedules2);
-                }
-                if (menuInDay != null) {
-                    request.setAttribute("menu", menuInDay);
-                }
-                request.getRequestDispatcher("FE_Lecturers/TimeTableLecturer.jsp").forward(request, response);
+
+@Override
+protected void doGet(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException {
+    Date date = new Date();
+    HttpSession session = request.getSession();
+    SimpleDateFormat dateF = new SimpleDateFormat("yyyy-MM-dd");
+    SimpleDateFormat dateFor = new SimpleDateFormat("dd/MM/yyyy");
+    LecturersDBContext lec = new LecturersDBContext();
+    SchoolYearDBContext school = new SchoolYearDBContext();
+    MenuDBContext menu = new MenuDBContext();
+    SchedulesDBContext scheDB = new SchedulesDBContext();
+    Class_SessionDBContext classSession = new Class_SessionDBContext();
+    List<Menu> menuInDay = new ArrayList<>();
+    SchedulesDBContext sche = new SchedulesDBContext();
+
+    CuriculumDBContext cur = new CuriculumDBContext();
+    List<Curiculum> curi = cur.getAllCuriculum();
+    ClassSession listClass = new ClassSession();
+    String lid_raw = request.getParameter("lid");
+
+    if (lid_raw != null && !lid_raw.isEmpty() && school.getSchoolYearByDateNow(dateF.format(date)) != null) {
+        listClass = classSession.getClassSessionByLidAndDateNow(Integer.parseInt(lid_raw), school.getSchoolYearByDateNow(dateF.format(date)).getYid());
+        if (listClass != null) {
+            List<Schedules> listSchedulesUnlearn = sche.getAllUnclassifiedSessionsDetail(listClass.getCsid(), listClass.getSid().getSid());
+            // Xem thử ngày học hôm nay có chưa
+            Schedules schedules = scheDB.getSchedulesByCsIdAndDate(listClass.getCsid(), dateF.format(date));
+
+            // Check if the day is not Saturday or Sunday
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+            boolean isWeekend = (dayOfWeek == Calendar.SATURDAY || dayOfWeek == Calendar.SUNDAY);
+
+            if (!isWeekend && !listSchedulesUnlearn.isEmpty() && schedules == null) {
+                sche.insert(listSchedulesUnlearn.get(0).getSdid().getSdid(), dateF.format(date), listClass.getCsid());
             }
 
+            session.setAttribute("lid", Integer.parseInt(lid_raw));
+            session.setAttribute("csid", listClass.getCsid());
+            Lecturers lectu = lec.getLecturerByid(Integer.parseInt(lid_raw));
+            request.setAttribute("infoLecturer", lectu);
+            request.setAttribute("curi", curi);
+            request.setAttribute("dateNow", dateFor.format(date));
+            menuInDay = menu.getMenuByAgeAndDate(listClass.getSid().getAge().getAgeid(), dateF.format(date));
+            Schedules schedules2 = scheDB.getSchedulesByCsIdAndDate(listClass.getCsid(), dateF.format(date));
+            if (schedules2 != null) {
+                request.setAttribute("schedulesToDay", schedules2);
+            }
+            if (menuInDay != null) {
+                request.setAttribute("menu", menuInDay);
+            }
+            request.getRequestDispatcher("FE_Lecturers/TimeTableLecturer.jsp").forward(request, response);
         }
-
     }
+}
 
     /**
      * Handles the HTTP <code>POST</code> method.

@@ -67,7 +67,7 @@
                 background-color: #007BFF;
                 border: none;
                 color: black;
-                padding: 10px 20px;
+                padding: 3px 20px;
                 text-align: center;
                 text-decoration: none;
                 display: inline-block;
@@ -86,6 +86,48 @@
                 font-size: 14px;
                 margin-left: 10px; /* Adjust spacing as needed */
             }
+            .button-container {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                margin-top: 1rem;
+            }
+            button {
+                background-color: #4CAF50;
+                color: white;
+                padding: 3px 20px;
+                border: none;
+                cursor: pointer;
+                border-radius: 4px;
+                margin: 0.5rem;
+                transition: background-color 0.3s ease;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                display: inline-block;
+            }
+            button a {
+                text-decoration: none;
+                color: white;
+                display: inline-block;
+            }
+            button:hover {
+                background-color: #45a049;
+            }
+            .delete-button {
+                background-color: #f44336;
+            }
+            .delete-button:hover {
+                background-color: #e53935;
+            }
+            .return-button {
+                background-color: #008CBA;
+            }
+            .return-button:hover {
+                background-color: #007BB5;
+            }
+            .return-link, .delete-button a {
+                color: white;
+                text-decoration: none;
+            }
         </style>
         <script>
             function confirmDeletion() {
@@ -95,50 +137,63 @@
     </head>
     <body>
         <h2>Chương trình học của lớp ${sessionScope.className} năm học ${sessionScope.year.dateStart} - ${sessionScope.year.dateEnd}</h2>
-        <c:if test="${sessionScope.sche != null}">
-    <button class="delete-button">
-        <a href="addSchedules?idToDelete=${sessionScope.sche.scheID}&csid=${sessionScope.csid}" 
-           onclick="return confirmDeletion()">Xoá Lịch học ngày hôm nay</a>
-    </button>
-</c:if>
-<a href="timeTableLecturer?lid=${sessionScope.lid}" class="return-link">Quay Lại</a>
+        <div class="button-container">
+            <button class="return-button">
+                <a href="timeTableLecturer?lid=${sessionScope.lid}" class="return-link">Quay Lại</a>
+            </button>
+            <c:if test="${sessionScope.sche != null}">
+                <button class="delete-button">
+                    <a href="addSchedules?idToDelete=${sessionScope.sche.scheID}&csid=${sessionScope.csid}" 
+                       onclick="return confirmDeletion()">Xoá Lịch học ngày hôm nay</a>
+                </button>
+            </c:if>
+
+        </div>
+
         <h3>${requestScope.Delete}</h3>
         <h3>${requestScope.mess}</h3>
-        <form action="addSchedules" method="GET">
-            <select name="sdid">
+        <form action="addSchedules" method="GET" >
+            
+            <select name="sdid" onchange="this.form.submit()">
                 <c:forEach items="${sessionScope.listSchedulesUnlearn}" var="s">                  
-                    <option value="${s.sdid.sdid}" ${s.sdid.sdid == requestScope.sdid ? 'selected' : ''} > 
+                    <option value="${s.sdid.sdid}" ${s.sdid.sdid == sessionScope.sdid ? 'selected' : ''} > 
                         ${s.sdid.detail}
                     </option>
                 </c:forEach>  
             </select>
-            <input readonly="" value="${sessionScope.date}" name="date"/>
             <input type="hidden" value="${sessionScope.csid}" name="csid"/>
             <c:if test="${sessionScope.sche != null}">
-                <input type="submit" value="Cập nhật"/>
+                <input type="submit" value="Update" name="sm"/>
             </c:if>
             <c:if test="${sessionScope.sche == null}">
-                <input type="submit" value="Thêm"/>
+                <input type="submit" value="Add" name="sm"/>
             </c:if>
         </form>
         <table border="1">
             <thead>
                 <tr>
                     <th>STT</th>
-                    <th>Buổi học</th>
-                    <th>Ngày học</th>
-                    <th>Lớp</th>
+                    <th>Giờ học</th>
+                    <th>Tên hoạt động</th>
+                    <th>Đã fix cứng</th>
                 </tr>
             </thead>
             <tbody>
-                <c:forEach items="${sessionScope.listSchedulesLearn}" var="s" varStatus="status">
-                    <tr>
-                        <td>${status.index + 1}</td>
-                        <td>${s.sdid.detail}</td>
-                        <td>${s.date}</td>
-                        <td>${s.csid.classID.clname}</td>
-                    </tr>
-                </c:forEach>
+                <c:forEach items="${requestScope.listCuri}" var="c" varStatus="status">
+                                <tbody>
+                                    <tr>
+                                         <td>${status.index + 1}</td>
+                                        <td>${c.timeStart} - ${c.timeEnd}</td>
+                                        <td>${c.nameAct}</td>
+                                        <c:if test="${c.isFix == true}">
+                                            <td>Cố Định</td>
+                                        </c:if>
+                                            <c:if test="${c.isFix == false}">
+                                            <td></td>
+                                        </c:if>
+                                    </tr>            
+                                </tbody>
+                            </c:forEach>
             </tbody>
         </table>
     </body>

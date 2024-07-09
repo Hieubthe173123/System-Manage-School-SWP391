@@ -1,62 +1,67 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
     <title>Menu Today</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: skyblue;
-            color: #333;
-            margin: 0;
-            padding: 0;
-        }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                margin: 0;
+                padding: 0;
+                background-color: #f0f2f5;
+                color: #333;
+            }
 
         h1 {
             text-align: center;
             margin-top: 20px;
-            color: #444;
+            color: black;
+            font-size: 2.5em;
         }
 
         h3 {
             text-align: center;
+            color: black;
         }
 
         form {
             display: flex;
             justify-content: center;
-            margin: 20px;
+            margin: 20px 0;
         }
 
         label {
             margin-right: 10px;
             font-weight: bold;
+            color: #00796b;
         }
 
         input[type="text"],
         input[type="date"],
         select {
-            padding: 8px;
+            padding: 10px;
             margin-right: 10px;
-            border: 1px solid #ccc;
+            border: 1px solid #b0bec5;
             border-radius: 4px;
+            font-size: 16px;
         }
 
         button {
-            padding: 8px 16px;
-            background-color: #4CAF50;
+            padding: 10px 20px;
+            background-color: green;
             color: white;
             border: none;
             border-radius: 4px;
             cursor: pointer;
             font-size: 16px;
+            transition: background-color 0.3s ease;
         }
 
         button:hover {
-            background-color: #45a049;
+            background-color: #004d40;
         }
 
         .table-container-wrapper {
@@ -66,32 +71,33 @@
         }
 
         table {
-            width: 60%;
+            width: 70%;
             border-collapse: collapse;
             margin-bottom: 20px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            border: 2px solid #ccc; /* Add border around the table */
+            border: 2px solid #b0bec5;
         }
 
         th, td {
             padding: 12px;
             text-align: left;
             border-bottom: 1px solid #ddd;
-             border: 2px solid #ccc; /* Add border around the table */
+            border: 2px solid #b0bec5;
         }
 
         th {
-            background-color: #f2f2f2;
+            background-color: #00b8ec;
+            color: white;
             font-weight: bold;
-             border: 2px solid #ccc; /* Add border around the table */
+            text-align: center;
         }
 
         tr:nth-child(even) {
-            background-color: #f9f9f9;
+            background-color: #e0f2f1;
         }
 
         tr:hover {
-            background-color: #f1f1f1;
+            background-color: #b2dfdb;
         }
 
         .table-wrapper {
@@ -131,7 +137,7 @@
         }
 
         .select-column {
-            width: 250px; /* Adjust this width as needed */
+            width: 250px;
         }
     </style>
 </head>
@@ -143,8 +149,8 @@
         <button type="submit">Submit</button>
     </form>
 
-    <div style="text-align: center ; color: green">${sessionScope.Mess}</div>
-    <div style="text-align: center ; color: orange">${sessionScope.Err}</div>
+    <div style="text-align: center; color: green">${sessionScope.Mess}</div>
+    <div style="text-align: center; color: red">${sessionScope.Err}</div>
     <form action="menu" method="POST" class="center">
         <select name="ageid" onchange="this.form.submit()">
             <option value="0">Chọn lứa tuổi</option>

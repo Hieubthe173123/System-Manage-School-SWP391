@@ -16,7 +16,10 @@ import java.util.logging.Logger;
  * @author admin
  */
 public class LecturersDBContext extends DBContext {
-
+    public static void main(String[] args) {
+        LecturersDBContext le = new LecturersDBContext();
+        System.out.println(le.getLecturerByid(1).getLid());
+    }
     public Lecturers getLecturerByid(int rid) {
         try {
             String sql = "SELECT [lid]\n"
@@ -36,8 +39,8 @@ public class LecturersDBContext extends DBContext {
             ResultSet rs = stm.executeQuery();
             if (rs.next()) {
                 Lecturers lec = new Lecturers();
-                lec.setLid(rs.getInt("pid"));
-                lec.setLname(rs.getString("pname"));
+                lec.setLid(rs.getInt("lid"));
+                lec.setLname(rs.getString("lname"));
                 lec.setGender(rs.getBoolean("gender"));
                 lec.setDob(rs.getString("dob"));
                 lec.setPhoneNumber(rs.getString("phoneNumber"));

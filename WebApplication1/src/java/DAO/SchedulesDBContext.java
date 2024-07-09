@@ -19,8 +19,7 @@ public class SchedulesDBContext extends DBContext {
 
     public static void main(String[] args) {
         SchedulesDBContext d = new SchedulesDBContext();
-        // System.out.println(d.getSchedulesByCsIdAndDate(1, "2024-05-21").getCsid().getCsid());
-        d.insert(1, "2024-05-31", 27);
+        System.out.println(d.getAllUnclassifiedSessionsDetail(3, 6).size());
     }
 
     public Schedules getSchedulesByCsIdAndDate(int id, String date) {
@@ -75,7 +74,7 @@ public class SchedulesDBContext extends DBContext {
         }
         return null;
     }
-    
+
     public List<Schedules> getSchedulesByCsid(int csid) {
         List<Schedules> list = new ArrayList<>();
         try {
@@ -127,17 +126,88 @@ public class SchedulesDBContext extends DBContext {
     // Update
     public void update(String date, int sdid, int csid) {
         String sql = "UPDATE [dbo].[Schedules]\n"
-                + "   SET [Date] = ?\n"
-                + " WHERE sdid = ? and csid = ?";
+                + "   SET sdid = ?\n"
+                + " WHERE [Date] = ? and csid = ?";
         try {
             PreparedStatement st = connection.prepareStatement(sql);
-            st.setString(1, date);
+            st.setString(2, date);
             st.setInt(3, csid);
-            st.setInt(2, sdid);
+            st.setInt(1, sdid);
             st.executeUpdate();
         } catch (SQLException e) {
             System.out.println(e);
         }
     }
 
+    public List<Schedules> getAllUnclassifiedSessionsDetail(int csid, int sid) {
+        List<Schedules> list = new ArrayList<>();
+        try {
+            String sql = "SELECT sd.sdid, sd.sid, s.scheID, s.csid, s.Date\n"
+                    + "FROM Session_Details sd\n"
+                    + "LEFT JOIN Schedules s ON sd.sdid = s.sdid AND s.csid = ?\n"
+                    + "LEFT JOIN Class_Session cs ON cs.sid = sd.sid AND cs.csid = ?\n"
+                    + "WHERE s.scheID IS NULL AND cs.sid = ?";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setInt(1, csid);
+            stm.setInt(2, csid);
+            stm.setInt(3, sid);
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                Schedules schel = new Schedules();
+                SessionDetailDBContext ses = new SessionDetailDBContext();
+                Class_SessionDBContext cla = new Class_SessionDBContext();
+                schel.setScheID(rs.getInt("scheID"));
+                schel.setDate(rs.getDate("Date"));
+                schel.setSdid(ses.getSessionDetailById(rs.getInt("sdid")));
+                schel.setCsid(cla.getClassSessionById(rs.getInt("csid")));
+                list.add(schel);
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return list;
+    }
+
+    public List<Schedules> getAllSessionsDetailByYidAndLid(int yid, int lid) {
+        List<Schedules> list = new ArrayList<>();
+        try {
+            String sql = "SELECT [scheID]\n"
+                    + "      ,[sdid]\n"
+                    + "      ,[Date]\n"
+                    + "      ,cs.[csid]\n"
+                    + "  FROM [SchoolManagement].[dbo].[Schedules] s Inner Join Class_Session cs On s.csid = cs.csid\n"
+                    + "  Inner Join Lecturers_Class_Session lc On lc.csid = cs.csid\n"
+                    + "  Where cs.yid = ? and lc.lid = ?";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setInt(1, yid);
+            stm.setInt(2, lid);
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                Schedules schel = new Schedules();
+                SessionDetailDBContext ses = new SessionDetailDBContext();
+                Class_SessionDBContext cla = new Class_SessionDBContext();
+                schel.setScheID(rs.getInt("scheID"));
+                schel.setDate(rs.getDate("Date"));
+                schel.setSdid(ses.getSessionDetailById(rs.getInt("sdid")));
+                schel.setCsid(cla.getClassSessionById(rs.getInt("csid")));
+                list.add(schel);
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return list;
+    }
+
+    // Delete category by id
+    public void delete(int id) {
+        String sql = "DELETE FROM [dbo].[Schedules]\n"
+                + "      WHERE scheID = ?";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setInt(1, id);
+            st.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+    }
 }

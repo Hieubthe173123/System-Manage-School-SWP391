@@ -92,7 +92,7 @@
                         <select name="schedulesID">
                             <option value="0">Chọn ngày</option>
                             <c:forEach items="${requestScope.listSch}" var="s">
-                                <option value ="${s.scheID}" ${s.scheID == requestScope.schID ? 'selected' : ''}> ${s.date} </option>
+                                <option value ="${s.scheID}"> ${s.date} </option>
                             </c:forEach>  
                         </select>
                         <button type="submit">Search</button>

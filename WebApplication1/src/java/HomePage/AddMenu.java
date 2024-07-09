@@ -99,11 +99,14 @@ public class AddMenu extends HttpServlet {
 
         if ("1".equals(save) && listMenuFood != null && !listMenuFood.isEmpty()) {
             saveMenu(listMenuFood, age, dateFormat.format(currentDate), listMeal, menuDB, session, request);
+            response.sendRedirect("searchMenu?date=" + dateFormat.format(currentDate));
         } else if (mealID != null && foodid != null && !foodid.equals("0")) {
             addFoodToMenu(mealID, foodid, listMenuFood, foodDB, session);
+     
         }
-
+if (!"1".equals(save)){
         response.sendRedirect("menu");
+}
     }
 
     private void saveMenu(List<MenuFood> listMenuFood, String age, String currentDate, List<MealTime> listMeal, MenuDBContext menuDB, HttpSession session, HttpServletRequest request) {

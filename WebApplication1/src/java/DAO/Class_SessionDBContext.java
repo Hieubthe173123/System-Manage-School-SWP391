@@ -16,10 +16,13 @@ import java.util.List;
  * @author admin
  */
 public class Class_SessionDBContext extends DBContext {
+
     public static void main(String[] args) {
-        Class_SessionDBContext c = new Class_SessionDBContext();
-        System.out.println(c.getClassSessionById(16));
+        Class_SessionDBContext s = new Class_SessionDBContext();
+        List<ClassSession> list = s.getClassSessionByLid(1);
+        System.out.println(s.getSidByCsid(1).getSid().getSid());
     }
+
     public ClassSession getClassSessionById(int id) {
         ClassSession claSes = new ClassSession();
         try {
@@ -50,6 +53,71 @@ public class Class_SessionDBContext extends DBContext {
         }
         return null;
     }
+
+    public ClassSession getClassSessionByLidAndDateNow(int lid, int yid) {
+        ClassSession claSes = new ClassSession();
+        try {
+            String sql = "SELECT l.[csid]\n"
+                    + "      ,[classID]\n"
+                    + "      ,l.[yid]\n"
+                    + "      ,[sid]\n"
+                    + "      ,[rid]\n"
+                    + "  FROM [SchoolManagement].[dbo].[Class_Session] l\n"
+                    + "  Inner Join Lecturers_Class_Session lc\n"
+                    + "  ON lc.csid = l.csid\n"
+                    + "  Inner join SchoolYear s\n"
+                    + "  On s.yid = l.yid\n"
+                    + "  WHere lc.lid = ? and l.yid =?";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setInt(1, lid);
+            stm.setInt(2, yid);
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                SchoolYearDBContext scho = new SchoolYearDBContext();
+                ClassDBContext cla = new ClassDBContext();
+                SessionDBContext ses = new SessionDBContext();
+                RoomDBContext r = new RoomDBContext();
+                AgeDBContext age = new AgeDBContext();
+                claSes.setCsid(rs.getInt("csid"));
+                claSes.setClassID(cla.getClassById(rs.getInt("classID")));
+                claSes.setYid(scho.getSchoolYearById(rs.getInt("yid")));
+                claSes.setSid(ses.getSessionById(rs.getInt("sid")));
+                claSes.setRid(r.getRoomByRid(rs.getInt("rid")));
+                return claSes;
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return null;
+    }
+
+    
+    public ClassSession getSidByCsid(int csid) {
+        ClassSession claSes = new ClassSession();
+        try {
+            String sql = "SELECT * FROM Class_Session where csid = ?";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setInt(1, csid);
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                SchoolYearDBContext scho = new SchoolYearDBContext();
+                ClassDBContext cla = new ClassDBContext();
+                SessionDBContext ses = new SessionDBContext();
+                RoomDBContext r = new RoomDBContext();
+                AgeDBContext age = new AgeDBContext();
+                claSes.setCsid(rs.getInt("csid"));
+                claSes.setClassID(cla.getClassById(rs.getInt("classID")));
+                claSes.setYid(scho.getSchoolYearById(rs.getInt("yid")));
+                claSes.setSid(ses.getSessionById(rs.getInt("sid")));
+                claSes.setRid(r.getRoomByRid(rs.getInt("rid")));
+                return claSes;
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return null;
+    }
+    
     
     public List<ClassSession> getClassSessionByYid(int id) {
         List<ClassSession> list = new ArrayList<>();
@@ -82,4 +150,34 @@ public class Class_SessionDBContext extends DBContext {
         }
         return list;
     }
+
+    public List<ClassSession> getClassSessionByLid(int lid) {
+        List<ClassSession> list = new ArrayList<>();
+        try {
+            String sql = "SELECT *  FROM [SchoolManagement].[dbo].[Lecturers_Class_Session] lc "
+                    + "Inner Join Class_Session cs ON lc.csid = cs.csid \n"
+                    + "  where lid = ?";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setInt(1, lid);
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                ClassSession claSes = new ClassSession();
+                SchoolYearDBContext scho = new SchoolYearDBContext();
+                ClassDBContext cla = new ClassDBContext();
+                SessionDBContext ses = new SessionDBContext();
+                RoomDBContext r = new RoomDBContext();
+                AgeDBContext age = new AgeDBContext();
+                claSes.setCsid(rs.getInt("csid"));
+                claSes.setClassID(cla.getClassById(rs.getInt("classID")));
+                claSes.setYid(scho.getSchoolYearById(rs.getInt("yid")));
+                claSes.setSid(ses.getSessionById(rs.getInt("sid")));
+                claSes.setRid(r.getRoomByRid(rs.getInt("rid")));
+                list.add(claSes);
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return list;
+    }
+
 }

@@ -5,8 +5,12 @@
 package HomePage;
 
 import DAO.Class_SessionDBContext;
+import DAO.CuriculumDBContext;
 import DAO.SchedulesDBContext;
+import DAO.SessionDetailDBContext;
+import Entity.Curiculum;
 import Entity.Schedules;
+import Entity.SessionDetails;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -16,6 +20,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -68,18 +73,21 @@ public class AddSchedules extends HttpServlet {
         String csid = request.getParameter("csid");
         String sdid = request.getParameter("sdid");
         String date = request.getParameter("date");
-         String idToDelete = request.getParameter("idToDelete");
+        String idToDelete = request.getParameter("idToDelete");
         Class_SessionDBContext classS = new Class_SessionDBContext();
         SchedulesDBContext sb = new SchedulesDBContext();
+        SessionDetailDBContext sddb = new SessionDetailDBContext();
+        CuriculumDBContext curdb = new CuriculumDBContext();
+        String sm = request.getParameter("sm");
         try {
-           
-        if(idToDelete != null || !idToDelete.isEmpty()){
-            sb.delete(Integer.parseInt(idToDelete));
-            request.setAttribute("Delete", "Delete success");
-        }
+
+            if (idToDelete != null || !idToDelete.isEmpty()) {
+                sb.delete(Integer.parseInt(idToDelete));
+                request.setAttribute("Delete", "Delete success");
+            }
         } catch (Exception e) {
         }
-        
+
         Date today = new Date();
         HttpSession session = request.getSession();
         SimpleDateFormat dateF = new SimpleDateFormat("yyyy-MM-dd");
@@ -89,36 +97,51 @@ public class AddSchedules extends HttpServlet {
         calendar.setTime(today);
         calendar.add(Calendar.DAY_OF_YEAR, 1);
         Date tomorrow = calendar.getTime();
-       
-        if (date != null && !date.isEmpty()) {
-            if (sb.getSchedulesByCsIdAndDate(Integer.parseInt(csid), date) != null) {
-                sb.update(date, Integer.parseInt(sdid), Integer.parseInt(csid));
+        if (sm != null) {
+            if (sb.getSchedulesByCsIdAndDate(Integer.parseInt(csid), dateF.format(today)) != null && sm.equals("Update")) {
+                sb.update(dateF.format(today), Integer.parseInt(sdid), Integer.parseInt(csid));
                 request.setAttribute("mess", "Cập nhật buổi học thành công");
             } else {
-                if ((!sdid.isEmpty() && !csid.isEmpty() && !date.isEmpty()) || (sdid != null && date != null && csid != null)) {
-                    sb.insert(Integer.parseInt(sdid), date, Integer.parseInt(csid));
+                if ((!sdid.isEmpty() && !csid.isEmpty()) || (sdid != null && csid != null && sm.equals("Add"))) {
+                    sb.insert(Integer.parseInt(sdid), dateF.format(today), Integer.parseInt(csid));
                     request.setAttribute("mess", "Thêm buổi học thành công.");
                 }
             }
         }
         if (csid != null && !csid.isEmpty()) {
+
             // Lấy ra những buổi đã học và chưa học củae 1 lớp trong năm học này
-            List<Schedules> listSchedulesUnlearn = sb.getAllUnclassifiedSessionsDetail(Integer.parseInt(csid));
+            List<Schedules> listSchedulesUnlearn = sb.getAllUnclassifiedSessionsDetail(Integer.parseInt(csid), classS.getSidByCsid(Integer.parseInt(csid)).getSid().getSid());
             List<Schedules> listSchedulesLearn = sb.getSchedulesByCsid(Integer.parseInt(csid));
-             // Check null và gửi data sang jsp
-            if(listSchedulesLearn != null || listSchedulesUnlearn != null){
-            session.setAttribute("listSchedulesUnlearn", listSchedulesUnlearn);
-            session.setAttribute("listSchedulesLearn", listSchedulesLearn);
-            if(listSchedulesLearn != null && !listSchedulesLearn.isEmpty())
-            session.setAttribute("className", listSchedulesLearn.get(0).getCsid().getClassID().getClname());
+            // Check null và gửi data sang jsp
+            if (listSchedulesUnlearn != null) {
+                List<Curiculum> listCuri = new ArrayList<>();
+
+                if (sdid != null) {
+                    listCuri = curdb.getCuriculumBySessionId(Integer.parseInt(sdid));
+                } else if (!listSchedulesUnlearn.isEmpty()) {
+                    listCuri = curdb.getCuriculumBySessionId(listSchedulesUnlearn.get(0).getSdid().getSdid());
+                } else {
+                    request.setAttribute("mess", "Chương trình dạy học của lớp trong năm học này đã hết!");
+                }
+
+                request.setAttribute("listCuri", listCuri);
+
+                session.setAttribute("listSchedulesUnlearn", listSchedulesUnlearn);
+                session.setAttribute("listSchedulesLearn", listSchedulesLearn);
+
+                if (listSchedulesLearn != null && !listSchedulesLearn.isEmpty()) {
+                    session.setAttribute("className", listSchedulesLearn.get(0).getCsid().getClassID().getClname());
+                }
             }
-            session.setAttribute("csid", csid);
-            session.setAttribute("sdid", sdid);
+
             session.setAttribute("year", classS.getClassSessionById(Integer.parseInt(csid)).getYid());
             session.setAttribute("sche", sb.getSchedulesByCsIdAndDate(Integer.parseInt(csid), dateF.format(today)));
             session.setAttribute("date", dateF.format(today)); // Set tomorrow's date
         }
 
+        session.setAttribute("csid", csid);
+        session.setAttribute("sdid", sdid);
         request.getRequestDispatcher("FE_Lecturers/AddSchedules.jsp").forward(request, response);
     }
 

@@ -63,26 +63,38 @@ public class TimeTable extends HttpServlet {
         int stuid = Integer.parseInt(request.getParameter("stuid"));
         String yidHistory = request.getParameter("yidHistoty");
         String schedulesID = request.getParameter("schedulesID");
+        SchoolYearDBContext school = new SchoolYearDBContext();
+        Date date = new Date();
+        SimpleDateFormat dateF = new SimpleDateFormat("yyyy-MM-dd");
+        FeedbackDBContext feed = new FeedbackDBContext();
+
+        SchoolYear sch = school.getSchoolYearByDateNow(dateF.format(date));
         // Lấy ra tất cả năm học của 1 học sinh đã học
         List<StudentClassSession> listYidInHistory = studen.getStudentClassSessionById(stuid);
 
         // Lấy ra ngày học trong 1 năm học dựa trên yid và studentID được gửi từ về
         StudentClassSession stuClassSession = new StudentClassSession();
         List<Schedules> listSch = new ArrayList<>();
+//        if (yidHistory != null) {
+//            stuClassSession = studen.getStudentClassSessionByStuid(stuid, Integer.parseInt(yidHistory));
+//            listSch = sche.getSchedulesByCsid(stuClassSession.getCsid().getCsid());
+//            request.setAttribute("yidH", Integer.parseInt(yidHistory));
+//        } else {
+//            listSch = sche.getSchedulesByCsid(listYidInHistory.get(0).getCsid().getCsid());
+//            request.setAttribute("yidH", Integer.parseInt(yidHistory));
+//        }
         if (yidHistory != null) {
             stuClassSession = studen.getStudentClassSessionByStuid(stuid, Integer.parseInt(yidHistory));
             listSch = sche.getSchedulesByCsid(stuClassSession.getCsid().getCsid());
             request.setAttribute("yidH", Integer.parseInt(yidHistory));
-        } else {
-            listSch = sche.getSchedulesByCsid(listYidInHistory.get(0).getCsid().getCsid());
+        } else if(yidHistory == null && sch != null){
+            stuClassSession = studen.getStudentClassSessionByStuid(stuid, sch.getYid());
+            listSch = sche.getSchedulesByCsid(stuClassSession.getCsid().getCsid());
+            request.setAttribute("yidH", sch.getYid());
+        }else{
+             listSch = sche.getSchedulesByCsid(listYidInHistory.get(0).getCsid().getCsid());
+            request.setAttribute("yidH", Integer.parseInt(yidHistory));
         }
-
-        // String stuid = request.getParameter("stuid");
-        SchoolYearDBContext school = new SchoolYearDBContext();
-        Date date = new Date();
-        SimpleDateFormat dateF = new SimpleDateFormat("yyyy-MM-dd");
-        FeedbackDBContext feed = new FeedbackDBContext();
-        SchoolYear sch = school.getSchoolYearByDateNow(dateF.format(date));
 
         StudentClassSession studID = studen.getStudentClassSessionByStuid(stuid, sch.getYid());
 

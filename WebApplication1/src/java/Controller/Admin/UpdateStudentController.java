@@ -5,6 +5,7 @@
 package Controller.Admin;
 
 import DAO.Class_SessionDBContext;
+import DAO.ParentDBContext;
 import DAO.StudentClassSessionDBContext;
 import DAO.StudentDBContext;
 import Entity.ClassSession;
@@ -119,6 +120,10 @@ public class UpdateStudentController extends HttpServlet {
         studentDB.updateStudentClass(studentId, newClassId);
         studentDB.updateStudentStatus(studentId, status);
 
+ 
+        updateParentStatusIfOnly1Student(studentId, status);
+          
+          
         response.sendRedirect("student");
     }
 
@@ -127,4 +132,16 @@ public class UpdateStudentController extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
+    //Update parent status if the parent has only 1 child
+     private void updateParentStatusIfOnly1Student(int studentId, boolean studentStatus) {
+        StudentDBContext studentDB = new StudentDBContext();
+               ParentDBContext parent= new ParentDBContext();
+        int parentId = studentDB.getParentIdByStudentId(studentId);
+        int activeStudentsCount = studentDB.countActiveStudentsByParentId(parentId);
+
+        if (activeStudentsCount < 1) {
+            parent.updateParentStatus(parentId, studentStatus);
+        }
+    }
 }
+

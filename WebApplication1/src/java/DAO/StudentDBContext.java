@@ -205,5 +205,37 @@ public class StudentDBContext extends DBContext {
             Logger.getLogger(RoomDBContext.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
+      //Get the parent ID . Used to update status
+        public int getParentIdByStudentId(int studentId) {
+        String sql = "SELECT pid FROM [SchoolManagement].[dbo].[Student] WHERE stuid = ?";
+        try {
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setInt(1, studentId);
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("pid");
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(StudentDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return -1;
+    }
+        
+       // Count the number of active students of the parent
+         public int countActiveStudentsByParentId(int parentId) {
+        String sql = "SELECT COUNT(*) AS total FROM [SchoolManagement].[dbo].[Student] WHERE pid = ? AND status = 1";
+        try {
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setInt(1, parentId);
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("total");
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(StudentDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return 0;
+    }
 }
-    
+  

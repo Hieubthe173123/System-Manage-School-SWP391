@@ -64,6 +64,7 @@
                     </form>
                 </div>
                 <div class="col-sm-6 text-right">
+                     <a href="parent" class="btn btn-primary" id="parentManagementBtn">Parent Management</a>
                     <a href="add-student" class="btn btn-primary" id="addNewStudentBtn">Add New Student</a>
                     <a href="inactive-student" class="btn btn-primary" id="viewInactiveStudentsBtn">Inactive Students</a>
                 </div>

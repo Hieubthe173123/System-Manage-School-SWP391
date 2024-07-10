@@ -5,6 +5,7 @@
 
 package Controller.Admin;
 
+import DAO.ParentDBContext;
 import DAO.StudentDBContext;
 import Entity.Student;
 import java.io.IOException;
@@ -50,6 +51,18 @@ public class UpdateInactiveStudent extends HttpServlet {
 
         StudentDBContext stuDB = new StudentDBContext();
         stuDB.updateStudentStatus(Stuid, status);
+        
+        // Get parent ID
+        int parentId = stuDB.getParentIdByStudentId(Stuid);
+            
+        // Count the number of active students of the parent
+        int activeStudentCount = stuDB.countActiveStudentsByParentId(parentId);
+        
+        if (activeStudentCount > 0) {
+               //update status parent
+                ParentDBContext parentDB = new ParentDBContext();
+                parentDB.updateParentStatus(parentId, true);
+            }
         
         response.sendRedirect("inactive-student");
     } catch (NumberFormatException e) {

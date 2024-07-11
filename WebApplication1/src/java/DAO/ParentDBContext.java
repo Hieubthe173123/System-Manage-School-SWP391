@@ -445,4 +445,21 @@ public class ParentDBContext extends DBContext {
             Logger.getLogger(ParentDBContext.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    
+    public boolean isEmailExists(String email) {
+    try {
+        String sql = "SELECT COUNT(*) AS count FROM [SchoolManagement].[dbo].[Parent] WHERE [Email] = ?";
+        PreparedStatement stm = connection.prepareStatement(sql);
+        stm.setString(1, email);
+        ResultSet rs = stm.executeQuery();
+        if (rs.next()) {
+            return rs.getInt("count") > 0;
+        }
+    } catch (SQLException ex) {
+        Logger.getLogger(ParentDBContext.class.getName()).log(Level.SEVERE, null, ex);
+    }
+    return false;
+}
+
 }

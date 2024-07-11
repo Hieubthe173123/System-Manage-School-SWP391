@@ -84,6 +84,12 @@ public class AddNewParent extends HttpServlet {
             processRequest(request, response);
             return;
         }
+        
+        if (parentDB.isEmailExists(email)) {
+        request.setAttribute("Error", "Email already exists.");
+        processRequest(request, response);
+        return;
+        }
      
         Parent parent = new Parent();
         parent.setPname(pname);

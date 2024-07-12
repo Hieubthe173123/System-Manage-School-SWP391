@@ -5,6 +5,8 @@
 package DAO;
 
 import Entity.Lecturers_Class_Session;
+import Entity.Parent;
+import Entity.Student;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -39,5 +41,43 @@ public class LecturerClassSession extends DBContext {
             System.out.println(e);
         }
         return null;
+    }
+    public List<Student> getStudentsForLecturers(int lid) {
+        List<Student> list = new ArrayList<>();
+        String sql = "SELECT S.stuid, S.sname, S.dob, S.gender, P.phoneNumber, P.pname " +
+                     "FROM Student S " +
+                     "INNER JOIN Student_Class_Session SCS ON S.stuid = SCS.stuid " +
+                     "INNER JOIN Class_Session CS ON SCS.csid = CS.csid " +
+                     "INNER JOIN Lecturers_Class_Session LCS ON CS.csid = LCS.csid " +
+                     "INNER JOIN Parent P ON S.pid = P.pid " +
+                     "INNER JOIN Class CL ON CS.classID = CL.classID " +
+                     "INNER JOIN SchoolYear SY ON CS.yid = SY.yid " +
+                     "WHERE SY.dateEnd = (SELECT MAX(dateEnd) FROM SchoolYear) " +
+                     "AND LCS.lid = ?";
+        
+        try (PreparedStatement stm = connection.prepareStatement(sql)) {
+            stm.setInt(1, lid); // Set lid parameter
+            ResultSet rs = stm.executeQuery();
+
+            while (rs.next()) {
+                Student student = new Student();
+                student.setStuid(rs.getInt("stuid"));
+                student.setSname(rs.getString("sname"));
+                student.setDob(rs.getString("dob"));
+                student.setGender(rs.getBoolean("gender"));
+
+                Parent parent = new Parent();
+                parent.setPname(rs.getString("pname"));
+                parent.setPhoneNumber(rs.getString("phoneNumber"));
+
+                // Set parent object to student
+                student.setPid(parent);
+
+                list.add(student);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace(); // Log or handle the exception properly
+        }
+        return list;
     }
 }

@@ -5,8 +5,10 @@
 package HomePage;
 
 import DAO.AccountDBContext;
+import DAO.LecturersDBContext;
 import DAO.StudentDBContext;
 import Entity.Account;
+import Entity.Lecturers;
 import Entity.Student;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -35,11 +37,11 @@ public class Login extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-       String user_raw = request.getParameter("username");
+        String user_raw = request.getParameter("username");
         String pass_raw = request.getParameter("password");
         AccountDBContext db = new AccountDBContext();
         StudentDBContext stu = new StudentDBContext();
-
+        LecturersDBContext lec = new LecturersDBContext();
         Account acc = db.getByUsernamePassword(user_raw, pass_raw);
 
         // Inside your login servlet or controller
@@ -55,9 +57,12 @@ public class Login extends HttpServlet {
                 request.setAttribute("list", list);
                 request.getRequestDispatcher("FE_Parent/StudentOfParent.jsp").forward(request, response);
             } else if (acc.getRole() == 2) {
-
-            } else if (acc.getRole() == 3){                                                            
-                request.getRequestDispatcher("FE_Admin/Admin_Home.jsp").forward(request, response);
+                Lecturers lecturer = lec.getLecturerByid(acc.getLid());
+                session.setAttribute("role", acc.getRole());  
+                request.setAttribute("list", lecturer);
+                response.sendRedirect("liststudent?lid=" + acc.getLid());
+            } else if (acc.getRole() == 3) {
+                response.sendRedirect("admin");
             }
 
             request.setAttribute("err", "Login Success");
@@ -65,7 +70,7 @@ public class Login extends HttpServlet {
             request.setAttribute("err", "username or password invalid!!! Please try again.");
 
         }
-        request.getRequestDispatcher("FE_Parent/Login.jsp").forward(request, response);
+       
     }
 
     @Override

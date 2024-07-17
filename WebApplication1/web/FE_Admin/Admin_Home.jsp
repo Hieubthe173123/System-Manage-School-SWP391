@@ -210,7 +210,7 @@
                     
                     <li><button onclick="window.location.href = 'schedule';">Quản Lý Lịch Học</button></li>
                     
-                    <li><button onclick="window.location.href = 'admin/searchMenu?date=${sessionScope.dateN}';">Quản Lý Thực Đơn</button></li>
+                    <li><button onclick="window.location.href = 'searchMenu?date=${sessionScope.dateN}';">Quản Lý Thực Đơn</button></li>
                     
                     <li><button onclick="window.location.href = 'session';">Quản Lý Chương Trình Học</button></li>
                     

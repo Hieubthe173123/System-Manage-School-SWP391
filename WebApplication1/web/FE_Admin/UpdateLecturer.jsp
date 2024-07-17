@@ -65,7 +65,7 @@
 <body>
 <div class="container">
     <div class="text-center">
-        <button onclick="window.location.href = 'lecturers'">Back To Lecturers</button>
+        <button class="btn btn-info" onclick="window.location.href = 'lecturers'">Back To Lecturers</button>
         <button class="btn btn-info mr-2" onclick="showForm('updateLecturerCard')">Update Lecturer</button>
         <button class="btn btn-info" onclick="showForm('updateClassCard')">Update Class</button>
     </div>
@@ -147,6 +147,7 @@
                         </select>
                     </div>
                     <button type="submit" class="btn btn-primary">Update Class</button>
+                  
                 </form>
             </div>
         </div>

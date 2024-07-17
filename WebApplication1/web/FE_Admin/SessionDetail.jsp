@@ -161,7 +161,7 @@
                 <h1 class="text-center mb-4" style="color: #39BACD;">Course Information</h1>
                 <div class="mb-3 d-flex justify-content-between align-items-start">
                     <div>
-                        <button onclick="window.location.href = 'session'">Back To Session</button>
+                        <button class="btn btn-info" onclick="window.location.href = 'session'">Back To Session</button>
                         <h2 style="color: #39BACD;">Available Sessions</h2>
                         <div class="table-responsive">
                             <table class="table table-bordered">

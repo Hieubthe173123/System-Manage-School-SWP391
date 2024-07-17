@@ -93,6 +93,7 @@
                                     </select>
                                 </div>
                                 <button type="submit" class="btn btn-primary">Add</button>
+                                <button type="submit" class="btn btn-danger" onclick="window.location.href='lecturers'">Cancel</button>
                             </form>
                         </div>
                     </div>

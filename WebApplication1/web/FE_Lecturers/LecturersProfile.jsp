@@ -69,11 +69,13 @@
 <body>
     <div class="sidebar">
         <h2>Dashboard</h2>
-        <a  href="update-lecturers?lid=${lecturers.lid}&lname=${lecturers.lname}&dob=${lecturers.dob}&phoneNumber=${lecturers.phoneNumber}&IDcard=${lecturers.IDcard}&address=${lecturers.address}&email=${lecturers.email}&nickname=${lecturers.nickname}">Update Profile</a>
+        <a href="update-lecturers?lid=${lecturers.lid}&lname=${lecturers.lname}&dob=${lecturers.dob}&phoneNumber=${lecturers.phoneNumber}&IDcard=${lecturers.IDcard}&address=${lecturers.address}&email=${lecturers.email}&nickname=${lecturers.nickname}">Update Profile</a>
         <a href="changepass">Change Password</a>
+        <a href="${pageContext.request.contextPath}/logout" >Logout</a>
     </div>
     <div class="content">
         <div class="container mt-3">
+            <button class="btn btn-primary"><a href="timeTableLecturer?lid=${sessionScope.lid}" style="color: white">Home</a></button>
             <form id="lecturersForm" action="lecturers-profile" method="post">
                 <div class="row">
                     <div class="col-md-12">

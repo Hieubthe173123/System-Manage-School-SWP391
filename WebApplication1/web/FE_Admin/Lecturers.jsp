@@ -9,17 +9,35 @@
     <!-- Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        /* Additional custom styles if needed */
-        .header-buttons .form-control {
-            max-width: 200px;
+        /* Custom styles for better appearance */
+        body {
+            background-color: #f8f9fa;
         }
-        /* Make the container and table wider */
         .container {
-            max-width: 100% !important;
-            padding: 0;
+            margin-top: 50px;
         }
-        table {
-            width: 100%;
+        header {
+            background-color: #343a40;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+        }
+        table thead {
+            background-color: #007bff;
+            color: white;
+        }
+        table tbody tr:hover {
+            background-color: #f1f1f1;
+        }
+        .actions .btn {
+            margin-right: 5px;
+        }
+        .btn-search {
+            background-color: #28a745;
+            color: white;
+        }
+        .btn-add, .btn-history {
+            color: white;
         }
     </style>
     <script>
@@ -28,26 +46,32 @@
                 window.location.href = 'delete-lecturer?lid=' + lid;
             }
         }
+
+        function search() {
+            // Your search logic here
+        }
     </script>
 </head>
 <body>
-    <div class="container">
-        <header class="d-flex justify-content-between align-items-center bg-dark text-light p-3 mt-4">
+        <header class="d-flex justify-content-between align-items-center">
+            <div>
+                <button class="btn btn-light" onclick="window.location.href='adminhome'">Back to home</button>
+            </div>
             <div class="date-range fs-5">
                 <span id="dateStart">${sc.dateStart}</span> - <span id="dateEnd">${sc.dateEnd}</span>
             </div>
             <div class="header-buttons d-flex">
                 <div class="input-group me-2">
                     <input type="text" class="form-control" placeholder="Search">
-                    <button class="btn btn-success" onclick="search()">Search</button>
+                    <button class="btn btn-search" onclick="search()">Search</button>
                 </div>
-                <button class="btn btn-primary mx-2" onclick="window.location.href = 'add-lecturer'">Add</button>
-                <button class="btn btn-secondary" onclick="window.location.href = 'history?yid=${sc.yid}'">History</button>
+                <button class="btn btn-primary btn-add mx-2" onclick="window.location.href = 'add-lecturer'">Add</button>
+                <button class="btn btn-secondary btn-history" onclick="window.location.href = 'history?yid=${sc.yid}'">History</button>
             </div>
         </header>
         <main class="mt-4">
             <table class="table table-bordered table-hover">
-                <thead class="thead-light">
+                <thead>
                     <tr>
                         <th>ID</th>
                         <th>Name</th>
@@ -85,7 +109,7 @@
                             <td class="actions text-center">
                                 <div class="btn-group" role="group">
                                     <button class="btn btn-sm btn-warning" onclick="window.location.href = 'update-lecturers?lid=${lcs.lid.lid}'">Update</button>
-                                    <button class="btn btn-sm btn-danger ml-2" onclick="confirmDelete('${lcs.lid.lid}')">Delete</button>
+                                    <button class="btn btn-sm btn-danger" onclick="confirmDelete('${lcs.lid.lid}')">Delete</button>
                                 </div>
                             </td>
                         </tr>
@@ -93,9 +117,8 @@
                 </tbody>
             </table>
         </main>
-    </div>
 
-    <!-- Bootstrap JS and dependencies if needed -->
+    <!-- Bootstrap JS and dependencies -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.slim.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
 </body>

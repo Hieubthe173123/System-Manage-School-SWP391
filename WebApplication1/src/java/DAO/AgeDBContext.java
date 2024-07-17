@@ -18,6 +18,29 @@ import java.util.List;
  */
 public class AgeDBContext extends DBContext {
 
+    public List<AgeCategory> getAge() {
+        List<AgeCategory> list = new ArrayList<>();
+        PreparedStatement stm = null;
+        ResultSet rs = null;
+
+        try {
+            String sql = "SELECT * FROM Age_Category";
+            stm = connection.prepareStatement(sql);
+            rs = stm.executeQuery();
+
+            while (rs.next()) {
+                AgeCategory age = new AgeCategory();
+                age.setAgeid(rs.getInt("ageid"));
+                age.setAname(rs.getString("aname"));
+                list.add(age);
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+
+        return list;
+    }
+
     public AgeCategory getAgeById(int id) {
         AgeCategory age = new AgeCategory();
         try {
@@ -38,34 +61,25 @@ public class AgeDBContext extends DBContext {
         }
         return null;
     }
-    public List<AgeCategory> getAge() {
-    List<AgeCategory> list = new ArrayList<>();
-    PreparedStatement stm = null;
-    ResultSet rs = null;
-    
-    try {
-        String sql = "SELECT * FROM Age_Category";
-        stm = connection.prepareStatement(sql);
-        rs = stm.executeQuery();
-        
-        while (rs.next()) {
-            AgeCategory age = new AgeCategory();
-            age.setAgeid(rs.getInt("ageid"));
-            age.setAname(rs.getString("aname"));
-            list.add(age);
-        }
-    } catch (SQLException e) {
+
+    public List<AgeCategory> getAllAgeCategory() {
+        List<AgeCategory> list = new ArrayList<>();
+        try {
+            String sql = "SELECT [ageid]\n"
+                    + "      ,[aname]\n"
+                    + "  FROM [SchoolManagement].[dbo].[Age_Category]";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                AgeCategory age = new AgeCategory();
+                age.setAgeid(rs.getInt("ageid"));
+                age.setAname(rs.getString("aname"));
+                list.add(age);
+            }
+        } catch (SQLException e) {
             System.out.println(e);
         }
-    
-    return list;
-}
-
-    
-    public static void main(String[] args) {
-        AgeDBContext age = new AgeDBContext();
-        List<AgeCategory> list = age.getAge();
-        System.out.println(list);
+        return list;
     }
-  
+
 }

@@ -41,10 +41,9 @@ public class MealTimeDBContext extends DBContext {
     public List<MealTime> getAllMealTime() {
         List<MealTime> meal = new ArrayList<>();
         try {
-            String sql = "SELECT [foodid]\n"
-                    + "      ,[fname]\n"
-                    + "      ,[calo]\n"
-                    + "  FROM [SchoolManagement].[dbo].[Food]";
+            String sql = "SELECT [mealID]\n"
+                    + "      ,[mealName]\n"
+                    + "  FROM [SchoolManagement].[dbo].[Meal_Time]";
             PreparedStatement stm = connection.prepareStatement(sql);
             ResultSet rs = stm.executeQuery();
             while (rs.next()) {

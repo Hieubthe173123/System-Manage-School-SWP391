@@ -7,7 +7,6 @@ package DAO;
 import java.sql.*;
 import Entity.Class;
 import Entity.ClassSession;
-import Entity.Lecturers_Class_Session;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -38,7 +37,7 @@ public class ClassDBContext extends DBContext {
         }
         return null;
     }
-
+    
     public List<ClassSession> getAllClass() {
         List<ClassSession> list = new ArrayList<>();
         try {
@@ -55,6 +54,27 @@ public class ClassDBContext extends DBContext {
                 ClassSession cs = new ClassSession();
                 cs.setClassID(cl);
                 list.add(cs);
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return list;
+    }
+
+    public ArrayList<Class> getClassById2(int id) {
+        ArrayList<Class> list = new ArrayList<>();
+        try {
+            String sql = "SELECT [classID]\n"
+                    + "      ,[clname] FROM [SchoolManagement].[dbo].[Class] where classID = ?";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setInt(1, id);
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                Class cla = new Class();
+                cla.setClassid(rs.getInt("classID"));
+                cla.setClname(rs.getString("clname"));
+
+                list.add(cla);
             }
         } catch (SQLException e) {
             System.out.println(e);
@@ -102,11 +122,5 @@ public class ClassDBContext extends DBContext {
             Logger.getLogger(RoomDBContext.class.getName()).log(Level.SEVERE, null, ex);
         }
         return list;
-    }
-
-    public static void main(String[] args) {
-        ClassDBContext cl = new ClassDBContext();
-        List<ClassSession> list = cl.getAllClass();
-        System.out.println(list);
     }
 }

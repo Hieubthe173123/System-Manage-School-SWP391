@@ -8,6 +8,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 @WebServlet(name = "AddSessionDetail", urlPatterns = {"/add-session"})
 public class AddSessionDetail extends HttpServlet {
@@ -31,17 +32,19 @@ public class AddSessionDetail extends HttpServlet {
         SessionDetailDBContext sdb = new SessionDetailDBContext();
         int count = sdb.getTotalSession(sid);
         int totalSession = s.SessionNumber(sid);
+        HttpSession session = request.getSession();
+
         if (count < totalSession) {
             sdb.insertSession(sid);
             // Redirect to the referer URL
             String referer = request.getHeader("referer");
             response.sendRedirect(referer);
         } else {
-            // Append the error message as a query parameter and redirect back to referer
-            String referer = request.getHeader("referer");
+            // Set the error message in session and redirect back to referer
             String errorMessage = "Error: Maximum number of sessions reached.";
-            String redirectUrl = referer + (referer.contains("?") ? "&" : "?") + "errorMessage=" + java.net.URLEncoder.encode(errorMessage, "UTF-8");
-            response.sendRedirect(redirectUrl);
+            session.setAttribute("errorMessage", errorMessage);
+            String referer = request.getHeader("referer");
+            response.sendRedirect(referer);
         }
     }
 

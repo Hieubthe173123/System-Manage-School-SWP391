@@ -6,7 +6,6 @@
         <meta charset="UTF-8">
         <title>Add Curriculum</title>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-        <link rel="stylesheet" href="styles.css">
         <style>
             body {
                 background-color: #b3d9ff;
@@ -27,14 +26,6 @@
             .card-body {
                 padding: 2rem;
             }
-            input[type=number]::-webkit-outer-spin-button,
-            input[type=number]::-webkit-inner-spin-button {
-                -webkit-appearance: none;
-                margin: 0;
-            }
-            input[type=number] {
-                -moz-appearance: textfield;
-            }
         </style>
     </head>
     <body>
@@ -45,20 +36,19 @@
                         <div class="card-header">
                             <h2>Add Curriculum</h2>
                         </div>
-                        <button onclick="window.location.href = 'session-detail?sid=${param.sid}&sdid=${param.sdid}'">Back To Session Detail</button>
                         <div class="card-body">
-                            <c:if test="${not empty errorMessage}">
-                                <div class="alert alert-danger">${errorMessage}</div>
+                            <button class="btn btn-secondary mb-3" onclick="window.location.href = 'session-detail?sid=${param.sid}&sdid=${param.sdid}'">Back To Session Detail</button>
+                            <c:if test="${not empty sessionScope.message}">
+                                <div class="alert alert-${sessionScope.messageType == 'success' ? 'success' : 'danger'}">
+                                    ${sessionScope.message}
+                                </div>
+                                <c:remove var="message" scope="session"/>
+                                <c:remove var="messageType" scope="session"/>
                             </c:if>
                             <form action="add-curiculum" method="POST">
-                                 <c:if test="${not empty requestScope.success}">
-                                    <div class="alert alert-success" role="alert">
-                                        ${requestScope.success}
-                                    </div>
-                                </c:if>
                                 <c:if test="${not empty param.sid}">
-                                    <input type="hidden" name="sid" value="${param.sid}" >
-                                 </c:if>
+                                    <input type="hidden" name="sid" value="${param.sid}">
+                                </c:if>
                                 <c:if test="${not empty param.sdid}">
                                     <input type="hidden" name="sdid" value="${param.sdid}">
                                 </c:if>
@@ -85,10 +75,33 @@
                                 </div>
                                 <button type="submit" class="btn btn-primary">Add</button>
                             </form>
+                            <table class="table table-bordered mt-4">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th>Activity</th>
+                                        <th>Start Time</th>
+                                        <th>End Time</th>
+                                        <th>Type</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <c:forEach var="activity" items="${requestScope.list}">
+                                        <tr>
+                                            <td>${activity.nameAct}</td>
+                                            <td>${activity.timeStart}</td>
+                                            <td>${activity.timeEnd}</td>
+                                            <td><c:out value="${activity.isFix ? 'Fixed Activity' : 'Normal Activity'}" /></td>
+                                        </tr>
+                                    </c:forEach>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     </body>
 </html>

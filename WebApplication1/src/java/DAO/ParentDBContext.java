@@ -5,6 +5,7 @@
 package DAO;
 
 import Entity.Parent;
+import Entity.Student;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -192,7 +193,7 @@ public class ParentDBContext extends DBContext {
 
             stmInsertParent.executeUpdate();
 
-            //add account
+            //add account           
             String sqlAccount = "INSERT INTO [dbo].[Account]([username],[password],[role],[pid],[status]) "
                     + "SELECT phoneNumber, FLOOR(RAND()*100000),'1',pid,'1' "
                     + "FROM Parent WHERE pid = (SELECT MAX(pid) FROM Parent)";
@@ -218,6 +219,21 @@ public class ParentDBContext extends DBContext {
                 Logger.getLogger(ParentDBContext.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+    }
+
+    public int getMaxParentId() {
+        int maxPid = 0;
+        try {
+            String sql = "SELECT MAX(pid) AS maxPid FROM Parent";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                maxPid = rs.getInt("maxPid");
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ParentDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return maxPid;
     }
 
     //get all parent active
@@ -381,8 +397,8 @@ public class ParentDBContext extends DBContext {
         }
         return exists;
     }
-    
-      public boolean isPhoneNumberExists(String phoneNumber) {
+
+    public boolean isPhoneNumberExists(String phoneNumber) {
         try {
             String sql = "SELECT COUNT(*) FROM Parent WHERE phoneNumber = ?";
             PreparedStatement stm = connection.prepareStatement(sql);
@@ -396,7 +412,6 @@ public class ParentDBContext extends DBContext {
         }
         return false;
     }
-
 
     //Count the number of parents for pagination
     public int getTotalParent() {
@@ -445,21 +460,63 @@ public class ParentDBContext extends DBContext {
             Logger.getLogger(ParentDBContext.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    
-    public boolean isEmailExists(String email) {
-    try {
-        String sql = "SELECT COUNT(*) AS count FROM [SchoolManagement].[dbo].[Parent] WHERE [Email] = ?";
-        PreparedStatement stm = connection.prepareStatement(sql);
-        stm.setString(1, email);
-        ResultSet rs = stm.executeQuery();
-        if (rs.next()) {
-            return rs.getInt("count") > 0;
-        }
-    } catch (SQLException ex) {
-        Logger.getLogger(ParentDBContext.class.getName()).log(Level.SEVERE, null, ex);
-    }
-    return false;
-}
 
+    public boolean isEmailExists(String email) {
+        try {
+            String sql = "SELECT COUNT(*) AS count FROM [SchoolManagement].[dbo].[Parent] WHERE [Email] = ?";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setString(1, email);
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("count") > 0;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ParentDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
 }
+    //get all active parents with associated student name
+//    public List<Student> getAllParent(int index) {
+//    List<Student> studentList = new ArrayList<>();
+//    try {
+//        String sql = "SELECT p.pid, p.pname, p.gender, p.dob, p.phoneNumber, p.IDcard, p.Address, p.Email, p.NickName,s.stuid, s.sname " +
+//                     "FROM Parent p " +
+//                     "LEFT JOIN Student s ON p.pid = s.pid " +
+//                     "WHERE p.status = 1 " +
+//                     "ORDER BY p.pid " +
+//                     "OFFSET ? ROWS FETCH NEXT 10 ROWS ONLY";
+//        PreparedStatement stm = connection.prepareStatement(sql);
+//        stm.setInt(1, (index - 1) * 10);
+//        ResultSet rs = stm.executeQuery();
+//        while (rs.next()) {
+//            Parent p = new Parent();
+//            p.setPid(rs.getInt("pid"));
+//            p.setPname(rs.getString("pname"));
+//            p.setGender(rs.getBoolean("gender"));
+//            p.setDob(rs.getString("dob"));
+//            p.setPhoneNumber(rs.getString("phoneNumber"));
+//            p.setIDcard(rs.getString("IDcard"));
+//            p.setEmail(rs.getString("Email"));
+//            p.setAddress(rs.getString("Address"));
+//            p.setNickname(rs.getString("NickName"));
+//            
+//            Student stu = new Student();
+//            stu.setPid(p);
+//            stu.setStuid(rs.getInt("stuid"));
+//            stu.setSname(rs.getString("sname"));
+//            
+//            
+//            studentList.add(stu);
+//        }
+//    } catch (SQLException ex) {
+//        Logger.getLogger(ParentDBContext.class.getName()).log(Level.SEVERE, null, ex);
+//    }
+//    return studentList;
+//}
+//    public static void main(String[] args) {
+//        ParentDBContext p = new ParentDBContext();
+//        List<Student> list = p.getAllParent(1);
+//        System.out.println(list);
+//    }
+//}

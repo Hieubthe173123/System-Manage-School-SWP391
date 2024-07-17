@@ -58,9 +58,9 @@
                     </form>
                 </div>
                 <div class="col-sm-6 text-right">
-                    <a href="add-parent" class="btn btn-primary" id="addNewParentBtn">Add New Parent</a>
+                    <a href="add-parent" class="btn btn-primary" id="addNewParentBtn">Add New Parent and Student</a>
                     <a href="parent-inactive" class="btn btn-primary" id="viewInactiveParentBtn">Inactive Parent</a>
-                     <a href="student" class="btn btn-secondary" id="backToStudentBtn">Back to Student</a>
+                    <a href="student" class="btn btn-secondary" id="backToStudentBtn">Back to Student</a>
                 </div>
             </div>
 
@@ -77,7 +77,8 @@
                         <th>Address</th>
                         <th>Email</th>
                         <th>Nickname</th>
-<!--                        <th>Update</th>-->
+<!--                        <th>Student Name</th>-->
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -95,9 +96,7 @@
                                     <td>${parent.address}</td>
                                     <td>${parent.email}</td>
                                     <td>${parent.nickname}</td>
-<!--                                    <td>
-                                        <button type="button" class="btn btn-warning btn-sm" onclick="showUpdateModal('${parent.pid}')">Update</button>
-                                    </td>-->
+
 
                                 </tr>
                             </c:forEach>
@@ -106,7 +105,7 @@
                             <c:forEach var="parent" items="${parentList}" varStatus="status">
                                 <tr>
                                     <td>${status.index + 1 + (index - 1) * 10}</td>
-                                    <td>${parent.pid}</td>
+                                     <td>${parent.pid}</td>
                                     <td>${parent.pname}</td>
                                     <td>${parent.gender ? 'Male' : 'Female'}</td>
                                     <td>${parent.dob}</td>
@@ -115,12 +114,14 @@
                                     <td>${parent.address}</td>
                                     <td>${parent.email}</td>
                                     <td>${parent.nickname}</td>
-<!--                                    <td>
-                                        <button type="button" class="btn btn-warning btn-sm" onclick="showUpdateModal('${parent.pid}')">Update</button>
-                                    </td>-->
+
+                                    <td>
+                                        <a class="btn btn-warning btn-sm" href="add-student?pid=${parent.pid}" class="btn btn-primary btn-sm">Add Student</a>
+                                    </td>
                                 </tr>
                             </c:forEach>
                         </c:otherwise>
+
                     </c:choose>
                 </tbody>
             </table>
@@ -195,16 +196,6 @@
             </style>
             <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
             <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
-<!--            <script>
-                               let updateParentId; // store the ID of the parent to be updated
-
-                               // Function to display status update modal
-                               function showUpdateModal(pid) {
-                                   updateParentId = pid; // Save parent ID
-                                   $('#pid').val(pid); // Set the value of hidden input
-                                   $('#updateModal').modal('show'); // display modal
-                               }
-            </script>-->
 
 
     </body>

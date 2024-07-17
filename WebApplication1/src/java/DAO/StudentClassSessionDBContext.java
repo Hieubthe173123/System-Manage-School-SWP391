@@ -541,7 +541,7 @@ public class StudentClassSessionDBContext extends DBContext {
     
     
     //add new student 
-    public boolean addNewtudent(String sname, String dob, boolean gender, String address, int pid, int classID) {
+    public boolean addNewStudent(String sname, String dob, boolean gender, String address, int pid, int classID) {
 
         PreparedStatement insert = null;
         PreparedStatement insertStuToClass = null;

@@ -41,17 +41,46 @@ public class AddStudentController extends HttpServlet {
         processRequest(request, response);
     }
 
-    @Override
+  @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String sName = request.getParameter("sName");
         String sDob = request.getParameter("sDob");
         boolean sGender = Boolean.parseBoolean(request.getParameter("sGender"));
         String sAddress = request.getParameter("sAddress");
-        int pid = Integer.parseInt(request.getParameter("pid"));
-        int classId = Integer.parseInt(request.getParameter("classId"));
+        String classIdStr = request.getParameter("classId");
+        String parentIdStr = request.getParameter("parentId");
 
-        //Check validate name, dob, address
+        if (classIdStr == null || classIdStr.trim().isEmpty()) {
+            request.setAttribute("error", "Class ID is required.");
+            processRequest(request, response);
+            return;
+        }
+
+        int classId;
+        try {
+            classId = Integer.parseInt(classIdStr);
+        } catch (NumberFormatException e) {
+            request.setAttribute("error", "Invalid Class ID.");
+            processRequest(request, response);
+            return;
+        }
+
+        if (parentIdStr == null || parentIdStr.trim().isEmpty()) {
+            request.setAttribute("error", "Parent ID is required.");
+            processRequest(request, response);
+            return;
+        }
+
+        int parentId;
+        try {
+            parentId = Integer.parseInt(parentIdStr);
+        } catch (NumberFormatException e) {
+            request.setAttribute("error", "Invalid Parent ID.");
+            processRequest(request, response);
+            return;
+        }
+
         if (sName == null || sName.trim().isEmpty()
                 || sDob == null || sDob.trim().isEmpty()
                 || sAddress == null || sAddress.trim().isEmpty()) {
@@ -70,15 +99,6 @@ public class AddStudentController extends HttpServlet {
             return;
         }
 
-        //Check if parent exists
-        ParentDBContext parentDB = new ParentDBContext();
-        boolean pidExists = parentDB.checkParentIdExists(pid);
-        if (!pidExists) {
-            request.setAttribute("error", "Parent ID does not exist.");
-            processRequest(request, response);
-            return;
-        }
-        //Check if class is empty
         int maxStuInClass = 20;
         StudentClassSessionDBContext stuDB = new StudentClassSessionDBContext();
         int totalStudentsInClass = stuDB.getTotalStudentsByClassId(String.valueOf(classId));
@@ -89,14 +109,12 @@ public class AddStudentController extends HttpServlet {
         }
 
         StudentClassSessionDBContext stu = new StudentClassSessionDBContext();
-
-        boolean success = stu.addNewtudent(sName, sDob, sGender, sAddress, pid, classId);
-        response.sendRedirect("student");
+        boolean success = stu.addNewStudent(sName, sDob, sGender, sAddress, parentId, classId);
+        response.sendRedirect("parent");
     }
 
     @Override
     public String getServletInfo() {
         return "Short description";
-    }// </editor-fold>
-
+    }
 }

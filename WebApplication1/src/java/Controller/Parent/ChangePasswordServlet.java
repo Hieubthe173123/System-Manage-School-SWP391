@@ -85,6 +85,9 @@ public class ChangePasswordServlet extends HttpServlet {
         } else if (!newPass.equals(confirmPass)) {
             request.setAttribute("mess", "New password and confirm password do not match!");
             
+         } else if (!isPasswordStrong(newPass)) {
+            request.setAttribute("mess", "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, and one special character!");
+
         } else {
             AccountDBContext acc = new AccountDBContext();
             request.setAttribute("mess", "Change password successfully!");
@@ -94,6 +97,13 @@ public class ChangePasswordServlet extends HttpServlet {
         }
         request.getRequestDispatcher("/FE_Parent/ChangePassWord.jsp").forward(request, response);
     }
+     private boolean isPasswordStrong(String password) {
+        return password.length() >= 8 &&
+               password.matches(".*[A-Z].*") &&
+               password.matches(".*[a-z].*") &&
+               password.matches(".*[!@#$%^&*()-_=+\\|[{]};:'\",<.>/?].*");
+    }
+ 
 
     @Override
     public String getServletInfo() {

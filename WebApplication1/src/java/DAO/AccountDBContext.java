@@ -42,7 +42,18 @@ public class AccountDBContext extends DBContext {
             Logger.getLogger(AccountDBContext.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
+     //change password lecturer
+     public void changePassLecurers(int id, String newPass) {
+        try {
+            String sql = "UPDATE Account SET password = ? WHERE lid = ?";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setString(1, newPass);
+            stm.setInt(2, id);
+            stm.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(AccountDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
     public Account getByUsernamePassword(String username, String password) {
         try {
             String sql = "SELECT [aid]\n"

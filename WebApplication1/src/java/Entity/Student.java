@@ -14,17 +14,19 @@ public class Student {
     private boolean gender;
     private String dob;
     private String address;
+    private boolean status; 
     private Parent pid;
 
     public Student() {
     }
 
-    public Student(int stuid, String sname, boolean gender, String dob, String address, Parent pid) {
+    public Student(int stuid, String sname, boolean gender, String dob, String address, boolean status, Parent pid) {
         this.stuid = stuid;
         this.sname = sname;
         this.gender = gender;
         this.dob = dob;
         this.address = address;
+        this.status = status;
         this.pid = pid;
     }
 
@@ -67,6 +69,14 @@ public class Student {
         this.address = address;
     }
 
+     public boolean isStatus() {
+        return status;
+    }
+
+    public void setStatus(boolean status) {
+        this.status = status;
+    }
+    
     public Parent getPid() {
         return pid;
     }
@@ -77,7 +87,7 @@ public class Student {
 
     @Override
     public String toString() {
-        return "Student{" + "stuid=" + stuid + ", sname=" + sname + ", gender=" + gender + ", dob=" + dob + ", address=" + address + ", pid=" + pid + '}';
+        return "Student{" + "stuid=" + stuid + ", sname=" + sname + ", gender=" + gender + ", dob=" + dob + ", address=" + address + ", status=" + status + ", pid=" + pid + '}';
     }
     
     

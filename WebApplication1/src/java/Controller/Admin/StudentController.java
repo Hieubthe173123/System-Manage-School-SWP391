@@ -4,9 +4,14 @@
  */
 package Controller.Admin;
 
+import DAO.ClassDBContext;
+import DAO.Class_SessionDBContext;
 import DAO.SchoolYearDBContext;
 import DAO.StudentClassSessionDBContext;
-import Entity.SchoolYear;
+import DAO.StudentDBContext;
+import Entity.Student;
+import Entity.Class;
+import Entity.ClassSession;
 import Entity.StudentClassSession;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -26,51 +31,67 @@ public class StudentController extends HttpServlet {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        StudentClassSessionDBContext stu = new StudentClassSessionDBContext();
-        SchoolYearDBContext sy = new SchoolYearDBContext();
-        List<StudentClassSession> list = stu.getAllStudentClassSession();
-        request.setAttribute("list", list);
 
-        List<SchoolYear> list2 = sy.getAllSchoolYear();
-        request.setAttribute("listB", list2);
+        response.setContentType("text/html;charset=UTF-8");
+
+        StudentClassSessionDBContext stuDB = new StudentClassSessionDBContext();
+        StudentDBContext sdc = new StudentDBContext();
+        //ClassDBContext cdb = new ClassDBContext();
+        Class_SessionDBContext cl = new Class_SessionDBContext();
+        SchoolYearDBContext sy = new SchoolYearDBContext();
+
+        String classId = request.getParameter("classId");
+        String indexPage = request.getParameter("index");
+
+        if (indexPage == null) {
+            indexPage = "1";
+        }
+        int index = Integer.parseInt(indexPage);
+
+        //List<Class> classList = cdb.getAllClasses();
+        List<ClassSession> classIDs = cl.getAllClass();
+        request.setAttribute("classIDs", classIDs);
+
+        if (classId != null && !classId.isEmpty()) {
+            List<StudentClassSession> studentList = stuDB.getStudentsByClassIdWithPaging(classId, index);
+            int count = stuDB.getTotalStudentsByClassId(classId);
+            int endPage = count / 10;
+            if (count % 10 != 0) {
+                endPage++;
+            }
+            request.setAttribute("studentList", studentList);
+            request.setAttribute("index", index);
+            request.setAttribute("endPage", endPage);
+            request.setAttribute("classId", classId);
+        } else {
+
+            // Get students for the latest school year
+            List<StudentClassSession> studentList = stuDB.getStudentClassSessionByLatestSchoolYearWithPaging( index);
+            int count = stuDB.getTotalStudentByLatestSchoolYear();
+            int endPage = count / 10;
+            if (count % 10 != 0) {
+                endPage++;
+            }
+            request.setAttribute("allStudent", studentList);
+            request.setAttribute("index", index);
+            request.setAttribute("endPage", endPage);
+        }
+
         request.getRequestDispatcher("FE_Admin/CRUD_Student.jsp").forward(request, response);
     }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
     }
 
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
     }
 
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
     @Override
     public String getServletInfo() {
         return "Short description";

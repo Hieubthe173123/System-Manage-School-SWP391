@@ -153,7 +153,7 @@
         <h1>Session Management</h1>
         <div class="action-buttons">
             <div class="left">
-                <button onclick="window.location.href = 'home'">Back to Home</button>
+                <button onclick="window.location.href = 'adminhome'">Back to Home</button>
             </div>
             <div class="search-bar">
                 <form action="session" method="get">

@@ -43,7 +43,7 @@
             <div class="col-md-6 offset-md-3">
                 <div class="card">
                     <div class="card-header">
-                        <h2>Add Lecturers Profile</h2>
+                        <h2>Add Session</h2>
                     </div>
                     <div class="card-body">
                         <form action="add-sessions" method="POST">

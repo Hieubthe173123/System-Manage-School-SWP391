@@ -78,6 +78,7 @@ public class Login extends HttpServlet {
                 List<Student> list = stu.getStudentByPid(acc.getPid().getPid());
                 session.setAttribute("role", acc.getRole());
                 session.setAttribute("pid", acc.getPid().getPid());
+                session.setAttribute("stuid", list.get(0).getStuid());
                 response.sendRedirect("parent/timetable?stuid=" + list.get(0).getStuid());
             } else if (acc.getRole() == 2) {
                 Lecturers lectu = lec.getLecturerByid(acc.getLid().getLid());

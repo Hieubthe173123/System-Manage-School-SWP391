@@ -62,7 +62,7 @@ public class AddSchedules extends BaseRBACController {
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response, Account account)
-            throws ServletException, IOException {
+    throws ServletException, IOException {
         String csid = request.getParameter("csid");
         String sdid = request.getParameter("sdid");
         String date = request.getParameter("date");
@@ -101,9 +101,9 @@ public class AddSchedules extends BaseRBACController {
                 }
             }
         }
-        if (csid != null && !csid.isEmpty() && !csid.equals("0")) {
-            
-            // Lấy ra những buổi đã học và chưa học của 1 lớp trong năm học này
+        if (csid != null && !csid.isEmpty()) {
+
+            // Lấy ra những buổi đã học và chưa học củae 1 lớp trong năm học này
             List<Schedules> listSchedulesUnlearn = sb.getAllUnclassifiedSessionsDetail(Integer.parseInt(csid), classS.getSidByCsid(Integer.parseInt(csid)).getSid().getSid());
             List<Schedules> listSchedulesLearn = sb.getSchedulesByCsid(Integer.parseInt(csid));
             // Check null và gửi data sang jsp
@@ -135,7 +135,7 @@ public class AddSchedules extends BaseRBACController {
 
         session.setAttribute("csid", csid);
         session.setAttribute("sdid", sdid);
-        request.getRequestDispatcher("/FE_Lecturers/AddSchedules.jsp").forward(request, response);
+            request.getRequestDispatcher("/FE_Lecturers/AddSchedules.jsp").forward(request, response);
     }
 
     /**

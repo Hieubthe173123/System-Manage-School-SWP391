@@ -76,6 +76,7 @@
     <body>
         <div class="content-wrapper">
             <h1>Account List</h1>
+
             <form action="account-list" method="GET">
                 <div class="form-group">
                     <label for="roleSelect">Select Role:</label>
@@ -97,10 +98,7 @@
                 </div>
                 <button type="submit" class="btn btn-campus">Show Accounts</button>
             </form>
-
-            <div class="mb-3">
-                <button class="btn btn-campus" onclick="window.location.href = 'authentication-account'">Assign Permissions to Account</button>
-            </div>
+            <button class="btn btn-campus" onclick="window.location.href = 'adminhome'">Back to Home</button>
 
             <div>
                 <table class="table table-striped">
@@ -120,7 +118,7 @@
                     </thead>
                     <tbody>
                         <c:forEach var="acc" items="${sessionScope.accountList}" varStatus="idex">
-                            
+
                             <tr>
                                 <td>${idex.index + 1}</td>
                                 <td>${acc.aid}</td>

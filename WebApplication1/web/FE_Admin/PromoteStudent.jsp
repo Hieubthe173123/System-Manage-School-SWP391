@@ -42,7 +42,8 @@
     <body class="container mt-5">
         <div class="content-wrapper">
             <div class="mb-3">
-                <button class="btn btn-campus" onclick="window.location.href = 'classController'">Back To List</button>
+                <button class="btn btn-campus" onclick="window.location.href = 'adminhome'">Back to Home</button>
+                <button class="btn btn-campus" onclick="window.location.href = 'classController'">Back To View Class</button>
             </div>
         </div>    
         <h1>Promote Students ( <c:out value="${selectedYear[0].dateStart} - ${selectedYear[0].dateEnd}"/> )</h1>

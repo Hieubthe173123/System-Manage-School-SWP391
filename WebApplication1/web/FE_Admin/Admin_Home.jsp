@@ -188,36 +188,21 @@
     <body>
         <div class="sidebar" id="sidebar">
             <div class="profile">
-                <img src="./Image/avatar-icon-vector-11835238.jpg" alt="Profile Image">
+                <img src="../Image/avatar-icon-vector-11835238.jpg" alt="Profile Image">
                 <span>Admin</span>
             </div>
             <nav>
                 <ul>
-
-                    <li><button onclick="window.location.href = 'home';">Trang chủ</button></li>
-                    
-                    <li><button onclick="window.location.href = 'account-list';">Quản Lý tài khoản</button></li>
-                    
-                    <li><button onclick="window.location.href = 'lecturers';">Quản Lý Giáo Viên</button></li>
-                    
-                    <li><button onclick="window.location.href = 'student';">Quản Lý Học Sinh</button></li>
-                    
-                    <li><button onclick="window.location.href = 'classController';">Quản Lý Lớp Học</button></li>
-                    
-                    <li><button onclick="window.location.href = 'newyear';">Quản Lý Năm Học</button></li>
-                    
-                    <li><button onclick="window.location.href = 'promote';">Quản Lý Lên Lớp</button></li>
-                    
-                    <li><button onclick="window.location.href = 'schedule';">Quản Lý Lịch Học</button></li>
-                    
-                    <li><button onclick="window.location.href = 'searchMenu?date=${sessionScope.dateN}';">Quản Lý Thực Đơn</button></li>
-                    
-                    <li><button onclick="window.location.href = 'session';">Quản Lý Chương Trình Học</button></li>
-                    
-                    <li><button onclick="window.location.href = 'historyschoolyear';">Lịch Sử Năm Học</button></li>
-                    
+                    <li><button onclick="window.location.href = 'home';">Home</button></li>
+                    <li><button onclick="window.location.href = 'account-list';">Manage Accounts</button></li>
+                    <li><button onclick="window.location.href = 'lecturers';">Manage Teachers</button></li>
+                    <li><button onclick="window.location.href = 'student';">Manage Students</button></li>
+                    <li><button onclick="window.location.href = 'classController';">Manage SchoolYear/Classes</button></li>
+                    <li><button onclick="window.location.href = 'session';">Manage Curriculum</button></li>
+                    <li><button onclick="window.location.href = 'promote';">Promote Students</button></li>
+                    <li><button onclick="window.location.href = 'searchMenu?date=${sessionScope.dateN}';">Manage Menu</button></li>
+                    <li><button onclick="window.location.href = 'historyschoolyear';">School Year History</button></li>
                     <li><a href="${pageContext.request.contextPath}/logout" class="btn btn-danger">Logout</a></li>
-                    
                 </ul>
             </nav>
         </div>
@@ -231,15 +216,15 @@
                 <div class="cards">
                     <div class="card blue">
                         <h2>${totalAccounts}</h2>
-                        <p>Tài khoản trong hệ thống</p>
+                        <p>Accounts in the System</p>
                     </div>
                     <div class="card green">
                         <h2>${totalStudents}</h2>
-                        <p>Số lượng Học Sinh</p>
+                        <p>Number of Students</p>
                     </div>
                     <div class="card yellow">
                         <h2>${totalTeachers}</h2>
-                        <p>Số lượng Giáo Viên</p>
+                        <p>Number of Teachers</p>
                     </div>
                 </div>
             </main>

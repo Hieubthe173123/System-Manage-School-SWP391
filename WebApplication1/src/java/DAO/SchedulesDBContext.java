@@ -19,7 +19,7 @@ public class SchedulesDBContext extends DBContext {
 
     public static void main(String[] args) {
         SchedulesDBContext d = new SchedulesDBContext();
-        System.out.println(d.getSchedulesByCsIdAndDate(1, "2024-07-11").getSdid().getSdid());
+        d.update("2024-07-20", 4, 1);
     }
 
     public List<Schedules> getAllSessionsDetailByYidAndLid(int yid, int lid) {
@@ -183,14 +183,12 @@ public class SchedulesDBContext extends DBContext {
 
     // Update
     public void update(String date, int sdid, int csid) {
-        String sql = "UPDATE [dbo].[Schedules]\n"
-                + "   SET [Date] = ?\n"
-                + " WHERE sdid = ? and csid = ?";
+        String sql = "  UPDATE [dbo].[Schedules] SET sdid = ?  WHERE [Date] = ? and csid = ?";
         try {
             PreparedStatement st = connection.prepareStatement(sql);
-            st.setString(1, date);
+            st.setString(2, date);
             st.setInt(3, csid);
-            st.setInt(2, sdid);
+            st.setInt(1, sdid);
             st.executeUpdate();
         } catch (SQLException e) {
             System.out.println(e);

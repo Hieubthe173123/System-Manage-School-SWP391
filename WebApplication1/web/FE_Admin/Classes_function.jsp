@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta charset="UTF-8">
         <title>JSP Page</title>
         <!-- Bootstrap CSS -->
         <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
@@ -43,16 +43,22 @@
     </head>
     <body class="container mt-5">
         <div class="content-wrapper">
-            <div class="mb-3">
-                <!-- Thêm nút tạo năm học mới -->
-                <button class="btn btn-campus" onclick="window.location.href = 'adminhome'">Back to Home</button>
-                <button class="btn btn-campus" onclick="window.location.href = 'newyear'">Create New School Year</button>
-                <!-- Nút Add/Update Class Session với kiểm tra JavaScript -->
-                <button class="btn btn-campus" onclick="checkSchoolYearAndRedirect('classSession-add')">Add/Update Class Session</button>
-                <!-- Nút Promote với kiểm tra JavaScript -->
-                <button class="btn btn-campus" onclick="checkSchoolYearAndRedirect('promote')">Promote Student</button>
-                <button class="btn btn-campus" onclick="window.location.href = 'historyschoolyear'">School Year History</button>
+            <div style="margin-bottom: 3%">
+                <h1 style="text-align: center">Class Management</h1>
             </div>
+
+            <div class="mb-3">
+                <button class="btn btn-campus" onclick="window.location.href = 'adminhome'">Back to Home</button>
+                <button class="btn btn-campus" data-toggle="modal" data-target="#createYearModal">Create New School Year</button>
+                <button class="btn btn-campus" onclick="checkSchoolYearAndRedirect('classSession-add')">Add/Update Class Session</button>
+                <button class="btn btn-campus" onclick="checkSchoolYearAndRedirect('promote')">Promote Student</button>
+            </div>
+
+            <c:if test="${not empty err}">
+                <div class="alert alert-danger" role="alert">
+                    ${err}
+                </div>
+            </c:if>
 
             <form action="classController" method="GET" class="form-inline mb-3">
                 <label for="yearSelect" class="mr-2">Select Year:</label>
@@ -139,6 +145,41 @@
             </div>
         </div>
 
+        <!-- Modal for creating new school year -->
+        <div class="modal fade" id="createYearModal" tabindex="-1" role="dialog" aria-labelledby="createYearModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="createYearModalLabel">Create New School Year</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form action="newyear" method="POST">
+                        <div class="modal-body">
+                            <c:if test="${not empty modalError}">
+                                <div class="alert alert-danger" role="alert">
+                                    ${modalError}
+                                </div>
+                            </c:if>
+                            <div class="form-group">
+                                <label for="dateStart">Start Date:</label>
+                                <input type="date" class="form-control" id="dateStart" name="dateStart" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="dateEnd">End Date:</label>
+                                <input type="date" class="form-control" id="dateEnd" name="dateEnd" required>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Save changes</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
         <!-- Bootstrap JS and dependencies -->
         <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
@@ -146,22 +187,28 @@
         <!-- SweetAlert2 library -->
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script>
-                    // Hàm kiểm tra và điều hướng đến trang tương ứng
                     function checkSchoolYearAndRedirect(action) {
-                        // Kiểm tra xem đã chọn năm học chưa
                         var selectedYear = document.getElementById('yearSelect').value;
                         if (!selectedYear || selectedYear === "") {
-                            // Hiển thị thông báo lỗi
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Oops...',
                                 text: 'Please create a new school year before using this functionality!'
                             });
                         } else {
-                            // Chuyển hướng đến trang tương ứng
                             window.location.href = action;
                         }
                     }
+
+                    $(document).ready(function () {
+
+            <c:if test="${not empty modalOpen}">
+                        $('#createYearModal').modal({
+                            backdrop: 'static',
+                            keyboard: false
+                        });
+            </c:if>
+                    });
         </script>
     </body>
 </html>

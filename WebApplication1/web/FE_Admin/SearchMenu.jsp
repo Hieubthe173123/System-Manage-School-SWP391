@@ -94,6 +94,7 @@
     <body>
         <h2>Meals for Children on ${requestScope.date_raw}</h2>
         <div style="display: block">
+            <button class="btn btn-campus" onclick="window.location.href = 'adminhome'">Back to Home</button>
             <button><a href="menu">Enter Today's Meals for All Ages</a></button>
         </div>
 

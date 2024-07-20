@@ -134,7 +134,7 @@
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
-                        <form id="updateParentForm" action="update-tatus-parent" method="post">
+                        <form id="updateParentForm" action="update-status-parent" method="post">
                             <div class="modal-body">
                                 <input type="hidden" id="pid" name="pid">
                                 <div class="form-group">

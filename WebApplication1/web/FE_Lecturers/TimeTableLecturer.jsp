@@ -4,31 +4,48 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <%@page contentType="text/html" pageEncoding="UTF-8"%>
-        <title>Time Table Lecturer</title>
+        <title>Lecturer Timetable</title>
         <style>
+            @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap');
             body {
-                font-family: Arial, sans-serif;
-                background: linear-gradient(to right, whitesmoke 0%, whitesmoke 100%);
+                font-family: 'Fredoka One', cursive;
+                background: #FFFAF0;
                 margin: 0;
                 padding: 0;
                 color: #333;
+                text-align: center;
             }
             header {
-                background: url('https://www.transparenttextures.com/patterns/clean-gray-paper.png');
+                background: #03ADD5;
                 color: white;
-                text-align: center;
                 padding: 1rem;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                margin-bottom: 1rem;
+                position: relative;
+            }
+            header a {
+                position: absolute;
+                right: 1rem;
+                top: 1rem;
+                color: white;
+                text-decoration: none;
+                font-size: 1rem;
+                padding: 0.5rem 1rem;
+                border-radius: 20px;
+                background: #32CD32;
+                transition: background-color 0.3s ease;
+            }
+            header a:hover {
+                background-color: #228B22;
             }
             nav {
-                margin-top: -30px;
-                padding: 1rem;
-                background: #333;
+                background: #03ADD5;
                 color: #fff;
-                text-align: right;
-                position: absolute;
-                top: 50px;
-                right: 10px;
-                border-radius: 50%;
+                text-align: center;
+                padding: 10px;
+                border-radius: 10px;
+                margin: 0 auto 1rem auto;
+                width: 90%;
                 box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             }
             nav a {
@@ -38,65 +55,78 @@
                 transition: color 0.3s ease;
             }
             nav a:hover {
-                color: #fcb69f;
+                color: #FFD700;
             }
             form {
                 display: inline-block;
-                justify-content: center;
-                margin: 1rem;
+                margin: 0.5rem;
             }
             button {
-                background-color: #4CAF50;
+                background-color: #32CD32;
                 color: white;
                 padding: 0.5rem 1rem;
                 border: none;
                 cursor: pointer;
-                border-radius: 4px;
-                align-items: center;
+                border-radius: 20px;
                 transition: background-color 0.3s ease;
                 box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                margin: 0.5rem;
             }
             button:hover {
-                background-color: #45a049;
+                background-color: #228B22;
             }
             hr {
-                margin: 2rem 0;
                 border: 0;
-                border-top: 1px solid #ccc;
+                border-top: 2px dashed #03ADD5;
             }
             h3 {
                 color: #333;
                 text-align: center;
+                margin-bottom: 1rem;
             }
             table {
-                width: 80%;
-                margin: 1rem auto;
+                width: 90%;
+                margin: 0 auto 1rem auto;
                 border-collapse: collapse;
                 box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
                 background: #fff;
-                border-radius: 8px;
+                border-radius: 20px;
                 overflow: hidden;
-                border: 2px solid #ddd; /* Specify border width, style, and color */
+                border: 5px solid #03ADD5;
             }
             th, td {
-                padding: 0.75rem;
-                text-align: left;
-                border-bottom: 1px solid #ddd; /* Add border for rows */
-                border-right: 2px solid #ddd; /* Add border for columns */
+                padding: 1rem;
+                text-align: center;
+                border-bottom: 1px solid #ddd;
             }
             th {
-                background-color: #00b8ec;
+                background-color: #03ADD5;
                 color: white;
-                border-right: 2px solid #ddd; /* Add border for columns */
+                text-align: center;
             }
             tbody tr:last-child td {
-                border-bottom: none; /* Remove bottom border for the last row */
+                border-bottom: none;
             }
             tbody td:last-child {
-                border-right: none; /* Remove right border for the last column */
+                border-right: none;
             }
             .meal-table {
-                border: 2px solid #ddd;
+                width: 90%;
+                margin: 0 auto 1rem auto;
+                border-collapse: collapse;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                background: #fff;
+                border-radius: 20px;
+                border: 5px solid #03ADD5;
+            }
+            .meal-table th {
+                background-color: #03ADD5;
+                color: white;
+                text-align: center;
+            }
+            .meal-table td {
+                border-right: 1px solid #ddd;
+                font-size: 16px;
             }
             @media (max-width: 768px) {
                 body {
@@ -104,51 +134,51 @@
                 }
                 nav {
                     text-align: center;
+                    width: 100%;
                 }
-                table {
+                table, .meal-table {
                     width: 100%;
                 }
             }
         </style>
     </head>
     <body>
-        <nav>
+        <header>
+            <h1>Lecturer Timetable</h1>
             <a href="lecturers-profile?lid=${sessionScope.lid}">Profile</a>
-        </nav>
-        <h2 style="text-align: center">Lecturer Time Table</h2>
+        </header>
 
         <hr/>
 
         <div style="text-align: center">
             <form action="addSchedules" method="GET">
                 <input type="hidden" value="${sessionScope.csid}" name="csid"/>
-                <button>Cập nhật lịch học</button>
+                <button>Update Schedule</button>
             </form>
             <form action="historyOfLecturer" method="POST">
                 <input type="hidden" value="${sessionScope.lid}" name="lid"/>
-                <button>Xem lại lịch sử</button>
+                <button>View History</button>
             </form>           
-                 <form action="liststudent" method="GET">
+            <form action="liststudent" method="GET">
                 <input type="hidden" value="${sessionScope.lid}" name="lid"/>
-                
-                <button onclick="window.location.href='liststudent'">Đánh giá buổi học hôm nay</button>
+                <button>Evaluate Today's Session</button>
             </form>
         </div>
         <hr/>
-        <h3>Lịch dạy ngày ${requestScope.dateNow} hôm nay</h3>
+        <h3>Today's Schedule on ${requestScope.dateNow}</h3>
         <table>
             <thead>
                 <tr>
-                    <th style="width: 10%;">STT</th>
-                    <th style="width: 30%;">Time</th>
-                    <th style="width: 60%;">Name activity</th>
+                    <th>No.</th>
+                    <th>Time</th>
+                    <th>Activity Name</th>
                 </tr>
-            <tbody>
             </thead>
+            <tbody>
                 <c:if test="${requestScope.schedulesToDay != null}">
+                    <c:set var="sch" value="${requestScope.schedulesToDay}"/>
                     <tr>
-                        <c:set var="sch" value="${requestScope.schedulesToDay}"/>
-                        <td>Buổi ${sch.sdid.sessionNumber}</td>
+                        <td>Session ${sch.sdid.sessionNumber}</td>
                         <td>
                             <c:forEach items="${requestScope.curi}" var="c">
                                 <c:if test="${sch.sdid.sdid == c.sdid.sdid}">
@@ -167,27 +197,27 @@
                 </c:if>
                 <c:if test="${requestScope.schedulesToDay == null}">
                     <tr>
-                        <td colspan="3"><h3>Giáo viên chưa cập nhật lịch học cho hôm nay.</h3></td>
+                        <td colspan="3"><h3>The lecturer has not updated the schedule for today.</h3></td>
                     </tr>
                 </c:if>
             </tbody>
         </table>
-        <h3>Bữa ăn hôm nay của các bé</h3>
+        <h3>Today's Meals for Children</h3>
         <table class="meal-table">
             <thead>
                 <tr>
-                    <th>Bữa ăn</th>
-                    <th>Món ăn</th>
+                    <th>Meal</th>
+                    <th>Dish</th>
                 </tr>
             </thead>
-            <c:forEach items="${requestScope.menu}" var="m">
-                <tbody>
+            <tbody>
+                <c:forEach items="${requestScope.menu}" var="m">
                     <tr>
                         <td>${m.mealID.mealName}</td>
                         <td>${m.menu}</td>
                     </tr>
-                </tbody>
-            </c:forEach>
+                </c:forEach>
+            </tbody>
         </table>
     </body>
 </html>

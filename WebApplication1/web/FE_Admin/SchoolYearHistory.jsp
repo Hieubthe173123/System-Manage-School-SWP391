@@ -40,8 +40,9 @@
     <body class="container mt-5">
         <div class="content-wrapper">
             <div class="mb-3">
-                <button class="btn btn-campus" onclick="window.location.href = 'classController'">Back To List</button>
+                <button class="btn btn-campus" onclick="window.location.href = 'adminhome'">Back to Home</button>
             </div>
+            
         </div>
         <h1>History SchoolYear Students</h1>
 

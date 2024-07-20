@@ -19,7 +19,7 @@ import jakarta.servlet.http.HttpServletResponse;
  *
  * @author NGUYEN THI KHANH VI
  */
-@WebServlet(name = "UpdateStatusParent", urlPatterns = {"/admin/update-tatus-parent"})
+@WebServlet(name = "UpdateStatusParent", urlPatterns = {"/admin/update-status-parent"})
 public class UpdateStatusParent extends BaseRBACController {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response, Account account)
@@ -52,6 +52,8 @@ public class UpdateStatusParent extends BaseRBACController {
 
             response.sendRedirect("parent");
         } catch (NumberFormatException e) {
+            System.out.println(e);
+            return;
         }
 
         processRequest(request, response, account);

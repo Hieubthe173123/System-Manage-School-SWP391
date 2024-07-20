@@ -4,7 +4,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Update Lecturers Profile</title>
+    <title>Add Session</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="styles.css">
     <style>
@@ -65,6 +65,7 @@
                                 </select>
                             </div>
                             <button type="submit" class="btn btn-primary">Add</button>
+                            <button type="submit" class="btn btn-danger" onclick="window.location.href='session'">Cancel</button>
                         </form>
                     </div>
                 </div>

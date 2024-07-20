@@ -56,7 +56,6 @@ public class UpdateStatusParent extends BaseRBACController {
             return;
         }
 
-        processRequest(request, response, account);
     }
 
     @Override

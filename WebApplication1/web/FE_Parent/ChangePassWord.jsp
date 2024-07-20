@@ -19,60 +19,32 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
                 Created on : May 18, 2024, 2:16:33 PM
                 Author     : NGUYEN THI KHANH VI
             */
-            * {
-                margin: 0;
-                padding: 0;
-                box-sizing: border-box;
-            }
-
-            body, html {
-                height: 100%;
-                font-family: 'Poppins', sans-serif;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                background: #f3f4f6;
-            }
+            * 
+           
             .container {
-                width: 800px;
-                height: 400px;
                 max-width: 600px;
+                margin: 0 auto;
                 padding: 20px;
                 background: #fff;
                 border-radius: 20px;
                 animation: glow 2s infinite linear;
             }
 
-            @keyframes glow {
-                0% {
-                    box-shadow: 0 0 10px rgba(255, 153, 204, 0.2),
-                        0 0 20px rgba(255, 153, 204, 0.2),
-                        0 0 30px rgba(255, 153, 204, 0.2); /* Màu sáng ở đầu */
-                }
-                100% {
-                    box-shadow: 0 0 40px rgba(255, 153, 204, 0.4),
-                        0 0 60px rgba(255, 153, 204, 0.4),
-                        0 0 80px rgba(255, 153, 204, 0.4); /* Màu sáng ở cuối */
-                }
-            }
+  
 
             .change-password-form {
-                width: 60%;
-                margin: 0 auto;
-                text-align: center;
+              text-align: center;
                 margin-top: 40px;
             }
 
             h1 {
-                margin-bottom: 20px;
-                font-size: 24px;
-                text-align: center;
+               font-size: 24px;
                 color: #333;
             }
 
             .input-group {
-                margin-bottom: 15px;
-                width: 100%;
+                margin-bottom: 20px;
+                text-align: left;
             }
 
             .input-group label {
@@ -83,7 +55,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
             }
 
             .input-group input {
-                width: 100%;
+                width: calc(100% - 30px);
                 padding: 10px 15px;
                 border: 1px solid #ddd;
                 border-radius: 5px;
@@ -99,7 +71,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
 
             .save-button {
                 width: 100%;
-                padding: 12px 20px;
+                padding: 12px 0;
                 background: #00b8ec;
                 border: none;
                 border-radius: 5px;
@@ -111,10 +83,27 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
             }
 
             .save-button:hover {
-                background-color: #0af6fa;
-                box-shadow: 0px 15px 20px rgba (13, 240, 252, 0.4);
-                color: #fff;
-                transform: translateY(-7px);
+                 background-color: #0af6fa;
+            }
+            .back-button {
+                margin-top: 10px;
+                padding: 10px 20px;
+                background: #ddd;
+                border: none;
+                border-radius: 5px;
+                font-size: 14px;
+                color: #333;
+                cursor: pointer;
+                transition: background 0.3s;
+            }
+
+            .back-button:hover {
+                background-color: #ccc;
+            }
+
+            #message {
+                margin-top: 10px;
+                color: red;
             }
 
         </style>
@@ -148,7 +137,11 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
 
                     <button class="back-button" onclick="window.history.back()">Back to previous page</button>
 
-                    <script type="text/javascript">
+                  
+                </form>
+            </div>
+        </div>
+                     <script type="text/javascript">
                         function hideMessage() {
                             var messageElement = document.getElementById("message");
                             if (messageElement) {
@@ -159,8 +152,5 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
                         }
                         window.onload = hideMessage;
                     </script>     
-                </form>
-            </div>
-        </div>
     </body>
 </html>

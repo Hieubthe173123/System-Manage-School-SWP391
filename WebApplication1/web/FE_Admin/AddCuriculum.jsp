@@ -37,7 +37,7 @@
                             <h2>Add Curriculum</h2>
                         </div>
                         <div class="card-body">
-                            <button class="btn btn-secondary mb-3" onclick="window.location.href = 'session-detail?sid=${param.sid}&sdid=${param.sdid}'">Back To Session Detail</button>
+                          
                             <c:if test="${not empty sessionScope.message}">
                                 <div class="alert alert-${sessionScope.messageType == 'success' ? 'success' : 'danger'}">
                                     ${sessionScope.message}
@@ -74,6 +74,7 @@
                                     </select>
                                 </div>
                                 <button type="submit" class="btn btn-primary">Add</button>
+                                  <button class="btn btn-danger" onclick="window.location.href = 'session-detail?sid=${param.sid}&sdid=${param.sdid}'">Cancel</button>
                             </form>
                             <table class="table table-bordered mt-4">
                                 <thead class="thead-dark">

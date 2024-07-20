@@ -66,6 +66,7 @@
                 <div class="col-sm-6 text-right">
                     <a href="parent" class="btn btn-primary" id="parentManagementBtn">Parent Management</a>
                     <a href="inactive-student" class="btn btn-primary" id="viewInactiveStudentsBtn">Inactive Students</a>
+                     <a href="adminhome" class="btn btn-secondary" id="backToHomeBtn">Back to Home</a>
                 </div>
             </div>
             <div class="row mt-3">

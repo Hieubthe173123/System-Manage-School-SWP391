@@ -54,7 +54,6 @@ public class UpdateStatusParent extends BaseRBACController {
         } catch (NumberFormatException e) {
         }
 
-        processRequest(request, response, account);
     }
 
     @Override

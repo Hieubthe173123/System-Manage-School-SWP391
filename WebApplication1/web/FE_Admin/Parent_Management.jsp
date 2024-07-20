@@ -96,7 +96,9 @@
                                     <td>${parent.address}</td>
                                     <td>${parent.email}</td>
                                     <td>${parent.nickname}</td>
-
+                                    <td>
+                                        <a class="btn btn-warning btn-sm" href="add-student?pid=${parent.pid}" class="btn btn-primary btn-sm">Add Student</a>
+                                    </td>
 
                                 </tr>
                             </c:forEach>

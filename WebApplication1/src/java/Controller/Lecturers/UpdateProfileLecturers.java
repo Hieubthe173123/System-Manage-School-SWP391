@@ -91,12 +91,12 @@ public class UpdateProfileLecturers extends BaseRBACController {
             processRequest(request, response, account);
             return;
         }
-        LecturersDBContext lec = new LecturersDBContext();
-        if (lec.isIDCardLecExists(IDCard)) {
-            request.setAttribute("Error", "ID Card already exists.");
-            processRequest(request, response, account);
-            return;
-        }
+//        LecturersDBContext lec = new LecturersDBContext();
+//        if (lec.isIDCardLecExists(IDCard)) {
+//            request.setAttribute("Error", "ID Card already exists.");
+//            processRequest(request, response, account);
+//            return;
+//        }
         // Update lecturer information
         int lecId = 0;
         try {

@@ -51,7 +51,7 @@ public class LecturersDBContext extends DBContext {
     //update lecturers profile
     public void updateLecturer(Lecturers lecturer) {
         try {
-            String sql = "UPDATE [Lecturers] SET lname = ?, gender = ?, dob = ?, phoneNumber = ?, IDcard = ?, Email = ?, Address = ?, NickName = ? WHERE lid = ?";
+            String sql = "UPDATE [Lecturers] SET lname = ?, gender = ?, dob = ?, phoneNumber = ?, IDcard = ?, Address = ?, Email = ?, NickName = ? WHERE lid = ?";
             PreparedStatement stm = connection.prepareStatement(sql);
 
             stm.setString(1, lecturer.getLname());
@@ -60,8 +60,9 @@ public class LecturersDBContext extends DBContext {
             stm.setString(4, lecturer.getPhoneNumber());
             stm.setString(5, lecturer.getIDcard());
             stm.setString(6, lecturer.getAddress());
-            stm.setString(7, lecturer.getNickname());
-            stm.setString(8, lecturer.getEmail());
+             stm.setString(7, lecturer.getEmail());
+            stm.setString(8, lecturer.getNickname());
+           
             stm.setInt(9, lecturer.getLid());
 
             stm.executeUpdate();

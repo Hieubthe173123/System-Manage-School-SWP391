@@ -10,7 +10,7 @@
             @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap');
 
             body {
-                font-family: 'Fredoka One', cursive;
+                font-family: 'Roboto', cursive;
                 background: #FFFAF0;
                 margin: 0;
                 padding: 0;
@@ -70,26 +70,28 @@
             }
 
             .card {
-                margin-bottom: 2rem;
+                margin-bottom: 1.5rem;
                 border: none;
-                border-radius: 15px;
+                border-radius: 10px;
                 box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
                 background-color: #FFF;
+                max-width: 600px;
+                margin: 0 auto;
             }
 
             .card-header {
                 background-color: #03ADD5;
                 color: white;
-                border-radius: 15px 15px 0 0;
-                padding: 1rem;
+                border-radius: 10px 10px 0 0;
+                padding: 0.75rem;
             }
 
             .card-body {
-                padding: 1.5rem;
+                padding: 1rem;
             }
 
             .info-group {
-                margin-bottom: 1rem;
+                margin-bottom: 0.75rem;
             }
 
             .info-group label {
@@ -119,7 +121,6 @@
                     padding: 1rem;
                 }
             }
-
         </style>
     </head>
     <body>
@@ -134,92 +135,67 @@
         <div class="content">
             <div class="card">
                 <div class="card-header">
-                    <h2>Thông tin cá nhân của phụ huynh</h2>
+                    <h2>Parent Information</h2>
                 </div>
                 <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="info-group">
-                                <label>Họ và tên</label>
-                                <p>${pa.pname}</p>
-                            </div>
+                    <div class="info-group">
+                        <label>Full Name</label>
+                        <p>${pa.pname}</p>
+                    </div>
+                    <div class="info-group">
+                        <label>Gender</label>
+                        <p>
+                            <c:if test="${pa.gender == true}">Male</c:if>
+                            <c:if test="${pa.gender == false}">Female</c:if>
+                            </p>
                         </div>
-                        <div class="col-md-6">
-                            <div class="info-group">
-                                <label>Giới tính</label>
-                                <p>
-                                    <c:if test="${pa.gender == true}">Nam</c:if>
-                                    <c:if test="${pa.gender == false}">Nữ</c:if>
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="info-group">
-                                    <label>Ngày sinh</label>
-                                    <p>${pa.dob}</p>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="info-group">
-                                <label>Địa chỉ</label>
-                                <p>${pa.address}</p>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="info-group">
-                                <label>Số điện thoại</label>
-                                <p>${pa.phoneNumber}</p>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="info-group">
-                                <label>Email</label>
-                                <p>${pa.email}</p>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="info-group">
-                                <label>Căn cước công dân</label>
-                                <p>${pa.IDcard}</p>
-                            </div>
-                        </div>
+                        <div class="info-group">
+                            <label>Date of Birth</label>
+                            <p>${pa.dob}</p>
+                    </div>
+                    <div class="info-group">
+                        <label>Address</label>
+                        <p>${pa.address}</p>
+                    </div>
+                    <div class="info-group">
+                        <label>Phone Number</label>
+                        <p>${pa.phoneNumber}</p>
+                    </div>
+                    <div class="info-group">
+                        <label>Email</label>
+                        <p>${pa.email}</p>
+                    </div>
+                    <div class="info-group">
+                        <label>ID Card</label>
+                        <p>${pa.IDcard}</p>
                     </div>
                 </div>
             </div>
+
             <c:forEach var="student" items="${stu}">
                 <div class="card">
                     <div class="card-header">
-                        <h3>Thông tin cá nhân của bé</h3>
+                        <h3>Child Information</h3>
                     </div>
                     <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="info-group">
-                                    <label>Họ và tên</label>
-                                    <p>${student.sname}</p>
-                                </div>
+                        <div class="info-group">
+                            <label>Full Name</label>
+                            <p>${student.sname}</p>
+                        </div>
+                        <div class="info-group">
+                            <label>Gender</label>
+                            <p>
+                                <c:if test="${student.gender == true}">Male</c:if>
+                                <c:if test="${student.gender == false}">Female</c:if>
+                                </p>
                             </div>
-                            <div class="col-md-6">
-                                <div class="info-group">
-                                    <label>Giới tính</label>
-                                    <p>
-                                        <c:if test="${student.gender == true}">Nam</c:if>
-                                        <c:if test="${student.gender == false}">Nữ</c:if>
-                                        </p>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="info-group">
-                                        <label>Ngày sinh</label>
-                                        <p>${student.dob}</p>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="info-group">
-                                    <label>Địa chỉ</label>
-                                    <p>${student.address}</p>
-                                </div>
-                            </div>
+                            <div class="info-group">
+                                <label>Date of Birth</label>
+                                <p>${student.dob}</p>
+                        </div>
+                        <div class="info-group">
+                            <label>Address</label>
+                            <p>${student.address}</p>
                         </div>
                     </div>
                 </div>

@@ -1,24 +1,27 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta charset="UTF-8">
         <title>History Selection</title>
         <!-- Bootstrap CSS -->
         <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+        <!-- FontAwesome for Icons -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
         <!-- Custom CSS -->
         <style>
             body {
-                background-color: #f0f8ff;
-                font-family: 'Arial', sans-serif;
+                background-color: #FFFAF0;
+                font-family: 'Roboto', sans-serif;
             }
             .container {
                 margin-top: 50px;
+                max-width: 1200px;
             }
             h1 {
                 margin-bottom: 30px;
-                color: #007bff;
+                color: #03ADD5;
                 text-align: center;
                 font-weight: bold;
             }
@@ -34,7 +37,7 @@
             .lecture {
                 background: #fff;
                 padding: 20px;
-                border-radius: 5px;
+                border-radius: 10px;
                 box-shadow: 0 0 10px rgba(0, 123, 255, 0.2);
                 margin-bottom: 20px;
                 text-align: center;
@@ -61,18 +64,32 @@
                 color: #007bff;
                 margin-bottom: 15px;
             }
+            .btn-custom {
+                background-color: #03ADD5;
+                color: white;
+                border-radius: 5px;
+                padding: 10px 20px;
+                margin-bottom: 20px;
+                display: inline-block;
+                transition: background-color 0.3s;
+            }
+            .btn-custom:hover {
+                background-color: #0288D1;
+                text-decoration: none;
+                color: white;
+            }
         </style>
-        <!-- FontAwesome for Icons -->
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     </head>
     <body>
         <div class="container">
-            <h1>Select a year</h1>
-            <button class="btn btn-primary mb-3" onclick="window.location.href='lecturers'">Back to Lecturer</button>
+            <h1>History Management</h1>
+            <div class="text-center">
+                <a href="lecturers" class="btn btn-custom">Back to Lecturer</a>
+            </div>
             <select class="form-control" id="year-select">
                 <option value="">Select a period</option>
                 <c:forEach var="year" items="${requestScope.year}">
-                    <option value="${year.yid}">${year.dateStart} - ${year.dateEnd}</option>
+                    <option value="${year.yid}" <c:if test="${param.yid == year.yid}">selected</c:if>>${year.dateStart} - ${year.dateEnd}</option>
                 </c:forEach>
             </select>
 
@@ -84,11 +101,11 @@
                             <h2>${lec.lid.lname}</h2>
                             <p><a href="history-detail?lid=${lec.lid.lid}">Lecture Details</a></p>
                             <p><a href="history-update-lecturers?yid=${param.yid}&lid=${lec.lid.lid}"><strong>Class:</strong> 
-                                <c:choose>
-                                    <c:when test="${empty lec.csid.classID.clname}">Không dạy lớp nào</c:when>
-                                    <c:otherwise>${lec.csid.classID.clname}</c:otherwise>
-                                </c:choose>
-                            </a></p>
+                                    <c:choose>
+                                        <c:when test="${empty lec.csid.classID.clname}">Không dạy lớp nào</c:when>
+                                        <c:otherwise>${lec.csid.classID.clname}</c:otherwise>
+                                    </c:choose>
+                                </a></p>
                             <p><strong>Lecture ID:</strong> ${lec.lid.lid}</p>
                             <p><strong>Status:</strong> 
                                 <c:choose>
@@ -99,7 +116,7 @@
                         </div>
                     </div>
                     <c:if test="${status.index % 4 == 3}">
-                        </div><div class="row">
+                    </div><div class="row">
                     </c:if>
                 </c:forEach>
             </div>
@@ -110,7 +127,7 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
         <script>
-            document.getElementById('year-select').addEventListener('change', function() {
+            document.getElementById('year-select').addEventListener('change', function () {
                 var yid = this.value;
                 if (yid) {
                     window.location.href = 'history?yid=' + yid;

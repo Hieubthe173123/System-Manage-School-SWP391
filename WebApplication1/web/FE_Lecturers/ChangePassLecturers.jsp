@@ -67,7 +67,7 @@
             }
 
             .input-group input {
-                width: calc(100% - 40px); /* Adjusted width to account for larger icon */
+                width: calc(100% - 40px); 
                 padding: 12px 15px;
                 border: 2px solid #00BFFF;
                 border-radius: 10px;
@@ -75,7 +75,7 @@
                 color: #333;
                 outline: none;
                 transition: border-color 0.3s;
-                background-color: #E0F7FA;
+                background-color: #FFFAF0;
             }
 
             .input-group input:focus {
@@ -89,7 +89,7 @@
                 transform: translateY(-50%);
                 cursor: pointer;
                 color: #00BFFF;
-                font-size: 20px; /* Increased font size for larger icon */
+                font-size: 20px; 
             }
 
             .save-button {

@@ -11,8 +11,29 @@
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
         <style>
+            body {
+                background: #FFFAF0;
+                font-family: 'Comic Sans MS', cursive, sans-serif;
+            }
+
+            .content-wrapper {
+                max-width: 1200px;
+                margin: auto;
+                padding: 20px;
+                background-color: #ffffff;
+                border-radius: 10px;
+                box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            }
+
+            h1 {
+                text-align: center;
+                color: #39BACD;
+                font-size: 2.5rem;
+                margin-bottom: 20px;
+            }
+
             .btn-campus {
-                background-color: #39BACD;
+                background-color: #FF6F61;
                 color: white;
                 border: none;
                 padding: 10px 20px;
@@ -23,25 +44,34 @@
                 margin: 4px 2px;
                 cursor: pointer;
                 transition: all 0.3s ease;
+                border-radius: 10px;
             }
 
             .btn-campus:hover {
-                background-color: #39BACD;
+                background-color: #FF6F61;
             }
 
             .custom-link:active {
                 font-weight: bold;
             }
 
-            .content-wrapper {
-                max-width: 1200px;
-                margin: auto;
-                padding: 20px;
+            .form-group label {
+                color: #333;
+                font-weight: bold;
             }
 
             .table-responsive {
                 max-height: 400px;
                 overflow-y: auto;
+            }
+
+            .table thead th {
+                background-color: #24B2D2;
+                color: white;
+            }
+
+            .table tbody tr:nth-child(even) {
+                background-color: #f2f2f2;
             }
 
             .toggle-password {
@@ -61,12 +91,10 @@
                 box-shadow: none;
             }
 
-            /* CSS cho trạng thái Active */
             .badge-success {
                 background-color: green;
             }
 
-            /* CSS cho trạng thái Pending */
             .badge-warning {
                 background-color: yellow;
             }
@@ -168,17 +196,14 @@
                 }
             }
 
-            // Xóa tài khoản
             function deleteAccount(aid, role) {
                 if (role === 3) {
-                    // Nếu vai trò là "Admin", hiển thị cảnh báo và không thực hiện xóa
                     Swal.fire({
                         title: "Unable to Delete",
                         text: "You cannot delete an admin account.",
                         icon: "error"
                     });
                 } else {
-                    // Nếu vai trò không phải là "Admin", hiển thị cảnh báo và xác nhận xóa tài khoản
                     Swal.fire({
                         title: "Are you sure?",
                         text: "You won't be able to revert this!",

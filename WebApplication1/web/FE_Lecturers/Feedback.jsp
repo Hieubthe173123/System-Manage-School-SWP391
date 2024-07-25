@@ -23,7 +23,7 @@
                 margin-bottom: 1rem;
                 position: relative;
             }
-            header a {
+           header a {
                 position: absolute;
                 right: 1rem;
                 top: 1rem;
@@ -143,7 +143,10 @@
     </head>
     <body>
         <header>
-            <a href="liststudent">Back to List Student</a>
+            <form action="liststudent" method="GET">
+                <input type="hidden" value="${sessionScope.lid}" name="lid"/>
+                <a onclick="window.location.href='liststudent?lid=${sessionScope.lid}'">Back to List Student</a>
+            </form>    
             <h1 class="name">Feedback Management</h1>
         </header>
 

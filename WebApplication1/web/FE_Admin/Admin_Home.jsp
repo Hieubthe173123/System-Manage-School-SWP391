@@ -193,7 +193,7 @@
             </div>
             <nav>
                 <ul>
-                    <li><button onclick="window.location.href = 'home';">Home</button></li>
+                    <li><button onclick="window.location.href = 'adminhome';">Home</button></li>
                     <li><button onclick="window.location.href = 'account-list';">Manage Accounts</button></li>
                     <li><button onclick="window.location.href = 'lecturers';">Manage Teachers</button></li>
                     <li><button onclick="window.location.href = 'student';">Manage Students</button></li>

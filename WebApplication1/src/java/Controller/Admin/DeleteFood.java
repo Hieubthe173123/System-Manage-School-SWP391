@@ -18,7 +18,7 @@ import java.sql.SQLException;
  *
  * @author hidung
  */
-@WebServlet(name = "DeleteFood", urlPatterns = {"/delete-food"})
+@WebServlet(name = "DeleteFood", urlPatterns = {"/admin/delete-food"})
 public class DeleteFood extends HttpServlet {
 
     
@@ -43,7 +43,7 @@ public class DeleteFood extends HttpServlet {
         try {
             boolean isDeleted = fooddb.deleteFood(foodId);
             if (isDeleted) {
-                request.getRequestDispatcher("/food").forward(request, response);
+                response.sendRedirect(request.getContextPath() + "/admin/food");
             } 
         } catch (SQLException e) {
             e.printStackTrace();

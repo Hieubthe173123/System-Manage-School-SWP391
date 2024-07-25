@@ -272,7 +272,7 @@
                     </div>
                 </div>
                 <div class="feedback-box">
-                    <h2>Teacher's Feedback on the Class</h2>
+                    <h2>Teacher's Feedback for ${requestScope.student.sname}</h2>
                     <p>${requestScope.feedback.fcontent}</p>
                 </div>
             </div>

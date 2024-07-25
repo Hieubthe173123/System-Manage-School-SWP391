@@ -8,7 +8,7 @@
         <style>
             @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap');
             body {
-                font-family: 'Fredoka One', cursive;
+                font-family: 'Roboto', cursive;
                 background: #FFFAF0;
                 margin: 0;
                 padding: 0;

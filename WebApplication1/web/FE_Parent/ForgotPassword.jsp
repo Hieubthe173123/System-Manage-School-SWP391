@@ -161,31 +161,29 @@
     <body>
         <div class="card">
             <p class="lock-icon"><i class="fas fa-lock"></i></p>
-            <h2>Quên Mật Khẩu?</h2>
-            <p>Bạn có thể thay đổi mật khẩu tại đây</p>
+            <h2>Forgot password</h2>
+            <p>You can change your password here</p>
 
             <form action="forgot" method="POST">
                 <!-- Select box chọn phương thức -->
                 <select name="method" id="method" class="method-select" required>
-                    <option value="email">Gửi qua Email</option>
-                    <option value="sms">Gửi qua SMS</option>
+                    <option value="email">Send to Email</option>
+                    
                 </select>
 
                 <!-- Các trường nhập liệu -->
                 <div id="emailField">
-                    <input type="email" class="passInput" placeholder="Nhập vào email" name="mailForgot">
+                    <input type="email" class="passInput" placeholder="Enter email" name="mailForgot">
                 </div>
-                <div id="phoneField" style="display: none;">
-                    <input type="text" class="passInput" placeholder="Nhập vào số điện thoại" name="phoneForgot">
-                </div>
+                
 
                 <!-- Hidden field for role, initially empty -->
                 <input type="hidden" name="role" id="role" value="">
 
-                <button type="submit">Gửi Mật Khẩu</button>
+                <button type="submit">Send Password</button>
             </form>
 
-            <a href="login" class="back-button">Quay lại Đăng nhập</a>
+            <a href="login" class="back-button">Go back to Login</a>
             <h3 style="color: greenyellow">${requestScope.confirm}</h3>
             <h3 style="color: red">${requestScope.err}</h3>
         </div>

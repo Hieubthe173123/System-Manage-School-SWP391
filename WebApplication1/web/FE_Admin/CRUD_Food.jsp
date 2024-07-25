@@ -38,8 +38,8 @@
             <c:if test="${not empty errorMessage}">
                 <div class="alert alert-danger">${errorMessage}</div>
             </c:if>
-            <div class="col-sm-6 text-right">
-                <button class="btn btn-primary" href="/Admin_Home.jsp" >Home</button>
+            <div class="col-sm-6 text-right"  style="margin-left: 70px" >
+                <button  class="btn btn-primary" onclick="window.location.href = 'menu'">Back to Menu</button>      
             </div>
             <div class="row mb-3">
                 <div class="col-sm-6">

@@ -187,7 +187,8 @@ public class SessionDBContext extends DBContext {
 
     public static void main(String[] args) {
         SessionDBContext s = new SessionDBContext();
-        s.deleteSession("1");
+        s.getSessionById(1);
+        System.out.println(s);
     }
 
 }

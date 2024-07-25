@@ -172,8 +172,8 @@
                                     </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="submit" class="btn btn-primary">Add</button>
                                     <button type="button" class="btn btn-danger" onclick="window.location.href = 'lecturers'">Cancel</button>
+                                    <button type="submit" class="btn btn-primary">Add</button>
                                 </div>
                             </form>
                         </div>

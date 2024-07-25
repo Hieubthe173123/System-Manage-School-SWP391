@@ -44,15 +44,6 @@
             header a:hover {
                 background-color: #228B22;
             }
-/*            .main {
-                padding: 20px;
-                flex-grow: 1;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-                overflow: auto;
-            }*/
             .name {
                 color: white;
                 font-size: 1.8em;
@@ -251,10 +242,10 @@
                             <td>
                                 <c:choose>
                                     <c:when test="${lcs.lid.gender}">
-                                        Nam
+                                        Male
                                     </c:when>
                                     <c:otherwise>
-                                        Nữ
+                                        Female
                                     </c:otherwise>
                                 </c:choose>
                             </td>

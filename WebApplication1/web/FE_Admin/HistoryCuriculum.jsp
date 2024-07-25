@@ -4,86 +4,126 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Lịch Sử Lịch Học</title>
+        <title>Session History</title>
         <!-- Bootstrap CSS -->
         <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
         <style>
             body {
-                font-family: Arial, sans-serif;
-                background-color: #f8f9fa;
-                margin: 0;
-                padding: 20px;
+                background-color: #FFFAF0;
+                font-family: 'Roboto', sans-serif;
             }
-            .session-link {
-                display: block;
-                color: #007bff;
+
+            .container {
+                margin-top: 50px;
+                max-width: 1200px;
+            }
+
+            h2 {
+                margin-bottom: 30px;
+                color: #03ADD5;
                 text-align: center;
-                margin-bottom: 10px;
-            }
-            .session-link:hover {
-                text-decoration: none;
-                color: #0056b3;
-            }
-            .history-item {
-                background-color: #ffffff;
-                border-radius: 5px;
-                padding: 15px;
-                margin-bottom: 20px;
-                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            }
-            .history-item h1 {
-                font-size: 20px;
-                margin: 5px 0;
-                color: #333;
-            }
-            .history-item h1 small {
-                font-size: 14px;
-                color: #666;
-            }
-            .card {
-                border: none;
-                margin-bottom: 20px;
-            }
-            .card-header {
-                background-color: #007bff;
-                color: #fff;
                 font-weight: bold;
             }
-            .card-body {
-                background-color: #e9ecef;
+
+            .btn-custom {
+                background-color: #03ADD5;
+                color: white;
+                border-radius: 5px;
+                padding: 10px 20px;
+                margin-bottom: 20px;
+                display: inline-block;
+                transition: background-color 0.3s;
+                text-decoration: none;
             }
+
+            .btn-custom:hover {
+                background-color: #0288D1;
+                text-decoration: none;
+                color: white;
+            }
+
+            .card {
+                background: #fff;
+                border-radius: 10px;
+                box-shadow: 0 0 10px rgba(0, 123, 255, 0.2);
+                transition: transform 0.3s, box-shadow 0.3s;
+                margin-bottom: 20px;
+            }
+
+            .card:hover {
+                transform: translateY(-10px);
+                box-shadow: 0 0 20px rgba(0, 123, 255, 0.3);
+            }
+
+            .card-header {
+                background-color: #03ADD5;
+                color: white;
+                border-bottom: none;
+                border-radius: 10px 10px 0 0;
+                padding: 15px;
+                font-weight: bold;
+            }
+
+            .card-body {
+                padding: 15px;
+                text-align: center;
+            }
+
             .card-body h5 {
+                font-size: 16px;
+                margin-bottom: 10px;
                 color: #007bff;
+            }
+
+            .card-body p {
+                margin: 5px 0;
+                color: #343a40;
+            }
+
+            .card-body p.default {
+                color: #6c757d;
+            }
+
+            .session-card {
+                margin-bottom: 10px;
             }
         </style>
     </head>
     <body>
         <div class="container">
-            <h2 class="mb-4">Lịch Sử Lịch Học</h2>
-            <div class="list-group mb-4">
+            <h2 class="mb-4">Session History</h2>
+            <a class="btn-custom" href="history-session">Back to History Session</a>
+
+            <!-- Session Links -->
+            <div class="row mb-4">
                 <c:forEach var="ses" items="${requestScope.list1}" varStatus="status">
-                    <c:if test="${status.index % 10 == 0}">
-                        <div class="row">
+                    <c:if test="${status.index % 4 == 0 && status.index > 0}">
+                    </div><div class="row mb-4">
                     </c:if>
-                    
-                    <div class="col-1">
-                        <a class="session-link list-group-item list-group-item-action" href="history-curiculum?sid=${param.sid}&sdid=${ses.sdid}">${ses.sessionNumber}</a>
-                    </div>
-                    
-                    <c:if test="${(status.index + 1) % 10 == 0 || status.last}">
+
+                    <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                        <div class="card session-card">
+                            <div class="card-body">
+                                <a class="btn-custom" href="history-curiculum?sid=${param.sid}&sdid=${ses.sdid}">
+                                    ${ses.sessionNumber}
+                                </a>
+                            </div>
                         </div>
-                    </c:if>
+                    </div>
                 </c:forEach>
             </div>
-            
-            <div class="history-container">
+
+            <!-- History Items -->
+            <div class="row">
                 <c:forEach var="his" items="${requestScope.list}">
-                    <div class="card">
-                        <div class="card-header">CurID: ${his.curID}</div>
-                        <div class="card-body">
-                            <h5 class="card-title">${his.nameAct}</h5>
-                            <p class="card-text">Time Start : ${his.timeStart}</p>
-                            <p class="card-text">Time End : ${his.timeEnd}</p>
+                    <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                        <div class="card">
+                            <div class="card-header">CurID: ${his.curID}</div>
+                            <div class="card-body">
+                                <h5 class="card-title">${his.nameAct}</h5>
+                                <p class="card-text">Start Time: ${his.timeStart}</p>
+                                <p class="card-text">End Time: ${his.timeEnd}</p>
+                            </div>
                         </div>
                     </div>
                 </c:forEach>

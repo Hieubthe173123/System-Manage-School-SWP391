@@ -7,30 +7,95 @@
         <title>Add New Student</title>
         <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
         <style>
+            @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap');
             body {
-                background-color: #f8f9fa;
-                font-family: 'Arial', sans-serif;
+                background-color: #FFFAF0;
+                font-family: 'Roboto', cursive;
+                margin: 0;
+                padding: 0;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
             }
+
             .container {
-                margin-top: 50px;
-                max-width: 600px;
+                width: 90%;
+                max-width: 800px;
                 padding: 20px;
-                background-color: #ffffff;
-                border-radius: 8px;
-                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                background-color: #FFFFFF;
+                border-radius: 15px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                border: 2px solid skyblue;
             }
+
             h2 {
+                color: #03ADD5;
+                text-align: center;
                 margin-bottom: 20px;
+                font-size: 1.5rem;
             }
-            .form-group {
-                margin-bottom: 20px;
+
+            .form-group label {
+                color: #03ADD5;
             }
+
+            .form-group input, .form-group select {
+                border: 2px solid #03ADD5;
+                border-radius: 10px;
+                padding: 5px;
+                font-size: 0.9rem;
+                background-color: #FFF7E0;
+            }
+
+            .btn-primary, .btn-secondary, .btn-danger {
+                border-radius: 10px;
+                font-size: 0.9rem;
+                padding: 8px 16px;
+                border: none;
+                transition: background-color 0.3s ease;
+            }
+
+            .btn-primary {
+                background-color: #41E0B3;
+            }
+
+            .btn-primary:hover {
+                background-color: #38C9A9;
+            }
+
+            .btn-secondary {
+                background-color: #FFC107;
+            }
+
+            .btn-secondary:hover {
+                background-color: #FF9800;
+            }
+
+            .btn-danger {
+                background-color: #dc3545;
+            }
+
+            .btn-danger:hover {
+                background-color: #c82333;
+            }
+
             .modal-footer {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
                 margin-top: 20px;
-                text-align: right;
             }
-            .btn-cancel {
-                margin-right: 10px;
+
+            .error-message {
+                color: red;
+                text-align: center;
+                font-size: 0.9rem;
+                margin-bottom: 20px;
+            }
+
+            .row {
+                margin-bottom: 15px;
             }
         </style>
     </head>
@@ -71,7 +136,7 @@
                 </div>
                 <% String error = (String) request.getAttribute("error");
                 if (error != null) { %>
-                <p style="color: red" id="message">${error}</p>
+                <p class="error-message">${error}</p>
                 <% } %>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" onclick="window.history.back()">Cancel</button>

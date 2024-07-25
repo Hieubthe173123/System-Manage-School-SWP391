@@ -175,6 +175,7 @@
                             <td>${feedback.dateFeedback}</td>
                             <td>
                                 <button class="btn btn-warning btn-sm" onclick="editFeedback('${feedback.fid}', '${feedback.stuid.stuid}', '${feedback.stuid.sname}', '${feedback.ftitle}', '${feedback.fcontent}', '${feedback.dateFeedback}')">Update</button>
+                                &nbsp
                                 <button type="button" class="btn btn-danger btn-sm" onclick="deleteFeedback('${feedback.fid}')">Delete</button>
                             </td>
                         </tr>

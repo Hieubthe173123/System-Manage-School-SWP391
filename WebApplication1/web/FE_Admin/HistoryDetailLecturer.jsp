@@ -3,10 +3,10 @@
     Created on : Jun 25, 2024, 9:36:03 AM
     Author     : admin
 --%>
-
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Lecturer Information</title>
@@ -16,21 +16,23 @@
         <style>
             body {
                 background-color: #f0f8ff;
-                font-family: 'Arial', sans-serif;
+                font-family: 'Fredoka One', cursive;
+                padding-top: 40px; /* for Bootstrap navbar */
             }
             .container {
                 margin-top: 50px;
                 background: #fff;
                 padding: 30px;
-                border-radius: 10px;
-                box-shadow: 0 0 20px rgba(0, 123, 255, 0.2);
+                border-radius: 15px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                border: 2px solid skyblue;
             }
             .header {
                 text-align: center;
                 margin-bottom: 30px;
             }
             .header h1 {
-                color: #007bff;
+                color: #03ADD5;
                 font-weight: bold;
             }
             .info-row {
@@ -45,7 +47,7 @@
             .info-label {
                 flex: 1;
                 font-weight: bold;
-                color: #007bff;
+                color: #03ADD5;
             }
             .info-value {
                 flex: 2;
@@ -56,8 +58,19 @@
             }
             .icon {
                 font-size: 50px;
-                color: #007bff;
+                color: #03ADD5;
                 margin-right: 20px;
+            }
+            .btn-back {
+                background-color: #41E0B3;
+                border: none;
+                border-radius: 10px;
+                font-size: 0.9rem;
+                padding: 8px 16px;
+                margin-bottom: 20px;
+            }
+            .btn-back:hover {
+                background-color: #FF9800;
             }
         </style>
         <!-- FontAwesome for Icons -->
@@ -65,42 +78,46 @@
     </head>
     <body>
         <div class="container">
+            <div class="text-center">
+                <button class="btn btn-back" onclick="window.location.href = 'history'">Back</button>
+            </div>
             <div class="header">
                 <i class="icon fas fa-user"></i>
-                <h1>Thông tin cá nhân</h1>
+                <h1>Personal Information</h1>
             </div>
             <div class="info-row">
-                <div class="info-label"><h3>Tên giáo viên :</h3></div>
+                <div class="info-label"><h3>Lecturer Name:</h3></div>
                 <div class="info-value"><h3>${lec.lname}</h3></div>
             </div>
             <div class="info-row">
-                <div class="info-label"><h3>Giới tính :</h3></div>
-                <div class="info-value"><h3>${lec.gender}</h3></div>
+                <div class="info-label"><h3>Gender:</h3></div>
+                <div class="info-value"><h3>
+                        <c:choose>
+                            <c:when test="${lec.gender == true}">Male</c:when>
+                            <c:otherwise>Female</c:otherwise>
+                        </c:choose>
+                    </h3></div>
             </div>
             <div class="info-row">
-                <div class="info-label"><h3>Số điện thoại :</h3></div>
+                <div class="info-label"><h3>Phone Number:</h3></div>
                 <div class="info-value"><h3>${lec.phoneNumber}</h3></div>
             </div>
             <div class="info-row">
-                <div class="info-label"><h3>IDCard :</h3></div>
+                <div class="info-label"><h3>ID Card:</h3></div>
                 <div class="info-value"><h3>${lec.IDcard}</h3></div>
             </div>
             <div class="info-row">
-                <div class="info-label"><h3>Email :</h3></div>
+                <div class="info-label"><h3>Email:</h3></div>
                 <div class="info-value"><h3>${lec.email}</h3></div>
             </div>
             <div class="info-row">
-                <div class="info-label"><h3>Trạng thái :</h3></div>
+                <div class="info-label"><h3>Status:</h3></div>
                 <div class="info-value">
                     <h3>
                         <c:choose>
-                            
-                              
-                            <c:when test="${lec.status != null || lec.status != ''}">${lec.status}</c:when>
-                            <c:otherwise>Đã Nghỉ Việc</c:otherwise>
+                            <c:when test="${lec.status != null && !lec.status.isEmpty()}">${lec.status}</c:when>
+                            <c:otherwise>Retired</c:otherwise>
                         </c:choose>
-                            
-                          
                     </h3>
                 </div>
             </div>

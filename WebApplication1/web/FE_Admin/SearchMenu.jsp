@@ -13,16 +13,45 @@
         <title>Search Menu</title>
         <style>
             body {
-                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                font-family: 'Comic Sans MS', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
                 margin: 0;
                 padding: 0;
-                background-color: #f0f2f5;
+                background-color: #FFFAF0;
                 color: #333;
             }
 
             h2 {
                 text-align: center;
                 margin-top: 20px;
+                font-size: 2em;
+            }
+
+            .button-container {
+                display: flex;
+                justify-content: center;
+                gap: 15px;
+                margin: 20px 0;
+            }
+
+            .button-container button {
+                background-color: #03add5;
+                border: none;
+                border-radius: 20px;
+                color: #fff;
+                cursor: pointer;
+                padding: 10px 20px;
+                font-size: 1em;
+                transition: background-color 0.3s ease;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            }
+
+            .button-container button:hover {
+                background-color: #ff4d4d;
+            }
+
+            .button-container button a {
+                color: #fff;
+                text-decoration: none;
             }
 
             .table-container-wrapper {
@@ -39,62 +68,56 @@
                 padding: 20px;
             }
 
-            .table-container .table-wrapper {
-                background-color: skyblue;
-                border-radius: 10px;
+            .table-wrapper {
+                background-color: #fff;
+                border-radius: 15px;
                 overflow: hidden;
-                padding: 10px;
+                padding: 20px;
                 text-align: center;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
                 width: 300px; /* Adjust the width as needed */
             }
 
-            .table-container table {
+            .table-wrapper h3 {
+                font-size: 1.5em;
+                color: #03add5;
+                margin-bottom: 10px;
+            }
+
+            .table-wrapper table {
                 width: 100%;
                 border-collapse: collapse;
                 margin-bottom: 20px;
             }
 
-            .table-container th, .table-container td {
-                padding: 8px;
+            .table-wrapper th, .table-wrapper td {
+                padding: 10px;
                 text-align: left;
+                border-bottom: 1px solid #ddd;
             }
 
-            .table-container th {
-                background-color: #f2f2f2;
+            .table-wrapper th {
+                background-color: #03add5;
+                color: white;
+            }
+
+            .table-wrapper td {
+                background-color: #f9f9f9;
                 color: #333;
             }
 
-            .table-container td {
-                background-color: white;
-                color: #000;
-            }
-
-            button a {
-                color: #fff;
-                text-decoration: none;
-            }
-
-            button {
-                background-color: #00b8ec;
-                border: none;
-                border-radius: 5px;
-                color: #fff;
-                cursor: pointer;
-                display: block;
-                margin: 20px auto;
-                padding: 10px 20px;
-                text-align: center;
-            }
-
-            button:hover {
-                background-color: #555;
+            @media (max-width: 768px) {
+                .table-container {
+                    flex-direction: column;
+                    align-items: center;
+                }
             }
         </style>
     </head>
     <body>
         <h2>Meals for Children on ${requestScope.date_raw}</h2>
-        <div style="display: block">
-            <button class="btn btn-campus" onclick="window.location.href = 'adminhome'">Back to Home</button>
+        <div class="button-container">
+            <button onclick="window.location.href = 'adminhome'">Back to Home</button>
             <button><a href="menu">Enter Today's Meals for All Ages</a></button>
         </div>
 
@@ -104,7 +127,7 @@
                     <c:forEach items="${requestScope.listAgeCategory}" var="age">
                         <div class="table-wrapper">
                             <h3>Meals for ${age.aname}</h3>
-                            <table border="1">
+                            <table border="0">
                                 <thead>
                                     <tr>
                                         <th>Meal</th>

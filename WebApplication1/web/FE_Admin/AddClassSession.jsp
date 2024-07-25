@@ -7,96 +7,83 @@
         <title>Add Class Session</title>
         <style>
             body {
-                font-family: Arial, sans-serif;
-                background-color: #f8f9fa;
+                font-family: 'Roboto', cursive, sans-serif;
+                background-color: #FFFAF0;
                 margin: 0;
                 padding: 0;
             }
 
             h1, h2 {
-                color: #343a40;
+                color: black;
+                text-align: center;
             }
 
-            .btn-campus {
-                background-color: #39BACD;
+            .btn-campus, .btn-campus1 {
+                background-color: #FFA500; /* orange */
                 color: white;
                 border: none;
-                padding: 10px 20px;
+                padding: 12px 25px;
                 text-align: center;
                 text-decoration: none;
                 display: inline-block;
-                font-size: 16px;
-                margin: 4px 2px;
+                font-size: 18px;
+                margin: 10px 5px;
                 cursor: pointer;
                 transition: all 0.3s ease;
-                border-radius: 5px;
+                border-radius: 25px;
             }
 
-            .btn-campus:hover {
-                background-color: #2c9aa8;
-            }
-
-            .btn-campus1 {
-                background-color: #39BACD;
-                color: white;
-                border: none;
-                padding: 10px 20px;
-                text-align: center;
-                text-decoration: none;
-                display: inline-block;
-                font-size: 16px;
-                margin: 4px 2px;
-                cursor: pointer;
-                transition: all 0.3s ease;
-                border-radius: 5px;
-            }
-
-            .btn-campus1:hover {
-                background-color: #2c9aa8;
-            }
-
-            .custom-link:active {
-                font-weight: bold;
+            .btn-campus:hover, .btn-campus1:hover {
+                background-color: #FF4500; /* orange red */
             }
 
             .content-wrapper {
-                max-width: 1200px;
+                max-width: 1000px;
                 margin: auto;
                 padding: 20px;
                 background-color: white;
-                border-radius: 10px;
-                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                border-radius: 20px;
+                box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+                overflow: hidden;
             }
 
             .form-group {
                 margin-bottom: 15px;
+                text-align: center;
             }
 
             label {
                 font-weight: bold;
                 display: block;
                 margin-bottom: 5px;
+                color: #2acee8;
             }
 
             select {
-                width: 20%;
-                padding: 8px;
-                border: 1px solid #ced4da;
-                border-radius: 5px;
-                font-size: 14px;
+                width: 50%;
+                padding: 10px;
+                border: 2px solid #ced4da;
+                border-radius: 10px;
+                font-size: 16px;
                 color: #495057;
+                margin-bottom: 15px;
+                border: 2px solid #2acee8;
             }
 
             .table-responsive {
                 max-height: 400px;
                 overflow-y: auto;
                 margin-top: 20px;
+                border-radius: 15px;
+                border: 2px solid #ced4da;
             }
 
             table {
                 width: 100%;
                 border-collapse: collapse;
                 margin-bottom: 20px;
+                border-radius: 15px;
+                overflow: hidden;
             }
 
             table, th, td {
@@ -104,25 +91,33 @@
             }
 
             th, td {
-                padding: 10px;
+                padding: 12px;
                 text-align: left;
             }
 
             th {
-                background-color: #65d2f6;
-                color: #343a40;
+                background-color: #03ADD5;
+                color: white;
             }
 
             td select {
-                width: auto;
-                padding: 5px;
-                border: 1px solid #ced4da;
-                border-radius: 5px;
-                font-size: 14px;
+                width: 80%;
+                padding: 8px;
+                border: 2px solid #ced4da;
+                border-radius: 10px;
+                font-size: 16px;
                 color: #495057;
             }
 
+            .status-active {
+                background-color: #32CD32; /* green */
+                color: white;
+            }
 
+            .status-inactive {
+                background-color: #FF6347; /* tomato red */
+                color: white;
+            }
         </style>
         <!-- Include SweetAlert2 library -->
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -164,6 +159,24 @@
                 });
                 updateRoomOptions();
 
+                function updateStatusColor() {
+                    statusSelects.forEach(select => {
+                        if (select.value === "true") {
+                            select.classList.add('status-active');
+                            select.classList.remove('status-inactive');
+                        } else {
+                            select.classList.add('status-inactive');
+                            select.classList.remove('status-active');
+                        }
+                    });
+                }
+
+                statusSelects.forEach(select => {
+                    select.addEventListener('change', updateStatusColor);
+                });
+
+                updateStatusColor();
+
             <c:if test="${not oldYearUpdateAttempt}">
                 document.querySelectorAll('.btn-campus').forEach(button => {
                     button.addEventListener('click', function (event) {
@@ -192,26 +205,26 @@
 
     <body>
         <div class="content-wrapper">
-            <div class="mb-3">
+            <div class="mb-3" style="text-align: center;">
                 <button class="btn btn-campus1" onclick="window.location.href = 'classController'">Back</button>
             </div>
             <h1>Add Class Session</h1>
 
             <!-- Form to select School Year -->
-            <form action="classSession-add" method="GET">
-                <label for="selectedYid">Select School Year:</label>
-                <select id="selectedYid" name="selectedYid" onchange="this.form.submit()">
-                    <option value="">Select a year</option>
-                    <c:forEach var="year" items="${years}">
-                        <option value="${year.yid}" <c:if test="${year.yid == selectedYid}">selected</c:if>>${year.dateStart} - ${year.dateEnd}</option>
-                    </c:forEach>
-                </select>
-            </form>
-            <br><br>
+            <div class="form-group">
+                <form action="classSession-add" method="GET">
+                    <label for="selectedYid">Select School Year:</label>
+                    <select id="selectedYid" name="selectedYid" onchange="this.form.submit()">
+                        <option value="">Select a year</option>
+                        <c:forEach var="year" items="${years}">
+                            <option value="${year.yid}" <c:if test="${year.yid == selectedYid}">selected</c:if>>${year.dateStart} - ${year.dateEnd}</option>
+                        </c:forEach>
+                    </select>
+                </form>
+            </div>
 
             <c:if test="${not empty selectedYid && selectedYid != -1}">
                 <c:if test="${not empty classSessions}">
-                    <h2>Existing Class Sessions</h2>
                     <form action="classSession-add" method="POST">
                         <input type="hidden" name="selectedYid" value="${selectedYid}">
                         <input type="hidden" name="action" value="update">
@@ -258,7 +271,9 @@
                             </table>
                         </div>
                         <br>
-                        <button class="btn-campus" type="submit">Update</button>
+                        <div style="text-align: center;">
+                            <button class="btn-campus" type="submit">Update</button>
+                        </div>
                     </form>
                 </c:if>
 
@@ -266,7 +281,7 @@
                     <form action="classSession-add" method="POST">
                         <input type="hidden" name="selectedYid" value="${selectedYid}">
                         <input type="hidden" name="action" value="save">
-                        <p>Selected School Year: ${selectedYid}</p>
+                        <p style="text-align: center; font-size: 18px;">Selected School Year: ${selectedYid}</p>
                         <div class="table-responsive">
                             <table>
                                 <thead>
@@ -310,7 +325,9 @@
                             </table>
                         </div>
                         <br>
-                        <button class="btn-campus" type="submit">Save</button>
+                        <div style="text-align: center;">
+                            <button class="btn-campus" type="submit">Save</button>
+                        </div>
                     </form>
                 </c:if>
             </c:if>

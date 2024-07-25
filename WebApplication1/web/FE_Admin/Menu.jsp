@@ -4,77 +4,82 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-
         <title>Today's Menu</title>
         <style>
             body {
-                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                font-family: 'Comic Sans MS', cursive, sans-serif;
                 margin: 0;
                 padding: 0;
-                background-color: #f8f9fa;
-                color: #343a40;
+                background-color: #f9f9f9;
+                color: #333;
             }
 
             header {
-                background-color: #007bff;
-                padding: 10px;
+                background-color: #33B7CE;
+                padding: 20px;
                 text-align: center;
                 color: white;
-                font-size: 2em;
+                font-size: 2.5em;
+                font-weight: bold;
             }
 
             .container {
                 max-width: 1200px;
-                margin: 0 auto;
+                margin: 20px auto;
                 padding: 20px;
+                background-color: #ffffff;
+                border-radius: 15px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             }
 
             .btn {
                 display: inline-block;
                 padding: 10px 20px;
                 border: none;
-                border-radius: 5px;
+                border-radius: 25px;
                 font-size: 16px;
                 cursor: pointer;
                 transition: background-color 0.3s ease;
                 text-decoration: none;
                 color: white;
                 text-align: center;
+                margin: 10px 5px;
             }
 
             .btn-primary {
-                background-color: #007bff;
+                background-color: #33B7CE;
             }
 
             .btn-primary:hover {
-                background-color: #0056b3;
+                background-color: #25CFC7;
             }
 
-            .btn-secondary {
-                background-color: #6c757d;
+            .btn-add-food {
+                background-color: #33B7CE;
             }
 
-            .btn-secondary:hover {
-                background-color: #545b62;
+            .btn-add-food:hover {
+                background-color: #25CFC7;
             }
 
             form {
                 display: flex;
                 justify-content: center;
+                align-items: center;
                 margin: 20px 0;
                 gap: 10px;
             }
 
             label {
                 font-weight: bold;
-                color: #00796b;
+                color: black;
             }
 
             input[type="date"],
             select {
                 padding: 10px;
-                border: 1px solid #ced4da;
-                border-radius: 5px;
+                border: 1px solid #33B7CE;
+                border-radius: 10px;
                 font-size: 16px;
             }
 
@@ -107,9 +112,13 @@
 
             table {
                 width: 100%;
-                border-collapse: collapse;
+                border-collapse: separate;
+                border-spacing: 0;
                 margin-bottom: 20px;
                 box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+                border-radius: 15px;
+                overflow: hidden;
+                background-color: #fff;
             }
 
             th, td {
@@ -119,9 +128,10 @@
             }
 
             th {
-                background-color: #007bff;
+                background-color: #03a9f4;
                 color: white;
                 text-align: center;
+                font-size: 1.2em;
             }
 
             tr:nth-child(even) {
@@ -129,7 +139,27 @@
             }
 
             tr:hover {
-                background-color: #e9ecef;
+                background-color: #e0f7fa;
+            }
+
+            td {
+                border-radius: 10px;
+            }
+
+            th {
+                border-radius: 10px 10px 0 0;
+            }
+
+            tbody tr:first-child td {
+                border-top: none;
+            }
+
+            tbody tr:last-child td {
+                border-bottom: none;
+            }
+
+            tbody td:last-child {
+                border-right: none;
             }
 
             .center {
@@ -140,36 +170,44 @@
                 width: 250px;
             }
 
-            .btn-add-food {
-                background-color: #28a745;
+            /* Add border-radius to table container */
+            .table-container-wrapper {
+                border-radius: 15px;
+                overflow: hidden;
+                border: 1px solid #ddd;
+                background-color: #fff;
             }
-
-            .btn-add-food:hover {
-                background-color: #218838;
-            }
-
         </style>
+
     </head>
     <body>
         <header>Today's Menu on ${requestScope.dateN}</header>
 
         <div class="container">
-            <button class="btn btn-primary" onclick="window.location.href = 'adminhome'">Back</button>
+            <div class="center">
+                <button class="btn btn-primary" onclick="window.location.href = 'searchMenu?date=${sessionScope.dateN}'">Back</button>
+                <button class="btn btn-add-food" onclick="window.location.href = 'food'">Add Food</button>
+            </div>
 
             <form action="searchMenu" method="GET">
                 <label for="date">Select date:</label>
                 <input type="date" id="date" name="date"/>
                 <button class="btn btn-primary" type="submit">Submit</button>
             </form>
+
             <c:if test="${sessionScope.Mess != null || sessionScope.Err != null}">
-            <div class="messages">
-                <div class="success-message">${sessionScope.Mess}</div>
-                <div class="error-message">${sessionScope.Err}</div>
-            </div>
-</c:if>
-            <button class="btn btn-add-food" onclick="window.location.href = 'food'">Add Food</button>
+                <div class="messages">
+                    <c:if test="${sessionScope.Mess != null}">
+                        <div class="success-message">${sessionScope.Mess}</div>
+                    </c:if>
+                    <c:if test="${sessionScope.Err != null}">
+                        <div class="error-message">${sessionScope.Err}</div>
+                    </c:if>
+                </div>
+            </c:if>
 
             <form action="menu" method="POST" class="center">
+                <label for="date">Select Age:</label>
                 <select name="ageid" onchange="this.form.submit()">
                     <option value="0">Select age group</option>
                     <c:forEach items="${sessionScope.listAgeCategory}" var="a">
@@ -179,6 +217,11 @@
             </form>
 
             <h3 class="center">If you have changes or additions to the menu, please enter here</h3>
+            <form action="menu" method="POST">
+                <div class="center" style="margin-top: 50px">
+                    <button class="btn btn-primary" type="submit" name="save" value="1">Save</button>
+                </div>
+            </form>
 
             <div class="table-container-wrapper">
                 <table>
@@ -215,15 +258,7 @@
                     </c:forEach>
                     </tbody>
                 </table>
-                 <form action="menu" method="POST">
-                     <div class="center" style="margin-top: 50px">
-                    <button class="btn btn-primary" type="submit" name="save" value="1">Save</button>
-                </div>
-            </form>
             </div>
-
         </div>
-
-           
     </body>
 </html>

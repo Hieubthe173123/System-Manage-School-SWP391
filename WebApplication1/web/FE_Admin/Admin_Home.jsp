@@ -198,8 +198,8 @@
                     <li><button onclick="window.location.href = 'lecturers';">Manage Teachers</button></li>
                     <li><button onclick="window.location.href = 'student';">Manage Students</button></li>
                     <li><button onclick="window.location.href = 'classController';">Manage SchoolYear/Classes</button></li>
-                    <li><button onclick="window.location.href = 'session';">Manage Curriculum</button></li>
                     <li><button onclick="window.location.href = 'promote';">Promote Students</button></li>
+                    <li><button onclick="window.location.href = 'session';">Manage Curriculum</button></li>
                     <li><button onclick="window.location.href = 'searchMenu?date=${sessionScope.dateN}';">Manage Menu</button></li>
                     <li><button onclick="window.location.href = 'historyschoolyear';">School Year History</button></li>
                     <li><a href="${pageContext.request.contextPath}/logout" class="btn btn-danger">Logout</a></li>

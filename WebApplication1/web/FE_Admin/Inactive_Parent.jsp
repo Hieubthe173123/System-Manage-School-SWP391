@@ -9,56 +9,187 @@
         <link rel="stylesheet" href="styles.css">
         <style>
             body {
-                background-color: #f8f9fa;
-                font-family: 'Arial', sans-serif;
+                font-family: 'Roboto', sans-serif;
+                background: #FFFAF0;
+                margin: 0;
+                padding: 0;
+                color: #333;
+                text-align: center;
+                height: 100vh;
+                display: flex;
+                flex-direction: column;
+            }
+
+            header {
+                background: #03ADD5;
+                color: white;
+                padding: 1rem;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                margin-bottom: 1rem;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+
+            header h1 {
+                margin-bottom: 1rem;
+            }
+
+            .header-buttons {
+                display: flex;
+                gap: 15px;
+            }
+
+            .header-buttons a {
+                background-color: #FF6F61;
+                border-color: #FF6F61;
+                color: white;
+                border-radius: 20px;
+                padding: 0.5rem 1rem;
+                text-decoration: none;
+                transition: background-color 0.3s ease, box-shadow 0.3s ease;
+            }
+
+            .header-buttons a:hover {
+                background-color: #FF4D4D;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            }
+
+            .header-buttons .btn-parent {
+                background-color: #4CAF50;
+                border-color: #4CAF50;
+            }
+
+            .header-buttons .btn-parent:hover {
+                background-color: #45A049;
+            }
+
+            .header-buttons .btn-inactive {
+                background-color: #FF9800;
+                border-color: #FF9800;
+            }
+
+            .header-buttons .btn-inactive:hover {
+                background-color: #FB8C00;
+            }
+
+            .container {
+                margin-top: 2rem;
+                padding: 0 1rem;
             }
 
             h2 {
                 margin-bottom: 20px;
+                font-size: 2em;
+                color: #03ADD5;
             }
 
-            .table th, .table td {
-                vertical-align: middle;
+            .form-inline .form-control {
+                border-radius: 20px;
+                margin-right: 0.5rem;
             }
 
-            .modal-header {
-                background-color: #007bff;
+            .btn-custom {
+                background-color: #03ADD5;
+                border-color: #03ADD5;
+                color: white;
+                border-radius: 20px;
+                transition: background-color 0.3s ease;
+            }
+
+            .btn-custom:hover {
+                background-color: #0288D1;
+                border-color: #0288D1;
+            }
+
+            .table {
+                width: 100%;
+                margin: 0 auto;
+                border-collapse: collapse;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                background: #fff;
+                border-radius: 20px;
+                overflow: hidden;
+                border: 5px solid #03ADD5;
+            }
+
+            th, td {
+                padding: 1rem;
+                text-align: center;
+                border-bottom: 1px solid #ddd;
+            }
+
+            th {
+                background-color: #03ADD5;
                 color: white;
             }
 
-            .btn-primary {
-                background-color: #007bff;
-                border-color: #007bff;
+            tbody tr:last-child td {
+                border-bottom: none;
             }
 
-            .btn-primary:hover {
-                background-color: #0056b3;
-                border-color: #004085;
+            tbody td:last-child {
+                border-right: none;
             }
 
-            .btn-secondary {
-                background-color: #6c757d;
-                border-color: #6c757d;
+            .pagination-container {
+                margin-top: 2rem;
+                display: flex;
+                justify-content: center;
+                flex-wrap: wrap;
             }
 
-            .form-group label {
+            .page-btn {
+                margin: 0 5px;
+                padding: 5px 10px;
+                background-color: #03ADD5;
+                border: none;
+                color: white;
+                cursor: pointer;
+                border-radius: 25px;
+                transition: background-color 0.3s ease;
+            }
+
+            .page-btn:hover {
+                background-color: #0288D1;
+            }
+
+            .page-btn.active {
+                background-color: #0288D1;
                 font-weight: bold;
+            }
+
+            @media (max-width: 768px) {
+                body {
+                    font-size: 14px;
+                }
+
+                .container {
+                    padding: 0;
+                }
+
+                .table {
+                    width: 100%;
+                    font-size: 14px;
+                }
             }
         </style>
     </head>
     <body>
-        <div class="container mt-5">
-            <h2 class="text-center">Parent Management</h2>
+        <header>
+            <h1>Parent Management</h1>
+            <div class="header-buttons">
+                <a href="parent" class="btn btn-parent">Back to Parent</a>
+            </div>
+        </header>
 
+        <div class="container">
             <div class="row mt-3">
                 <div class="col-sm-6">
                     <form class="form-inline" action="search-parent-inactive" method="post">
                         <input class="form-control mr-sm-2" type="search" name="searchInput" placeholder="Search parent..." required>
-                        <button class="btn btn-success my-2 my-sm-0" type="submit">Search</button>
+                        <button class="btn btn-custom my-2 my-sm-0" type="submit">Search</button>
                     </form>
-                </div>
-                <div class="col-sm-6 text-right">
-                    <button class="btn btn-secondary" onclick="window.location.href = 'parent'">Back to Parent</button>
                 </div>
             </div>
 
@@ -96,7 +227,6 @@
                                     <td>
                                         <button type="button" class="btn btn-warning btn-sm" onclick="showUpdateModal('${parent.pid}')">Update</button>
                                     </td>
-
                                 </tr>
                             </c:forEach>
                         </c:when>
@@ -122,7 +252,6 @@
                     </c:choose>
                 </tbody>
             </table>
-
 
             <!-- Modal Update Parent Status -->
             <div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="updateModalLabel" aria-hidden="true">
@@ -154,9 +283,8 @@
                 </div>
             </div>
 
-
-            <!-- Paging  -->
-            <div class="d-flex justify-content-center Endpage">
+            <!-- Paging -->
+            <div class="pagination-container">
                 <c:if test="${!empty parentInactiveList}">
                     <c:if test="${index > 1}">
                         <button class="page-btn" onclick="window.location.href = 'parent-inactive?pid=${pid}&index=${index - 1}'">Previous</button>
@@ -169,31 +297,11 @@
                     </c:if>
                 </c:if>
             </div>
-            <style>
-                .Endpage {
-                    margin-top: 10px;
-                }
-                .page-btn {
-                    margin: 0 5px;
-                    padding: 5px 10px;
-                    background-color: #007bff;
-                    border: none;
-                    color: white;
-                    cursor: pointer;
-                    border-radius: 5px;
-                    transition: background-color 0.3s ease;
-                }
-                .page-btn:hover {
-                    background-color: #0056b3;
-                }
-                .page-btn.active {
-                    background-color: #0056b3;
-                    font-weight: bold;
-                }
-            </style>
-            <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-            <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
-            <script>
+        </div>
+
+        <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+        <script>
                             let updateParentId; // store the ID of the parent to be updated
 
                             // Function to display status update modal
@@ -202,8 +310,6 @@
                                 $('#pid').val(pid); // Set the value of hidden input
                                 $('#updateModal').modal('show'); // display modal
                             }
-            </script>
-
-
+        </script>
     </body>
 </html>

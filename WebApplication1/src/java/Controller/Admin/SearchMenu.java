@@ -50,8 +50,9 @@ public class SearchMenu extends BaseRBACController {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response, Account account)
     throws ServletException, IOException {
+        
         String date_raw = request.getParameter("date");
-   
+        
         AgeDBContext age = new AgeDBContext();
         List<AgeCategory> listAge = age.getAllAgeCategory();
 

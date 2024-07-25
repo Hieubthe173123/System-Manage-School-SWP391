@@ -24,8 +24,8 @@ public class CuriculumDBContext extends DBContext {
 
     public static void main(String[] args) {
         CuriculumDBContext db = new CuriculumDBContext();
-        List<Curiculum> curi = db.getCuriculumById(1);
-        System.out.println(curi.size());
+        List<Curiculum> curi = db.getAllActivityInSession("1","4");
+        System.out.println(curi);
     }
 
     public List<Curiculum> getAllActivityInSession(String sid, String sdid) {
@@ -104,7 +104,7 @@ public class CuriculumDBContext extends DBContext {
     }
 
     public boolean checkTimeSlotConflict(String sdid, String timeStart, String timeEnd) {
-        String sql = "SELECT COUNT(*) FROM Curiculum WHERE sdid = ? AND timeStart = ? AND timeEnd = ?";
+        String sql = "SELECT COUNT(*) FROM Curiculum WHERE sdid = ? AND timeStart = ? AND timeEnd = ? and statusSes is not null";
         try {
             PreparedStatement stm = connection.prepareStatement(sql);
             stm.setString(1, sdid);

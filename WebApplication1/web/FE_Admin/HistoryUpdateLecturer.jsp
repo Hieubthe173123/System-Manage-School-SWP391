@@ -1,14 +1,17 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>History Update Lecturers</title>
         <style>
+            @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap');
+
             body {
-                font-family: Arial, sans-serif;
-                background-color: #f4f4f4;
+                background-color: #FFFAF0;
+                font-family: 'Fredoka One', cursive;
+                padding-top: 40px; /* for Bootstrap navbar */
                 margin: 0;
                 padding: 0;
             }
@@ -18,11 +21,12 @@
                 overflow: hidden;
             }
             header {
-                background: #35424a;
+                background: #03ADD5;
                 color: #ffffff;
                 padding-top: 30px;
                 min-height: 70px;
-                border-bottom: #e8491d 3px solid;
+                border-bottom: #FF9800 3px solid;
+                text-align: center;
             }
             header a, header h1 {
                 color: #ffffff;
@@ -36,16 +40,30 @@
                 background: #ffffff;
                 margin: 10px 0;
                 padding: 20px;
-                border-radius: 8px;
-                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                border-radius: 15px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                border: 2px solid skyblue;
             }
             .history-card h2 {
-                color: #35424a;
+                color: #03ADD5;
                 margin: 0 0 10px 0;
             }
             .history-card p {
                 margin: 0 0 10px 0;
                 color: #333333;
+            }
+            .btn-back {
+                background-color: #41E0B3;
+                border: none;
+                border-radius: 10px;
+                font-size: 0.9rem;
+                padding: 8px 16px;
+                margin: 20px 0;
+                display: block;
+                text-align: center;
+            }
+            .btn-back:hover {
+                background-color: #FF9800;
             }
         </style>
     </head>
@@ -53,6 +71,7 @@
         <header>
             <div class="container">
                 <h1>History Update Lecturers</h1>
+                <button class="btn btn-back" onclick="window.location.href = 'lecturers'">Back</button>
             </div>
         </header>
         <div class="container">
@@ -60,7 +79,10 @@
                 <div class="history-card">
                     <h2>Lecturer: ${his.lid.lname}</h2>
                     <p>Class: ${his.csid.classID.clname}</p>
-                    <p>Status: <c:out value="${his.status}" default="Đã sửa đổi"/></p>
+                    <p>Status: <c:choose>
+                            <c:when test="${his.status != null && !his.status.isEmpty()}">${his.status}</c:when>
+                            <c:otherwise>Modified</c:otherwise>
+                        </c:choose></p>
                 </div>
             </c:forEach>
         </div>

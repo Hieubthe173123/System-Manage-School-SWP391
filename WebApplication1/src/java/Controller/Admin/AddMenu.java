@@ -105,16 +105,16 @@ public class AddMenu extends BaseRBACController {
             saveMenu(listMenuFood, age, dateFormat.format(currentDate), listMeal, menuDB, session, request, response);
             response.sendRedirect("searchMenu?date=" + dateFormat.format(currentDate));
         } else if (("1".equals(save) && listMenuFood.isEmpty() && age == null)) {
-            session.setAttribute("Err", "Ban chua nhap do tuoi");
+            session.setAttribute("Err", "You have not entered your age yet!");
             response.sendRedirect("menu");
         } else if (("1".equals(save) && !listMenuFood.isEmpty() && (age == null || !age.equals("0")))) {
-            session.setAttribute("Err", "Bạn chưa nhập độ tuổi!");
+            session.setAttribute("Err", "You have not entered your age yet!");
             response.sendRedirect("menu");
         } else if (mealID != null && foodid != null && !foodid.equals("0")) {
             addFoodToMenu(mealID, foodid, listMenuFood, foodDB, session);
 
         }else if("1".equals(save) && listMenuFood.isEmpty() && age != null) {
-             session.setAttribute("Err", "Danh sách food trống không thể lưu");
+             session.setAttribute("Err", "Empty food list cannot be saved");
             response.sendRedirect("menu");
         }
         if (!"1".equals(save)) {
@@ -145,21 +145,21 @@ public class AddMenu extends BaseRBACController {
                     for (Menu menu : existingMenus) {
                         if (menu.getMealID().getMealID() == mealTime.getMealID()) {
                             menuDB.update(currentDate, menuBuilder.toString(), Integer.parseInt(age), mealTime.getMealID());
-                            session.setAttribute("Mess", "Cập nhật thành công bữa ăn.");
+                            session.setAttribute("Mess", "Successfully updated menu.");
                             menuExists = true;
                             break;
                         }
                     }
                     if (!menuExists) {
                         menuDB.insertMenu(Integer.parseInt(age), currentDate, menuBuilder.toString(), mealTime.getMealID());
-                        session.setAttribute("Mess", "Thêm thành công bữa ăn");
+                        session.setAttribute("Mess", "Add menu successfull");
                     }
                 }
             }
             listMenuFood.clear();
         } else {
             try {
-                session.setAttribute("Err", "Bạn chưa nhập độ tuổi.");
+                session.setAttribute("Err", "You have not entered your age yet!");
                 respond.sendRedirect("menu");
             } catch (IOException ex) {
 
@@ -174,7 +174,7 @@ public class AddMenu extends BaseRBACController {
                     .anyMatch(menuFood -> menuFood.getMealid() == Integer.parseInt(mealID) && menuFood.getFood().getFoodid() == selectedFood.getFoodid());
 
             if (foodExists) {
-                session.setAttribute("Err", "Món ăn đã tồn tại trong danh sách!");
+                session.setAttribute("Err", "The food already exists in the list!");
             } else {
                 listMenuFood.add(new MenuFood(Integer.parseInt(mealID), selectedFood));
                 session.setAttribute("listMenuFood", listMenuFood);

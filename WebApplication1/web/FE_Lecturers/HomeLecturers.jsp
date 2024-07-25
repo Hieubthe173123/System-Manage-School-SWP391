@@ -205,10 +205,7 @@
                         <div class="modal-body">
                             <input type="hidden" id="studentId" name="studentId" value="">
                             <input type="hidden" id="lid" name="lid" value="${lec.lid}">
-                            <div class="form-group">
-                                <label for="fid">Feedback ID</label>
-                                <input type="text" class="form-control" name="fid" id="fid" readonly>
-                            </div>
+                            
                             <div class="form-group">
                                 <label for="ftitle">Title</label>
                                 <input type="text" class="form-control" id="ftitle" name="ftitle" required>

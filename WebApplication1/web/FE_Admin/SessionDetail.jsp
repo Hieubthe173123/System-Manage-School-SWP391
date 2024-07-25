@@ -10,116 +10,162 @@
         <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
         <style>
             body {
-                background-color: #f9f9f9;
-                color: #333;
-                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                font-family: 'Roboto', cursive, sans-serif;
+                background-color: #FFFAF0; /* Ivory */
+                margin: 0;
+                padding: 0;
             }
-            .btn-campus {
-                background-color: #4CAF50;
+
+            header {
+                background: #33B7CE;
+                color: white;
+                padding: 1rem;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                margin-bottom: 1rem;
+                position: relative;
+            }
+
+            header a {
+                position: absolute;
+                right: 1rem;
+                top: 1rem;
+                color: white;
+                text-decoration: none;
+                font-size: 1rem;
+                padding: 0.5rem 1rem;
+                border-radius: 25px;
+                background: #FF4500; /* Orange Red */
+                transition: background-color 0.3s ease;
+            }
+
+            header a:hover {
+                background-color: #FF6347; /* Tomato */
+            }
+
+            .btn-campus, .btn-campus1 {
+                background-color: #638EBF;
                 color: white;
                 border: none;
-                padding: 10px 20px;
+                padding: 12px 25px;
                 text-align: center;
                 text-decoration: none;
                 display: inline-block;
-                font-size: 16px;
-                margin: 4px 2px;
+                font-size: 18px;
+                margin: 10px 5px;
                 cursor: pointer;
                 transition: all 0.3s ease;
+                border-radius: 25px;
             }
-            .btn-campus:hover {
-                background-color: #388E3C;
+
+            .btn-campus:hover, .btn-campus1:hover {
+                background-color: #63E3AD; /* Orange Red */
             }
-            .btn-selected {
-                background-color: #FFC107;
-                color: white;
-                border: none;
-                padding: 10px 20px;
-                text-align: center;
-                text-decoration: none;
-                display: inline-block;
-                font-size: 16px;
-                margin: 4px 2px;
-                cursor: pointer;
-                transition: all 0.3s ease;
-            }
-            .btn-selected:hover {
-                background-color: #FFA000;
-            }
-            .btn-session-detail {
-                background-color: #2196F3;
-                color: white;
-                border: none;
-                padding: 10px 20px;
-                text-align: center;
-                text-decoration: none;
-                display: inline-block;
-                font-size: 16px;
-                margin: 5px;
-                cursor: pointer;
-                transition: all 0.3s ease;
-            }
-            .btn-session-detail:hover {
-                background-color: #1976D2;
-            }
-            .btn-selected-session-detail {
-                background-color: #FF9800; /* Different color for the selected button */
-                color: white;
-            }
+
             .content-wrapper {
-                max-width: 1200px;
+                max-width: 1000px;
                 margin: auto;
                 padding: 20px;
-                background-color: #fff;
-                border: 1px solid #ddd;
-                border-radius: 10px;
-                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                background-color: white;
+                border-radius: 20px;
+                box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+                overflow: hidden;
             }
+
+            .form-group {
+                margin-bottom: 15px;
+                text-align: center;
+            }
+
+            label {
+                font-weight: bold;
+                display: block;
+                margin-bottom: 5px;
+                color: #2acee8; /* Light blue */
+            }
+
             .table-responsive {
                 max-height: 400px;
                 overflow-y: auto;
+                margin-top: 20px;
+                border-radius: 15px;
+                border: 2px solid #ced4da;
             }
-            .session-details .btn-campus {
-                margin: 5px;
+
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-bottom: 20px;
+                border-radius: 15px;
+                overflow: hidden;
             }
-            .table-bordered {
-                border: 2px solid #4CAF50;
-                border-radius: 10px;
+
+            table, th, td {
+                border: 1px solid #dee2e6;
             }
-            .thead-dark {
-                background-color: #4CAF50;
+
+            th, td {
+                padding: 12px;
+                text-align: left;
+            }
+
+            th {
+                background-color: #03ADD5; /* Light blue */
                 color: white;
             }
-            .btn-warning {
-                background-color: #FFC107;
-                border-color: #FFC107;
+
+            td select {
+                width: 80%;
+                padding: 8px;
+                border: 2px solid #ced4da;
+                border-radius: 10px;
+                font-size: 16px;
+                color: #495057;
             }
-            .btn-warning:hover {
-                background-color: #FFA000;
-                border-color: #FFA000;
+
+            .status-active {
+                background-color: #32CD32; /* Lime green */
+                color: white;
             }
-            .btn-danger {
-                background-color: #DC3545;
-                border-color: #DC3545;
+
+            .status-inactive {
+                background-color: #FF6347;
+                color: white;
             }
-            .btn-danger:hover {
-                background-color: #C82333;
-                border-color: #C82333;
+
+            .btn-primary {
+                background-color: #374955;
+                border-color: #374955;
             }
-            h1, h2, h3, h4, h5, h6 {
-                color: #4CAF50;
+
+            .btn-primary:hover {
+                background-color: #228B22;
+                border-color: #228B22;
             }
-            a {
-                color: #4CAF50;
+
+            .btn-session {
+                background-color: #17a2b8;
+                color: white;
+                border: none;
+                padding: 10px 20px;
+                text-align: center;
+                text-decoration: none;
+                display: inline-block;
+                font-size: 16px;
+                margin: 4px 2px;
+                cursor: pointer;
+                transition: background-color 0.3s ease;
+                border-radius: 25px;
             }
-            a:hover {
-                color: #388E3C;
+
+            .btn-session.selected {
+                background-color: #63E3AD; /* Màu nổi bật */
+                color: white;
             }
-            .total-session {
-                font-size: 18px;
-                color: #4CAF50;
-                margin-left: 10px;
+
+            .btn-session:hover {
+                background-color: #63E3AD;
             }
+
         </style>
         <script>
             function confirmDelete(curID) {
@@ -128,44 +174,65 @@
                 }
             }
 
-            function selectButton(button) {
-                const buttons = document.querySelectorAll('.btn-session-detail');
-                buttons.forEach(btn => btn.classList.remove('btn-selected-session-detail'));
-                button.classList.add('btn-selected-session-detail');
-            }
+            function handleSessionDetailClick(button, sid, sdid) {
+                // Xóa lớp 'selected' khỏi tất cả các nút session detail
+                const buttons = document.querySelectorAll('.btn-campus1');
+                buttons.forEach(btn => btn.classList.remove('selected'));
 
-            function handleSessionDetailClick(sid, sdid) {
+                // Thêm lớp 'selected' vào nút session detail được nhấp
+                button.classList.add('selected');
+
                 const url = new URL(window.location.href);
                 url.searchParams.set('sid', sid);
                 url.searchParams.set('sdid', sdid);
                 window.location.href = url.toString();
             }
 
+            function handleSessionClick(button) {
+                // Xóa lớp 'selected' khỏi tất cả các nút session
+                const buttons = document.querySelectorAll('.btn-session');
+                buttons.forEach(btn => btn.classList.remove('selected'));
+
+                // Thêm lớp 'selected' vào nút session được nhấp
+                button.classList.add('selected');
+            }
+
             window.onload = function () {
                 const urlParams = new URLSearchParams(window.location.search);
                 const selectedSdid = urlParams.get('sdid');
                 if (selectedSdid) {
-                    const buttons = document.querySelectorAll('.btn-session-detail');
+                    const buttons = document.querySelectorAll('.btn-campus1');
                     buttons.forEach(btn => {
                         if (btn.getAttribute('data-sdid') === selectedSdid) {
-                            btn.classList.add('btn-selected-session-detail');
+                            btn.classList.add('selected');
                         }
                     });
+                }
+
+                // Kiểm tra nếu có session đã được chọn trong URL, thêm lớp 'selected' cho nút đó
+                const selectedSid = urlParams.get('sid');
+                if (selectedSid) {
+                    const selectedButton = document.querySelector(`.btn-session[data-sid="${selectedSid}"]`);
+                    if (selectedButton) {
+                        selectedButton.classList.add('selected');
+                    }
                 }
             };
         </script>
     </head>
     <body>
+        <header>
+            <h1 class="name">Course Information</h1>
+            <a href="session" class="btn btn-campus">Back To Session</a>
+        </header>
         <div class="container mt-5">
             <div class="content-wrapper">
-                <h1 class="text-center mb-4" style="color: #39BACD;">Course Information</h1>
                 <div class="mb-3 d-flex justify-content-between align-items-start">
                     <div>
-                        <button class="btn btn-info" onclick="window.location.href = 'session'">Back To Session</button>
-                        <h2 style="color: #39BACD;">Available Sessions</h2>
+                        <h2>Available Sessions</h2>
                         <div class="table-responsive">
                             <table class="table table-bordered">
-                                <thead class="thead-dark">
+                                <thead>
                                     <tr>
                                         <th>Session Name</th>
                                     </tr>
@@ -173,7 +240,12 @@
                                 <tbody>
                                     <c:forEach var="session" items="${requestScope.list}">
                                         <tr>
-                                            <td style="width: 20%;"><a href="session-detail?sid=${session.sid}" class="text-decoration-none" style="color: #39BACD;">${session.sname}</a></td>
+                                            <td>
+                                                <form action="session-detail" method="get" style="display: inline;">
+                                                    <input type="hidden" name="sid" value="${session.sid}">
+                                                    <button type="submit" class="btn btn-session" data-sid="${session.sid}" onclick="handleSessionClick(this)">${session.sname}</button>
+                                                </form>
+                                            </td>
                                         </tr>
                                     </c:forEach>
                                 </tbody>
@@ -182,26 +254,27 @@
                     </div>
                     <div>
                         <div class="mb-3 d-flex justify-content-between align-items-center">
-                            <h2 style="color: #39BACD;">Session Details</h2>
+                            <h2 style="margin-right: 10px">Session Details</h2>
                             <form action="add-session" method="POST" style="display:inline;">
                                 <input type="hidden" name="sid" value="${param.sid}" />
-                                <button type="submit" class="btn btn-primary" id="addNewLecturerBtn">Add Session</button>
+                                <button type="submit" class="btn btn-primary">Add Session</button>
                             </form>
+                            &nbsp&nbsp
                             <span class="total-session">Total Session: ${requestScope.list1[0].sid.totalSession}</span>
                         </div>
                         <div class="session-details d-flex flex-wrap">
                             <c:forEach var="sessionDetail" items="${requestScope.list1}">
-                                <a href="javascript:void(0);" class="btn btn-session-detail" data-sdid="${sessionDetail.sdid}" onclick="handleSessionDetailClick('${param.sid}', '${sessionDetail.sdid}')">Buổi ${sessionDetail.sessionNumber}</a>
+                                <a href="javascript:void(0);" class="btn btn-campus1" data-sdid="${sessionDetail.sdid}" onclick="handleSessionDetailClick(this, '${param.sid}', '${sessionDetail.sdid}')">Session ${sessionDetail.sessionNumber}</a>
                             </c:forEach>
                         </div>
                     </div>
                 </div>
                 <div>
-                    <h2 style="color: #39BACD;">Activities</h2>
+                    <h2>Activities</h2>
                     <button class="btn btn-danger" id="addActivityButton">Add Activity</button>
                     <div class="table-responsive">
                         <table class="table table-bordered">
-                            <thead class="thead-dark">
+                            <thead>
                                 <tr>
                                     <th>Activity</th>
                                     <th>Start Time</th>
@@ -261,3 +334,4 @@
         </script>
     </body>
 </html>
+

@@ -10,11 +10,9 @@ import Entity.Account;
 import Entity.Food;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.List;
 
 /**
@@ -46,12 +44,6 @@ public class FoodController extends BaseRBACController {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response, Account account)
             throws ServletException, IOException {
-        FoodDBContext fooddb = new FoodDBContext();
-         List<Food> foodList = fooddb.getAllFood();
-        
-        // Set the food list in request scope
-        request.setAttribute("foodList", foodList);
-        request.getRequestDispatcher("/FE_Admin/CRUD_Food.jsp").forward(request, response);
     }
 
     @Override

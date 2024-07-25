@@ -10,9 +10,11 @@ import Entity.Account;
 import Entity.Food;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.PrintWriter;
 
 /**
  *
@@ -38,7 +40,23 @@ public class AddFood extends BaseRBACController {
     protected void doPost(HttpServletRequest request, HttpServletResponse response, Account account)
             throws ServletException, IOException {
         try {
-            String fname = request.getParameter("fname");       
+            String fname = request.getParameter("fname");
+            String caloStr = request.getParameter("calo");
+            int calo;
+
+            try {
+                calo = Integer.parseInt(caloStr);
+                if (calo < 0) {
+                    request.setAttribute("errorMessage", "Calories cannot be negative.");
+                    request.getRequestDispatcher("/admin/food").forward(request, response);
+                    return;
+                }
+            } catch (NumberFormatException e) {
+                request.setAttribute("errorMessage", "Calories must be an integer.");
+                request.getRequestDispatcher("/admin/food").forward(request, response);
+                return;
+            }
+
             Food newFood = new Food();
             newFood.setFname(fname);
 
@@ -48,7 +66,9 @@ public class AddFood extends BaseRBACController {
                 request.getRequestDispatcher("/admin/food").forward(request, response);
                 return;
             }
+
             foodDBContext.addFood(newFood);
+
             // Redirect to the FoodController servlet after adding the food
             response.sendRedirect(request.getContextPath() + "/admin/food");
         } catch (Exception e) {

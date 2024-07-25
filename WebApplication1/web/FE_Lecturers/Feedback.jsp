@@ -30,7 +30,6 @@
         </style>
     </head>
     <body>
-<<<<<<< Updated upstream
         <div class="container mt-5">
             <h2 class="text-center">Feedback Management</h2>
         </form>           
@@ -42,15 +41,6 @@
         <c:if test="${not empty errorMessage}">
             <div class="alert alert-danger">${errorMessage}</div>
         </c:if>
-=======
-        <header>
-            <form action="liststudent" method="GET">
-                <input type="hidden" value="${sessionScope.lid}" name="lid"/>
-                <button>Back to List Student</button>
-            </form>          
-            <h1 class="name">Feedback Management</h1>
-        </header>
->>>>>>> Stashed changes
 
         <table class="table table-bordered">
             <thead class="thead-light">

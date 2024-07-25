@@ -44,7 +44,7 @@ public class UpdateFood extends HttpServlet {
         try {
             boolean isUpdated = fooddb.updateFood(foodId, foodName);
             if (isUpdated) {
-               response.sendRedirect(request.getContextPath() + "/admin/food");
+                request.getRequestDispatcher("/food").forward(request, response);
             }
         } catch (SQLException e) {
             request.setAttribute("errorMessage", "An error occurred while adding food.");

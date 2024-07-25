@@ -65,11 +65,11 @@
                     <c:choose>
                         <c:when test="${not empty searchResults}">
                             <c:forEach var="food" items="${searchResults}">
-                                <tr data-foodid="${food.foodid}" data-foodname="${food.fname}" data-calo="${food.calo}">
+                                <tr data-foodid="${food.foodid}" data-foodname="${food.fname}" ">
                                     <td>${food.foodid}</td>
                                     <td>${food.fname}</td>
                                     <td>
-                                        <button class="btn btn-warning btn-sm" onclick="editFood('${food.foodid}', '${food.fname}', '${food.calo}')">Update</button>
+                                        <button class="btn btn-warning btn-sm" onclick="editFood('${food.foodid}', '${food.fname}'">Update</button>
                                         <button type="button" class="btn btn-danger btn-sm" onclick="deleteFood('${food.foodid}')">Delete</button>
                                     </td>
                                 </tr>
@@ -115,8 +115,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- Update Food Modal -->
         <!-- Update Food Modal -->
         <div class="modal fade" id="updateFoodModal" tabindex="-1" aria-labelledby="updateFoodModalLabel" aria-hidden="true">
             <div class="modal-dialog">
@@ -130,8 +128,7 @@
                         <form action="update-food" method="POST">
                             <div class="form-group">
                                 <label for="updateFoodId">Food ID</label>
-                                <p id="displayFoodId" class="form-control-plaintext"></p>
-                                <input type="hidden" class="form-control" name="foodid" id="updateFoodId" required>
+                                <input type="text" class="form-control" name="foodid" id="updateFoodId" readonly="r">
                             </div>
                             <div class="form-group">
                                 <label for="updateFoodName">Food Name</label>
@@ -144,8 +141,6 @@
                 </div>
             </div>
         </div>
-
-
         <!-- Delete Food Modal -->
         <div class="modal fade" id="deleteFoodModal" tabindex="-1" aria-labelledby="deleteFoodModalLabel" aria-hidden="true">
             <div class="modal-dialog">
@@ -174,11 +169,9 @@
                                                 $('#deleteFoodModal').modal('show');
                                             }
 
-                                            function editFood(foodId, foodName, calo) {
-                                                document.getElementById('displayFoodId').innerText = foodId;
+                                            function editFood(foodId, foodName) {
                                                 document.getElementById('updateFoodId').value = foodId;
                                                 document.getElementById('updateFoodName').value = foodName;
-                                                document.getElementById('updateCalo').value = calo;
 
                                                 $('#updateFoodModal').modal('show');
                                             }
@@ -190,7 +183,7 @@
 
                                                 const input = document.createElement('input');
                                                 input.type = 'hidden';
-                                                input.name = 'fname';
+                                                input.name = 'foodid';
                                                 input.value = deleteFoodId;
 
                                                 form.appendChild(input);

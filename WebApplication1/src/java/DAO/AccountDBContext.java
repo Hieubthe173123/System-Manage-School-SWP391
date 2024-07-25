@@ -28,7 +28,7 @@ public class AccountDBContext extends DBContext {
 //        System.out.println(list);
 
     }
-    
+
     //change password lecturer
     public void changePassLecurers(int id, String newPass) {
         try {
@@ -168,7 +168,6 @@ public class AccountDBContext extends DBContext {
                 acc.setAid(rs.getInt("aid"));
                 acc.setUsername(rs.getString("username"));
                 acc.setPassword(rs.getString("password"));
-                
 
                 Parent pa = new Parent();
                 pa.setPid(rs.getInt("pid"));
@@ -186,9 +185,9 @@ public class AccountDBContext extends DBContext {
         }
         return list;
     }
-    
+
     public Account getAllAccountByAid2(String aid) {
-        
+
         try {
             String sql = "SELECT [aid]\n"
                     + "      ,[username]\n"
@@ -370,7 +369,7 @@ public class AccountDBContext extends DBContext {
         return list;
     }
 
-     //Hàm Update => Phân Quyền Role, Pid, Lid cho Account
+    //Hàm Update => Phân Quyền Role, Pid, Lid cho Account
     public void updateAuthenticationAccount3(Account acc, boolean status) {
         try {
             String sql = "UPDATE Account SET role = ?, pid = ?, lid = ?, status = ? WHERE aid = ?";
@@ -396,7 +395,7 @@ public class AccountDBContext extends DBContext {
             Logger.getLogger(AccountDBContext.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     public void deleteAccount(String aid) {
         try {
             String sql = "DELETE FROM [dbo].[Account]\n"
@@ -407,7 +406,7 @@ public class AccountDBContext extends DBContext {
         } catch (SQLException ex) {
             Logger.getLogger(AccountDBContext.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
     }
 
     //Hàm Tạo Account mới
@@ -520,7 +519,9 @@ public class AccountDBContext extends DBContext {
     }
 
     public int countStudents() {
-        String sql = "SELECT COUNT(*) AS total FROM [SchoolManagement].[dbo].[Student] ";
+        String sql = " SELECT COUNT(*) AS total \n"
+                + "FROM [SchoolManagement].[dbo].[Student]\n"
+                + "WHERE Status = 1; ";
         try (PreparedStatement stm = connection.prepareStatement(sql)) {
             ResultSet rs = stm.executeQuery();
             if (rs.next()) {
@@ -533,7 +534,7 @@ public class AccountDBContext extends DBContext {
     }
 
     public int countTeachers() {
-        String sql = "SELECT COUNT(*) AS total FROM [SchoolManagement].[dbo].[Lecturers]";
+        String sql = "SELECT COUNT(*) AS total FROM [SchoolManagement].[dbo].[Lecturers] WHERE Status = 1;";
         try (PreparedStatement stm = connection.prepareStatement(sql)) {
             ResultSet rs = stm.executeQuery();
             if (rs.next()) {
@@ -544,7 +545,7 @@ public class AccountDBContext extends DBContext {
         }
         return 0;
     }
-    
+
     //Cookie
     public ArrayList<Account> getAccountByUsernameandPassword(String username, String password) {
         ArrayList<Account> list = new ArrayList<>();
@@ -561,27 +562,27 @@ public class AccountDBContext extends DBContext {
             ps.setString(1, username);
             ps.setString(2, password);
             ResultSet rs = ps.executeQuery();
-            while(rs.next()){
+            while (rs.next()) {
                 Account a = new Account();
                 a.setAid(rs.getInt("aid"));
                 a.setUsername(rs.getString("username"));
                 a.setPassword(rs.getString("password"));
                 a.setRole(rs.getInt("role"));
-                
+
                 Parent pa = new Parent();
                 pa.setPid(rs.getInt("pid"));
                 a.setPid(pa);
-                
+
                 Lecturers lec = new Lecturers();
                 lec.setLid(rs.getInt("lid"));
                 a.setLid(lec);
-                
+
                 list.add(a);
             }
         } catch (SQLException ex) {
             Logger.getLogger(AccountDBContext.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         return list;
     }
 }

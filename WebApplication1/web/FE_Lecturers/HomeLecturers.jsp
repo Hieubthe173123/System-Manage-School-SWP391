@@ -153,13 +153,10 @@
 
         <div class="main" id="mainContent">
             <h2 class="text-center">FeedBack Management</h2> 
-
-            <!-- Buttons to replace sidebar -->
             <div class="btn-group">
-                <a class="btn btn-custom" href="timeTableLecturer">Back to TimeTable</a>
-                <a href="javascript:void(0)" id="listFeedbackLink" class="btn btn-custom">List Feedback</a>
+                <a class="btn btn-custom" href="timeTableLecturer?lid=${sessionScope.lid}">Back to TimeTable</a>
+                <a href="javascri1pt:void(0)" id="listFeedbackLink" class="btn btn-custom">List Feedback</a>
             </div>
-
             <c:if test="${not empty successMessage}">
                 <div class="alert alert-success" role="alert">
                     ${successMessage}
@@ -238,22 +235,7 @@
         <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
         <script>
-                                    function toggleSidebar() {
-                                        var sidebar = document.getElementById("sidebar");
-                                        var mainContent = document.getElementById("mainContent");
-                                        var toggleBtn = document.getElementById("toggleBtn");
-
-                                        if (sidebar.classList.contains("hidden")) {
-                                            sidebar.classList.remove("hidden");
-                                            mainContent.classList.remove("fullwidth");
-                                            toggleBtn.style.left = "220px";
-                                        } else {
-                                            sidebar.classList.add("hidden");
-                                            mainContent.classList.add("fullwidth");
-                                            toggleBtn.style.left = "20px";
-                                        }
-                                    }
-
+                                    
                                     document.addEventListener("DOMContentLoaded", function () {
                                         var listFeedbackLink = document.getElementById("listFeedbackLink");
                                         var lecturerId = "${lec.lid}";

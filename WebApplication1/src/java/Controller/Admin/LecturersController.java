@@ -22,11 +22,17 @@ public class LecturersController extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        LecturerClassSession lcs = new LecturerClassSession();
-        List<Lecturers_Class_Session> list = lcs.getAllLecturerInNewSchoolYear();
+        String nameLec = request.getParameter("nameLec");
+          LecturerClassSession lcs = new LecturerClassSession();
+         if (nameLec != null && !nameLec.trim().isEmpty()) {
+            List<Lecturers_Class_Session> list1 = lcs.searchLecturers(nameLec);
+            request.setAttribute("list1", list1);
+        } else {
+              List<Lecturers_Class_Session> list = lcs.getAllLecturerInNewSchoolYear();
+              request.setAttribute("list", list);
+        }
         SchoolYear sc = lcs.getNewSchoolYear();
-        request.setAttribute("sc", sc);
-        request.setAttribute("list", list);
+        request.setAttribute("sc", sc); 
         request.getRequestDispatcher("/FE_Admin/Lecturers.jsp").forward(request, response);
     }
 

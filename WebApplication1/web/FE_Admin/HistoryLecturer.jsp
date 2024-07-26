@@ -99,7 +99,7 @@
                         <div class="lecture">
                             <i class="lecture-icon fas fa-chalkboard-teacher"></i>
                             <h2>${lec.lid.lname}</h2>
-                            <p><a href="history-detail?lid=${lec.lid.lid}">Lecture Details</a></p>
+                            <p><a href="history-detail?lid=${lec.lid.lid}&yid=${param.yid}">Lecture Details</a></p>
                             <p><a href="history-update-lecturers?yid=${param.yid}&lid=${lec.lid.lid}"><strong>Class:</strong> 
                                     <c:choose>
                                         <c:when test="${empty lec.csid.classID.clname}">Không dạy lớp nào</c:when>
@@ -107,12 +107,6 @@
                                     </c:choose>
                                 </a></p>
                             <p><strong>Lecture ID:</strong> ${lec.lid.lid}</p>
-                            <p><strong>Status:</strong> 
-                                <c:choose>
-                                    <c:when test="${empty lec.lid.status}">Inactive</c:when>
-                                    <c:otherwise>${lec.lid.status}</c:otherwise>
-                                </c:choose>
-                            </p>
                         </div>
                     </div>
                     <c:if test="${status.index % 4 == 3}">

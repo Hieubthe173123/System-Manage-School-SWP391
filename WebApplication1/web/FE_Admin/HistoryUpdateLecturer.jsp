@@ -71,7 +71,7 @@
         <header>
             <div class="container">
                 <h1>History Update Lecturers</h1>
-                <button class="btn btn-back" onclick="window.location.href = 'lecturers'">Back</button>
+                <button class="btn btn-back" onclick="window.location.href = 'history?yid=${param.yid}'">Back</button>
             </div>
         </header>
         <div class="container">

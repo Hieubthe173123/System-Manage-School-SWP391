@@ -205,6 +205,7 @@
                 </form>
             </div>
             <div class="action-buttons">
+                 <button class="btn btn-secondary" onclick="window.location.href = 'session'">Show All Session</button>
                 <button class="btn-add" onclick="window.location.href = 'add-sessions'">Add Session</button>
                 <button class="btn-history" onclick="window.location.href = 'history-session'">Session History</button>
             </div>

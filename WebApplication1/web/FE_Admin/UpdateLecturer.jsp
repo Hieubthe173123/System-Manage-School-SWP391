@@ -156,7 +156,7 @@
                             <div class="form-group">
                                 <label for="class">Class Name</label>
                                 <select class="form-control" id="class" name="classid" required>
-                                    <option value="${lec1.csid.classID}">${lec1.csid.classID.clname}</option>
+                                    <option value="${lec.csid.classID}">${lec.csid.classID.clname}</option>
                                     <option value="">No Class</option>
                                     <c:forEach items="${requestScope.list1}" var="cla">
                                         <option value="${cla.classID.classid}">${cla.classID.clname}</option>

@@ -1,10 +1,8 @@
 package Controller.Admin;
 
-import Authentication.BaseRBACController;
 import DAO.ClassDBContext;
 import DAO.LecturerClassSession;
 import DAO.LecturersDBContext;
-import Entity.Account;
 import Entity.Lecturers;
 import Entity.Lecturers_Class_Session;
 import Entity.Class;
@@ -39,13 +37,14 @@ public class UpdateLecturers extends HttpServlet {
         List<ClassSession> list = cl.getAllClass();
         request.setAttribute("list1", list);
 
-        if (request.getParameter("successMessage") != null) {
-            request.setAttribute("successMessage", request.getParameter("successMessage"));
+        String successMessage = request.getParameter("successMessage");
+        if (successMessage != null) {
+            request.setAttribute("successMessage", successMessage);
         }
 
-        String errorMessage3 = (String) request.getAttribute("errorMessage3");
-        if (errorMessage3 != null) {
-            request.setAttribute("errorMessage3", errorMessage3);
+        String errorMessage = (String) request.getAttribute("errorMessage");
+        if (errorMessage != null) {
+            request.setAttribute("errorMessage", errorMessage);
         }
 
         request.getRequestDispatcher("/FE_Admin/UpdateLecturer.jsp").forward(request, response);
@@ -57,7 +56,7 @@ public class UpdateLecturers extends HttpServlet {
         processRequest(request, response);
     }
 
-     @Override
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String lid = request.getParameter("lid");
@@ -69,27 +68,12 @@ public class UpdateLecturers extends HttpServlet {
         String email = request.getParameter("email");
         String IDcard = request.getParameter("IDcard");
 
-
-        if (phoneNumber == null || !phoneNumber.matches("0\\d{9}")) {
-            request.setAttribute("errorMessage", "Invalid Declaration, Please Try Again.");
-            request.setAttribute("lid", lid);
-
-        if (!isValidInput(request, lid, lname, phoneNumber, IDcard)) {
-
-            processRequest(request, response);
-            return;
-        }
-
-
-        if (lname == null || !lname.matches("[\\p{L} ]+")) {
-            request.setAttribute("errorMessage", "Invalid Declaration, Please Try Again.");
-            request.setAttribute("lid", lid);
+        if (!isValidInput(request, lname, phoneNumber, IDcard)) {
             processRequest(request, response);
             return;
         }
 
         int lid_raw;
-
         try {
             lid_raw = Integer.parseInt(lid);
         } catch (NumberFormatException e) {
@@ -119,7 +103,7 @@ public class UpdateLecturers extends HttpServlet {
         }
     }
 
-    private boolean isValidInput(HttpServletRequest request, String lid, String lname, String phoneNumber, String IDcard) {
+    private boolean isValidInput(HttpServletRequest request, String lname, String phoneNumber, String IDcard) {
         boolean valid = true;
 
         if (phoneNumber == null || !phoneNumber.matches("0\\d{9}")) {
@@ -133,7 +117,7 @@ public class UpdateLecturers extends HttpServlet {
         }
 
         if (IDcard == null || !IDcard.matches("\\d{12}")) {
-            request.setAttribute("errorMessage", "The ID card number must consist of exactly 12 digits.");
+            request.setAttribute("errorMessage", "Enter invalid information. Please try again.");
             valid = false;
         }
 

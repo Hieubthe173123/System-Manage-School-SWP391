@@ -84,26 +84,26 @@ public class LecturerClassSession extends DBContext {
 
         try {
             String sql = "SELECT\n"
-                    + "L.lid,\n"
-                    + "L.lname,\n"
-                    + "L.dob,\n"
-                    + "L.gender,\n"
-                    + "L.phoneNumber,\n"
-                    + "L.IDcard,\n"
-                    + "L.[Address],\n"
-                    + "L.NickName,\n"
-                    + "L.Email,\n"
-                    + "C.classID,\n"
-                    + "C.clname\n"
-                    + "FROM\n"
-                    + "Lecturers L\n"
-                    + "LEFT JOIN\n"
-                    + "Lecturers_Class_Session LCS ON L.lid = LCS.lid\n"
-                    + "LEFT JOIN\n"
-                    + "Class_Session CS ON LCS.csid = CS.csid\n"
-                    + "LEFT JOIN\n"
-                    + "Class C ON CS.classID = C.classID\n"
-                    + "where L.lid = ?";
+                    + "                    L.lid,\n"
+                    + "                    L.lname,\n"
+                    + "                    L.dob,\n"
+                    + "                    L.gender,\n"
+                    + "                    L.phoneNumber,\n"
+                    + "                    L.IDcard,\n"
+                    + "                    L.[Address],\n"
+                    + "                    L.NickName,\n"
+                    + "                    L.Email,\n"
+                    + "                    C.classID,\n"
+                    + "                    C.clname\n"
+                    + "                    FROM\n"
+                    + "                    Lecturers L\n"
+                    + "                    LEFT JOIN\n"
+                    + "                    Lecturers_Class_Session LCS ON L.lid = LCS.lid\n"
+                    + "                    LEFT JOIN\n"
+                    + "                    Class_Session CS ON LCS.csid = CS.csid\n"
+                    + "                    LEFT JOIN\n"
+                    + "                    Class C ON CS.classID = C.classID\n"
+                    + "                    where L.lid = ? and LCS.Status is not null";
 
             PreparedStatement stm = connection.prepareStatement(sql);
             stm.setString(1, lid);
@@ -504,12 +504,12 @@ public class LecturerClassSession extends DBContext {
         return false;
     }
 
-    public int getTotalPhoneNumberExists(String phoneNumber,String id) {
+    public int getTotalPhoneNumberExists(String phoneNumber, String id) {
         try {
             String sql = "SELECT COUNT(*) AS count FROM Lecturers WHERE phoneNumber = ? and status is not null and lid != ?";
             PreparedStatement stm = connection.prepareStatement(sql);
             stm.setString(1, phoneNumber);
-            stm.setString(2,id);
+            stm.setString(2, id);
             ResultSet rs = stm.executeQuery();
 
             if (rs.next()) {
@@ -521,12 +521,12 @@ public class LecturerClassSession extends DBContext {
         return 0;
     }
 
-    public int getIDCardExists(String IDCard,String id) {
+    public int getIDCardExists(String IDCard, String id) {
         try {
             String sql = "SELECT COUNT(*) AS count FROM Lecturers WHERE IDcard = ? and status is not null and lid != ?";
             PreparedStatement stm = connection.prepareStatement(sql);
             stm.setString(1, IDCard);
-            stm.setString(2,id);
+            stm.setString(2, id);
             ResultSet rs = stm.executeQuery();
 
             if (rs.next()) {
@@ -538,12 +538,12 @@ public class LecturerClassSession extends DBContext {
         return 0;
     }
 
-    public int getEmailExists(String email,String id) {
+    public int getEmailExists(String email, String id) {
         try {
             String sql = "SELECT COUNT(*) AS count FROM Lecturers WHERE Email = ? and status is not null and lid != ?";
             PreparedStatement stm = connection.prepareStatement(sql);
             stm.setString(1, email);
-            stm.setString(2,id);
+            stm.setString(2, id);
             ResultSet rs = stm.executeQuery();
 
             if (rs.next()) {
@@ -964,7 +964,7 @@ public class LecturerClassSession extends DBContext {
 
     public static void main(String[] args) {
         LecturerClassSession lc = new LecturerClassSession();
-        int l = lc.getTotalPhoneNumberExists("0913339709","52");
+        int l = lc.getTotalPhoneNumberExists("0913339709", "52");
         System.out.println(l);
 
     }

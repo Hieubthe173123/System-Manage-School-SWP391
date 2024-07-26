@@ -34,7 +34,7 @@ public class UpdateLecturers extends HttpServlet {
         request.setAttribute("lec", lec);
 
         ClassDBContext cl = new ClassDBContext();
-        List<ClassSession> list = cl.getAllClass();
+        List<ClassSession> list = cl.getAllClass2();
         request.setAttribute("list1", list);
 
         String successMessage = request.getParameter("successMessage");

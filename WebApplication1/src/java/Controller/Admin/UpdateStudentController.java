@@ -32,13 +32,7 @@ public class UpdateStudentController extends BaseRBACController {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response, Account account)
             throws ServletException, IOException {
 
-//        ClassDBContext clDB = new ClassDBContext();
-//        List<Entity.Class> clList = clDB.getAllClasses();
-//        request.setAttribute("clList", clList);
 
-        Class_SessionDBContext cl = new Class_SessionDBContext();
-          List<ClassSession> classIDs = cl.getAllClass();
-        request.setAttribute("classIDs", classIDs);
 
         request.getRequestDispatcher("/FE_Admin/Update_Student.jsp").forward(request, response);
     }
@@ -56,7 +50,6 @@ public class UpdateStudentController extends BaseRBACController {
         String dob = request.getParameter("dob");
         boolean gender = Boolean.parseBoolean(request.getParameter("gender"));
         String address = request.getParameter("address");
-        String className = request.getParameter("className");
         boolean status = Boolean.parseBoolean(request.getParameter("status"));
 
         // Validate name, dob, address
@@ -79,24 +72,6 @@ public class UpdateStudentController extends BaseRBACController {
             return;
         }
 
-       
-        int newClassId = 0;
-        try {
-            newClassId = Integer.parseInt(className);
-        } catch (NumberFormatException e) {
-            request.setAttribute("classError", "Invalid Class ID.");
-            processRequest(request, response, account);
-            return;
-        }
-
-        StudentClassSessionDBContext stuDB = new StudentClassSessionDBContext();
-        int totalStudentsInNewClass = stuDB.getTotalStudentsByClassId(String.valueOf(newClassId));
-
-        if (totalStudentsInNewClass >= 20) {
-            request.setAttribute("classError", "The class is full. Please choose another class!");
-            processRequest(request, response, account);
-            return;
-        }
 
        // Update student information
         int studentId = 0;
@@ -119,7 +94,6 @@ public class UpdateStudentController extends BaseRBACController {
       // Update students and classes
         StudentDBContext studentDB = new StudentDBContext();
         studentDB.updateStudent(updatedStudent);
-        studentDB.updateStudentClass(studentId, newClassId);
         studentDB.updateStudentStatus(studentId, status);
 
  

@@ -249,6 +249,7 @@
                                     <td>${studentClass.csid.classID.clname}</td>
                                     <td>
                                         <a class="btn btn-warning btn-sm btn-custom" href="update-student?stuid=${studentClass.stuid.stuid}&sname=${studentClass.stuid.sname}&dob=${studentClass.stuid.dob}&gender=${studentClass.stuid.gender}&address=${studentClass.stuid.address}&classid=${studentClass.csid.classID.classid}">Update</a>
+                                        <a class="btn btn-sm btn-custom" style="background-color: #20B2AA; color: white;" href="update-student-class?stuid=${studentClass.stuid.stuid}&classid=${studentClass.csid.classID.classid}">Update Class</a>
                                     </td>
                                 </tr>
                             </c:forEach>
@@ -266,6 +267,7 @@
                                     <td>${studentClass.csid.classID.clname}</td>
                                     <td>
                                         <a class="btn btn-warning btn-sm btn-custom" href="update-student?stuid=${studentClass.stuid.stuid}&sname=${studentClass.stuid.sname}&dob=${studentClass.stuid.dob}&gender=${studentClass.stuid.gender}&address=${studentClass.stuid.address}&classid=${studentClass.csid.classID.classid}">Update</a>
+                                        <a class="btn btn-sm btn-custom" style="background-color:#20B2AA; color: white;" href="update-student-class?stuid=${studentClass.stuid.stuid}&classid=${studentClass.csid.classID.classid}">Update Class</a>
                                     </td>
                                 </tr>
                             </c:forEach>
@@ -283,6 +285,7 @@
                                     <td>${studentClass.csid.classID.clname}</td>
                                     <td>
                                         <a class="btn btn-warning btn-sm btn-custom" href="update-student?stuid=${studentClass.stuid.stuid}&sname=${studentClass.stuid.sname}&dob=${studentClass.stuid.dob}&gender=${studentClass.stuid.gender}&address=${studentClass.stuid.address}&classid=${studentClass.csid.classID.classid}">Update</a>
+                                         <a class="btn btn-sm btn-custom" style="background-color:#20B2AA; color: white;" href="update-student-class?stuid=${studentClass.stuid.stuid}&classid=${studentClass.csid.classID.classid}">Update Class</a>
                                     </td>
                                 </tr>
                             </c:forEach>

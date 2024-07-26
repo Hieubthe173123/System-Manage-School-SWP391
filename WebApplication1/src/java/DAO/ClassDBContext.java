@@ -7,6 +7,7 @@ package DAO;
 import java.sql.*;
 import Entity.Class;
 import Entity.ClassSession;
+import Entity.SchoolYear;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -37,7 +38,7 @@ public class ClassDBContext extends DBContext {
         }
         return null;
     }
-    
+
     public List<ClassSession> getAllClass() {
         List<ClassSession> list = new ArrayList<>();
         try {
@@ -52,6 +53,38 @@ public class ClassDBContext extends DBContext {
                 cl.setClassid(rs.getInt("classID"));
                 cl.setClname(rs.getString("clname"));
                 ClassSession cs = new ClassSession();
+                cs.setClassID(cl);
+                list.add(cs);
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return list;
+    }
+
+    public List<ClassSession> getAllClass2() {
+        List<ClassSession> list = new ArrayList<>();
+        try {
+            String sql = "select * from Class_Session cs\n"
+                    + "inner join Class cl on cs.classID = cl.classID\n"
+                    + "	inner join SchoolYear sy on cs.yid = sy.yid\n"
+                    + " where cs.status = '1' and sy.yid = (select Max(yid) from SchoolYear)";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+
+                Class cl = new Class();
+                cl.setClassid(rs.getInt("classID"));
+                cl.setClname(rs.getString("clname"));
+
+                SchoolYear sy = new SchoolYear();
+                sy.setYid(rs.getInt("yid"));
+                sy.setDateStart(rs.getString("dateStart"));
+                sy.setDateEnd(rs.getString("dateEnd"));
+
+                ClassSession cs = new ClassSession();
+                cs.setCsid(rs.getInt("csid"));
+                cs.setYid(sy);
                 cs.setClassID(cl);
                 list.add(cs);
             }

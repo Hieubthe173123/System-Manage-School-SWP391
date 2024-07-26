@@ -16,7 +16,7 @@
 
             header {
                 background-color: #33B7CE;
-                padding: 20px;
+                padding: 0px;
                 text-align: center;
                 color: white;
                 font-size: 2.5em;
@@ -25,7 +25,7 @@
 
             .container {
                 max-width: 1200px;
-                margin: 20px auto;
+                margin: auto;
                 padding: 20px;
                 background-color: #ffffff;
                 border-radius: 15px;
@@ -66,7 +66,7 @@
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                margin: 20px 0;
+                margin: 0;
                 gap: 10px;
             }
 
@@ -85,7 +85,7 @@
 
             .messages {
                 text-align: center;
-                margin: 20px auto;
+                margin: auto;
                 width: 80%;
                 padding: 10px;
                 border-radius: 5px;
@@ -217,11 +217,6 @@
             </form>
 
             <h3 class="center">If you have changes or additions to the menu, please enter here</h3>
-            <form action="menu" method="POST">
-                <div class="center" style="margin-top: 50px">
-                    <button class="btn btn-primary" type="submit" name="save" value="1">Save</button>
-                </div>
-            </form>
 
             <div class="table-container-wrapper">
                 <table>
@@ -258,6 +253,11 @@
                     </c:forEach>
                     </tbody>
                 </table>
+                <form action="menu" method="POST">
+                    <div class="center" style="margin-bottom: 250px">
+                        <button class="btn btn-primary" type="submit" name="save" value="1">Save</button>
+                    </div>
+                </form>
             </div>
         </div>
     </body>

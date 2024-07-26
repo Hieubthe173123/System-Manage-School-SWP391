@@ -1,10 +1,7 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
- */
 package Controller.Lecturers;
 
 import Authentication.BaseRBACController;
+import DAO.LecturerClassSession;
 import DAO.LecturersDBContext;
 import Entity.Account;
 import Entity.Lecturers;
@@ -15,8 +12,6 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import java.time.LocalDate;
-import java.time.format.DateTimeParseException;
 
 /**
  *
@@ -54,62 +49,29 @@ public class UpdateProfileLecturers extends BaseRBACController {
         String email = request.getParameter("email");
         String nickName = request.getParameter("nickName");
 
-        if (lname == null || lname.trim().isEmpty()) {
-            request.setAttribute("Error", "Please enter your name.");
+        if (!checkValidInput(request, lname, phoneNumber, IDCard)) {
             processRequest(request, response, account);
             return;
         }
 
-        if (dob == null || dob.trim().isEmpty()) {
-            request.setAttribute("Error", "Please enter your dob.");
-            processRequest(request, response, account);
-            return;
-        }
-
-        LocalDate dobDate = null;
-        try {
-            dobDate = LocalDate.parse(dob);
-        } catch (DateTimeParseException e) {
-            request.setAttribute("Error", "Invalid date format for Date of Birth. Please use yyyy-MM-dd format.");
-            processRequest(request, response, account);
-            return;
-        }
-
-        if (address == null || address.trim().isEmpty()) {
-            request.setAttribute("addressError", "Please enter your address.");
-            processRequest(request, response, account);
-            return;
-        }
-        if (!phoneNumber.matches("\\d{10}")) {
-            request.setAttribute("Error", "Phone number must be 10 digits.");
-            processRequest(request, response, account);
-            return;
-        }
-
-        if (!IDCard.matches("\\d{12}")) {
-            request.setAttribute("Error", "ID Card must be 12 digits.");
-            processRequest(request, response, account);
-            return;
-        }
-//        LecturersDBContext lec = new LecturersDBContext();
-//        if (lec.isIDCardLecExists(IDCard)) {
-//            request.setAttribute("Error", "ID Card already exists.");
-//            processRequest(request, response, account);
-//            return;
-//        }
-        // Update lecturer information
         int lecId = 0;
         try {
             lecId = Integer.parseInt(lid);
         } catch (NumberFormatException e) {
-            request.setAttribute("Error", "Invalid Lecturers ID.");
+            request.setAttribute("Error", "Invalid Lecturer ID.");
+            processRequest(request, response, account);
+            return;
+        }
+
+        LecturerClassSession lcs = new LecturerClassSession();
+        if (checkForDuplicates(request, lcs, phoneNumber, email, IDCard, lid)) {
             processRequest(request, response, account);
             return;
         }
 
         // Update lecturer information
         Lecturers updatedLec = new Lecturers();
-        updatedLec.setLid(Integer.parseInt(lid));
+        updatedLec.setLid(lecId);
         updatedLec.setLname(lname);
         updatedLec.setGender(gender);
         updatedLec.setDob(dob);
@@ -120,16 +82,62 @@ public class UpdateProfileLecturers extends BaseRBACController {
         updatedLec.setNickname(nickName);
 
         // Update lecturer in database
-        LecturersDBContext lecturersDB = new LecturersDBContext();
-        lecturersDB.updateLecturer(updatedLec);
+        LecturersDBContext lecDB = new LecturersDBContext();
+        lecDB.updateLecturer(updatedLec);
 
         response.sendRedirect("lecturers-profile");
+    }
 
+    //check input profile valid
+    private boolean checkValidInput(HttpServletRequest request, String lname, String phoneNumber, String IDcard) {
+        boolean valid = true;
+
+        if (phoneNumber == null || !phoneNumber.matches("\\d{10}")) {
+            request.setAttribute("phoneError", "Invalid phone number. Must be 10 digits !");
+            valid = false;
+        }
+
+        if (lname == null || !lname.matches("[\\p{L} ]+")) {
+            request.setAttribute("nameError", "Invalid name. Please try again !");
+            valid = false;
+        }
+
+        if (IDcard == null || !IDcard.matches("\\d{12}")) {
+            request.setAttribute("idCardError", "Invalid ID Card. Must be 12 digits !");
+            valid = false;
+        }
+
+        return valid;
+    }
+
+    //check if email duplicates
+    private boolean checkForDuplicates(HttpServletRequest request, LecturerClassSession lcs, String phoneNumber, String email, String IDcard, String lid) {
+        int totalPhoneNumber = lcs.getTotalPhoneNumberExists(phoneNumber, lid);
+        int totalIDCard = lcs.getIDCardExists(IDcard, lid);
+        int totalEmail = lcs.getEmailExists(email, lid);
+
+        boolean hasDuplicate = false;
+
+        if (totalPhoneNumber > 0) {
+            request.setAttribute("phoneError", "Phone number already exists !");
+            hasDuplicate = true;
+        }
+
+        if (totalEmail > 0) {
+            request.setAttribute("emailError", "Email already exists !");
+            hasDuplicate = true;
+        }
+
+        if (totalIDCard > 0) {
+            request.setAttribute("idCardError", "ID card already exists !");
+            hasDuplicate = true;
+        }
+
+        return hasDuplicate;
     }
 
     @Override
     public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
-
+        return "Servlet for updating lecturer profiles";
+    }
 }

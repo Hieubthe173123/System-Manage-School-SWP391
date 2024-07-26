@@ -142,7 +142,7 @@
             <img src="../Image/7886962.png" alt="Profile Picture">
             <div class="nickname">${lecturers.nickname}</div>
             <a href="timeTableLecturer?lid=${sessionScope.lid}" text-decoration: none;">Back to Home</a>
-            <a href="update-lecturers?lid=${lecturers.lid}&lname=${lecturers.lname}&dob=${lecturers.dob}&phoneNumber=${lecturers.phoneNumber}&IDcard=${lecturers.IDcard}&address=${lecturers.address}&email=${lecturers.email}&nickname=${lecturers.nickname}">Update Profile</a>
+            <a href="update-lecturers?lid=${lecturers.lid}">Update Profile</a>
             <a href="changepass">Change Password</a>
             <button class="logout" onclick="window.location.href = '${pageContext.request.contextPath}/logout'">Logout</button>
         </div>

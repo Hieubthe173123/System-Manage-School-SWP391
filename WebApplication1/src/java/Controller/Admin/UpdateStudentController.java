@@ -53,8 +53,8 @@ public class UpdateStudentController extends BaseRBACController {
         boolean status = Boolean.parseBoolean(request.getParameter("status"));
 
         // Validate name, dob, address
-        if (sname == null || sname.trim().isEmpty()) {
-            request.setAttribute("nameError", "Student Name is required.");
+        if (sname == null || !sname.matches("[\\p{L} ]+")) {
+            request.setAttribute("nameError", "Invalid name. Please try again !");
             processRequest(request, response, account);
             return;
         }

@@ -8,6 +8,7 @@
         <title>Sessions List</title>
         <!-- Bootstrap CSS -->
         <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
         <style>
             body {
                 font-family: 'Roboto', cursive, sans-serif;
@@ -167,11 +168,22 @@
             }
 
         </style>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script>
             function confirmDelete(curID) {
-                if (confirm("Are you sure you want to delete this activity?")) {
-                    window.location.href = 'delete-curiculum-day?curid=' + curID;
-                }
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#DC3545',
+                    cancelButtonColor: '#6c757d',
+                    confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = 'delete-curiculum-day?curid=' + curID;
+                    }
+                })
             }
 
             function handleSessionDetailClick(button, sid, sdid) {
@@ -303,7 +315,7 @@
                 </div>
                 <c:if test="${not empty sessionScope.errorMessage}">
                     <script>
-                    alert('${sessionScope.errorMessage}');
+                        alert('${sessionScope.errorMessage}');
                     </script>
                     <c:remove var="errorMessage" scope="session"/>
                 </c:if>
@@ -334,4 +346,3 @@
         </script>
     </body>
 </html>
-

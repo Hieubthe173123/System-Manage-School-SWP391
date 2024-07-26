@@ -1,9 +1,3 @@
-<%-- 
-    Document   : AddSchedules
-    Created on : Jun 15, 2024, 2:29:27 PM
-    Author     : Admin
---%>
-
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -12,10 +6,10 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Add Schedules</title>
         <style>
-            @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap');
+            @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
 
             body {
-                font-family: 'Roboto', cursive;
+                font-family: 'Roboto', sans-serif;
                 margin: 0;
                 padding: 0;
                 background-color: #fffae6;
@@ -137,9 +131,28 @@
                 text-decoration: none;
             }
         </style>
+        <!-- SweetAlert2 CSS -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+        <!-- SweetAlert2 JS -->
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
         <script>
-            function confirmDeletion() {
-                return confirm("Are you sure you want to delete today's schedule?");
+            function confirmDeletion(event) {
+                event.preventDefault(); // Prevent default action of the link
+                const link = event.currentTarget.getAttribute('href');
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, delete it!',
+                    cancelButtonText: 'Cancel'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = link; // Redirect to the delete URL
+                    }
+                });
             }
         </script>
     </head>
@@ -149,7 +162,7 @@
             <div class="button-container">
                 <a href="timeTableLecturer?lid=${sessionScope.lid}" class="return-button">Return</a>
                 <c:if test="${sessionScope.sche != null}">
-                    <a href="addSchedules?idToDelete=${sessionScope.sche.scheID}&csid=${sessionScope.csid}" class="delete-button" onclick="return confirmDeletion()">Delete Today's Schedule</a>
+                    <a href="addSchedules?idToDelete=${sessionScope.sche.scheID}&csid=${sessionScope.csid}" class="delete-button" onclick="confirmDeletion(event)">Delete Today's Schedule</a>
                 </c:if>
             </div>
 

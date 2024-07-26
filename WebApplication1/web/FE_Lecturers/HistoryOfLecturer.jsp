@@ -173,7 +173,6 @@
                     <tr>
                         <th>Time Slot</th>
                         <th>Activity</th>
-                        <th>Fixed Activity</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -181,12 +180,6 @@
                         <tr>
                             <td>${c.timeStart} - ${c.timeEnd}</td>
                             <td>${c.nameAct}</td>
-                            <c:if test="${c.isFix eq true}">
-                                <td>Fixed</td>
-                            </c:if>
-                            <c:if test="${c.isFix != true}">
-                                <td>Not Fixed</td>
-                            </c:if>
                         </tr>
                     </c:forEach>
                 </tbody>

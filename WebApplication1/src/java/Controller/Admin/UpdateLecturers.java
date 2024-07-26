@@ -70,14 +70,14 @@ public class UpdateLecturers extends HttpServlet {
         String IDcard = request.getParameter("IDcard");
 
         if (phoneNumber == null || !phoneNumber.matches("0\\d{9}")) {
-            request.setAttribute("errorMessage", "Khai Báo Không Hợp Lệ,Vui Lòng Thử Lại.");
+            request.setAttribute("errorMessage", "Invalid Declaration, Please Try Again.");
             request.setAttribute("lid", lid);
             processRequest(request, response);
             return;
         }
 
         if (lname == null || !lname.matches("[\\p{L} ]+")) {
-            request.setAttribute("errorMessage", "Khai Báo Không Hợp Lệ,Vui Lòng Thử Lại.");
+            request.setAttribute("errorMessage", "Invalid Declaration, Please Try Again.");
             request.setAttribute("lid", lid);
             processRequest(request, response);
             return;

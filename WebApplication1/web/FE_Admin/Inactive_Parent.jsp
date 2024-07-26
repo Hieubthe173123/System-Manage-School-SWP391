@@ -184,6 +184,7 @@
         </header>
 
         <div class="container">
+            <h2>Inactive Parent</h2>
             <div class="row mt-3">
                 <div class="col-sm-6">
                     <form class="form-inline" action="search-parent-inactive" method="post">

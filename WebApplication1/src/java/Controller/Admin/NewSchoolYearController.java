@@ -18,13 +18,13 @@ public class NewSchoolYearController extends BaseRBACController {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response, Account account)
             throws ServletException, IOException {
-        // Get parameters from the request
+        // Lấy tham số từ request
         String dateStart = request.getParameter("dateStart");
         String dateEnd = request.getParameter("dateEnd");
 
         try {
             if (dateStart != null && !dateStart.isEmpty() && dateEnd != null && !dateEnd.isEmpty()) {
-                //Chuyển đổi ngày tháng dạng chuỗi sang LocalDate
+                // Chuyển đổi chuỗi ngày thành LocalDate
                 LocalDate startDate;
                 LocalDate endDate;
                 try {
@@ -32,14 +32,14 @@ public class NewSchoolYearController extends BaseRBACController {
                     startDate = LocalDate.parse(dateStart, formatter);
                     endDate = LocalDate.parse(dateEnd, formatter);
                 } catch (DateTimeParseException e) {
-                    //Sai định dạng thông báo lỗi
+                    // Thông báo lỗi khi định dạng ngày không hợp lệ
                     request.setAttribute("modalError", "Invalid date format! Please use YYYY-MM-DD.");
                     request.setAttribute("modalOpen", true);
                     request.getRequestDispatcher("/admin/classController").forward(request, response);
                     return;
                 }
 
-                // kiểm tra nếu năm học được tạo là năm học trong quá khứ
+                // Kiểm tra nếu ngày bắt đầu nằm trong quá khứ
                 if (startDate.isBefore(LocalDate.now())) {
                     request.setAttribute("modalError", "The start date of the new school year cannot be in the past!");
                     request.setAttribute("modalOpen", true);
@@ -49,33 +49,19 @@ public class NewSchoolYearController extends BaseRBACController {
 
                 SchoolYearDBContext yearDB = new SchoolYearDBContext();
 
-                // Kiểm tra nếu năm học đó đã tồn tại
+                // Kiểm tra nếu năm học đã tồn tại
                 if (yearDB.isSchoolYearExists(dateStart, dateEnd)) {
                     request.setAttribute("modalError", "This school year already exists! Please choose another year.");
                     request.setAttribute("modalOpen", true);
                     request.getRequestDispatcher("/admin/classController").forward(request, response);
                 } else {
-                    // Check that the new school year is at least one year apart from the last year
-                    SchoolYear latestYear = yearDB.getNewestSchoolYear();
-
-                    if (latestYear != null) {
-                        // Năm học mới được tạo phải cách năm học cũ ít nhất 1 năm
-                        int latestYearEnd = Integer.parseInt(latestYear.getDateEnd().substring(0, 4));
-                        int newYearStart = Integer.parseInt(dateStart.substring(0, 4));
-                        int newYearEnd = Integer.parseInt(dateEnd.substring(0, 4));
-
-                        // Năm học mới được tạo phải nối tiếp năm học cũ
-                        if (newYearStart == latestYearEnd && newYearEnd == newYearStart + 1) {
-                            // Tạo năm học mới
-                            yearDB.createNewSchoolYearForClassSession(dateStart, dateEnd);
-                            response.sendRedirect("classController");
-                        } else {
-                            request.setAttribute("modalError", "The new school year must directly follow the latest school year (e.g., 2023-2024 to 2024-2025).");
-                            request.setAttribute("modalOpen", true);
-                            request.getRequestDispatcher("/admin/classController").forward(request, response);
-                        }
+                    // Kiểm tra xem năm học mới có trùng lặp với năm học đã tồn tại không
+                    if (yearDB.isOverlapWithExistingSchoolYears(startDate, endDate)) {
+                        request.setAttribute("modalError", "The new school year overlaps with an existing school year. Please choose another date range.");
+                        request.setAttribute("modalOpen", true);
+                        request.getRequestDispatcher("/admin/classController").forward(request, response);
                     } else {
-                        // nếu không có năm học nào trước đó thì tạo năm học mới trực tiếp
+                        // Tạo năm học mới
                         yearDB.createNewSchoolYearForClassSession(dateStart, dateEnd);
                         response.sendRedirect("classController");
                     }
@@ -105,6 +91,6 @@ public class NewSchoolYearController extends BaseRBACController {
 
     @Override
     public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
+        return "Servlet for creating a new school year";
+    }
 }

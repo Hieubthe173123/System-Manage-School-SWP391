@@ -73,7 +73,7 @@
                 color: #333;
                 outline: none;
                 transition: border-color 0.3s;
-                background-color: #E0F7FA;
+                background-color: #FFFAF0;
             }
 
             .input-group input:focus {
@@ -138,15 +138,17 @@
                     <div class="input-group">
                         <label for="old-password">Old Password</label>
                         <input type="password" id="old-password" name="old-password" placeholder="Enter old password" required>
-                        <input type="hidden" name="user" value="${sessionScope.account.username}">
+                        <span class="toggle-password" onclick="togglePasswordVisibility('old-password')">&#128065;</span>
                     </div>
                     <div class="input-group">
                         <label for="new-password">New Password</label>
                         <input type="password" id="new-password" name="new-password" placeholder="Enter new password" required>
+                        <span class="toggle-password" onclick="togglePasswordVisibility('new-password')">&#128065;</span>
                     </div>
                     <div class="input-group">
                         <label for="confirm-password">Confirm New Password</label>
                         <input type="password" id="confirm-password" name="confirm-password" placeholder="Confirm new password" required>
+                        <span class="toggle-password" onclick="togglePasswordVisibility('confirm-password')">&#128065;</span>
                     </div>
                     <button type="submit" class="save-button">Update Password</button>
                     <% String mess = (String) request.getAttribute("mess");
@@ -163,10 +165,22 @@
                 if (messageElement) {
                     setTimeout(function () {
                         messageElement.style.display = "none";
-                    }, 2000);
+                    }, 6000);
                 }
             }
             window.onload = hideMessage;
+
+            function togglePasswordVisibility(id) {
+                var input = document.getElementById(id);
+                var icon = event.target;
+                if (input.type === "password") {
+                    input.type = "text";
+                    icon.innerHTML = "&#128064;";  // Change to an "eye with slash" icon
+                } else {
+                    input.type = "password";
+                    icon.innerHTML = "&#128065;";  // Change back to the "eye" icon
+                }
+            }
         </script>
     </body>
 </html>

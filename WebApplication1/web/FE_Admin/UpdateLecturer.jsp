@@ -7,7 +7,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Update Lecturer and Class</title>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-        <link rel="stylesheet" href="styles.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
         <style>
             @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap');
 
@@ -105,16 +106,7 @@
                         <h2>Update Lecturer</h2>
                     </div>
                     <div class="card-body">
-                        <c:if test="${not empty successMessage}">
-                            <div class="alert alert-success" role="alert">
-                                ${successMessage}
-                            </div>
-                        </c:if>
-                        <c:if test="${not empty errorMessage}">
-                            <div class="alert alert-danger" role="alert">
-                                ${errorMessage}
-                            </div>
-                        </c:if>
+                        
                         <form id="updateLecturerForm" action="update-lecturers" method="POST">
                             <input type="hidden" name="lid" value="${lec.lid.lid}">
                             <div class="form-group">
@@ -158,7 +150,7 @@
                         <h2>Update Class</h2>
                     </div>
                     <div class="card-body">
-                       
+
                         <form id="updateClassForm" action="update-lecturer-class" method="POST">
                             <input type="hidden" name="lid" value="${param.lid}">
                             <div class="form-group">
@@ -182,6 +174,27 @@
             document.addEventListener("DOMContentLoaded", function () {
                 // Show Update Lecturer form by default
                 showForm('updateLecturerCard');
+            });
+
+            function showForm(formId) {
+                // Hide all cards
+                document.querySelectorAll('.card').forEach(card => card.classList.remove('active'));
+
+                // Show the selected form
+                document.getElementById(formId).classList.add('active');
+            }
+
+            document.addEventListener("DOMContentLoaded", function () {
+                // Show Update Lecturer form by default
+                showForm('updateLecturerCard');
+
+                // Show success or error messages if available
+            <c:if test="${not empty successMessage}">
+                swal("Success!", "${successMessage}", "success");
+            </c:if>
+            <c:if test="${not empty errorMessage}">
+                swal("Error!", "${errorMessage}", "error");
+            </c:if>
             });
 
             function showForm(formId) {

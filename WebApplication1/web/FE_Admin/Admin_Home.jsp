@@ -10,16 +10,16 @@
         <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
         <style>
             body {
-                font-family: 'Roboto', sans-serif;
+                font-family: 'Comic Sans MS', cursive, sans-serif;
                 margin: 0;
                 display: flex;
-                background-color: #f8f9fa;
+                background-color: #e0f7fa;
             }
 
             .sidebar {
                 width: 250px;
-                background-color: #343a40;
-                color: white;
+                background-color: #2bb4d0;
+                color: #333;
                 height: 100vh;
                 padding: 20px;
                 position: fixed;
@@ -27,8 +27,8 @@
                 left: 0;
                 transition: transform 0.3s ease;
                 z-index: 1;
-                overflow-y: auto; /* Ensure sidebar scrolls if content exceeds height */
-                overflow-x: hidden; /* Hide horizontal scrollbar */
+                overflow-y: auto;
+                overflow-x: hidden;
                 box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
             }
 
@@ -47,10 +47,12 @@
                 width: 50px;
                 height: 50px;
                 margin-right: 10px;
+                border: 2px solid #fff;
             }
 
             .profile span {
-                font-size: 18px;
+                font-size: 20px;
+                color: #333;
             }
 
             nav ul {
@@ -69,14 +71,14 @@
                 padding: 10px;
                 border: none;
                 background: none;
-                color: white;
-                font-size: 16px;
+                color: #333;
+                font-size: 18px;
                 cursor: pointer;
                 transition: background 0.3s ease;
             }
 
             nav ul li button:hover {
-                background-color: #495057;
+                background-color: #b0e0e6;
             }
 
             .content {
@@ -101,11 +103,11 @@
                 align-items: center;
                 padding: 10px;
                 background-color: #ffffff;
-                border-bottom: 1px solid #dee2e6;
+                border-bottom: 2px solid #87ceeb;
             }
 
             .user-info {
-                font-size: 18px;
+                font-size: 20px;
                 color: #333;
             }
 
@@ -123,12 +125,13 @@
             .card {
                 width: 200px;
                 padding: 20px;
-                border-radius: 10px;
+                border-radius: 15px;
                 color: white;
                 margin: 10px;
                 cursor: pointer;
                 transition: transform 0.3s ease;
                 box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                text-align: center;
             }
 
             .card:hover {
@@ -136,28 +139,29 @@
             }
 
             .card.blue {
-                background-color: #007bff;
+                background-color: #5ab4e6;
             }
 
             .card.green {
-                background-color: #28a745;
-            }
-
-            .card.yellow {
-                background-color: #ffc107;
-            }
-
-            .card.red {
                 background-color: #dc3545;
             }
 
+            .card.yellow {
+                background-color: #28a745;
+            }
+
+            .card.red {
+                background-color: #f28b82;
+            }
+
             .btn-toggle {
-                background-color: #343a40;
+                background-color: #5ab4e6;
                 color: white;
                 border: none;
                 padding: 10px;
                 cursor: pointer;
                 font-size: 20px;
+                border-radius: 5px;
             }
 
             .btn-toggle:focus {

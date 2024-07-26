@@ -7,11 +7,12 @@
         <title>Add Curriculum</title>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
         <style>
-            @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap');
+            @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap');
 
             body {
                 background-color: #FFFAF0;
-                font-family: 'Roboto', cursive;
+                font-family: 'Open Sans', cursive;
+                font-weight: bold;
                 padding-top: 40px; /* for Bootstrap navbar */
             }
 

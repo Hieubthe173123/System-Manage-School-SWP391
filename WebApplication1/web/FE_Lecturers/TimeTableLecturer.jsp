@@ -6,9 +6,11 @@
         <%@page contentType="text/html" pageEncoding="UTF-8"%>
         <title>Lecturer Timetable</title>
         <style>
-            @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap');
+            @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap');
+
             body {
-                font-family: 'Roboto', cursive;
+                font-family: 'Open Sans', cursive;
+                font-weight: bold;
                 background: #FFFAF0;
                 margin: 0;
                 padding: 0;
@@ -207,7 +209,7 @@
             <thead>
                 <tr>
                     <th>Meal</th>
-                    <th>Dish</th>
+                    <th>Food</th>
                 </tr>
             </thead>
             <tbody>

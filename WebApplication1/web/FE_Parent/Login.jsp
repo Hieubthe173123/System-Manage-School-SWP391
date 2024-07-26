@@ -79,6 +79,24 @@
                 border-color: #FFFFFF;
             }
 
+            .form-button {
+                margin: 15px;
+                padding: 10px 20px;
+                background-color: #FFFFFF;
+                color: #2BB4D0;
+                border: 1px solid #2BB4D0;
+                border-radius: 5px;
+                cursor: pointer;
+                text-decoration: none;
+                font-size: 14px;
+                text-transform: uppercase;
+            }
+
+            .form-button:hover {
+                background-color: #22678c;
+                color: #FFFFFF;
+            }
+
             form {
                 background-color: #FFFFFF; /* White background for the form */
                 display: flex;
@@ -210,7 +228,8 @@
         </style>
     </head>
     <body>
-        <h2></h2>
+        
+        <a href="FE_Parent/HomePage.jsp" class="form-button">Back to Home</a>
         <div class="container" id="container">
             <div class="form-container sign-in-container">
                 <form action="login" method="POST">
@@ -249,8 +268,3 @@
         </script>
     </body>
 </html>
-
-
-
-
-

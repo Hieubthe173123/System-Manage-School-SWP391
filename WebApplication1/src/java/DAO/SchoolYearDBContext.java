@@ -16,6 +16,7 @@ import Entity.StudentClassSession;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -404,7 +405,7 @@ public class SchoolYearDBContext extends DBContext {
                 Session session = new Session();
                 session.setSid(rs.getInt("sid"));
                 classSession.setSid(session);
-                
+
                 AgeCategory age = new AgeCategory();
                 age.setAgeid(rs.getInt("ageid"));
                 session.setAge(age);
@@ -426,7 +427,6 @@ public class SchoolYearDBContext extends DBContext {
         }
         return list;
     }
-
 
     //Add học sinh vào lớp mới trong bảng Student_Class_Session
     public void addStudentToClass(StudentClassSession student) {
@@ -518,20 +518,18 @@ public class SchoolYearDBContext extends DBContext {
                 stu.setSname(rs.getString("sname"));
                 stu.setDob(rs.getString("dob"));
                 scs.setStuid(stu);
-                
-                
+
                 Session ses = new Session();
                 ses.setSid(rs.getInt("sid"));
                 ses.setSname(rs.getString("Sname"));
                 cls.setSid(ses);
                 scs.setCsid(cls);
-                
+
                 AgeCategory age = new AgeCategory();
                 age.setAgeid(rs.getInt("ageid"));
                 ses.setAge(age);
                 cls.setSid(ses);
                 scs.setCsid(cls);
-                
 
                 Class cla = new Class();
                 cla.setClassid(rs.getInt("classID"));
@@ -665,6 +663,27 @@ public class SchoolYearDBContext extends DBContext {
             ps.setString(2, dateEnd);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(SchoolYearDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+
+    //kiểm tra xem khoảng thời gian của năm học mới có trùng lặp với bất kỳ năm học nào đã tồn tại 
+    public boolean isOverlapWithExistingSchoolYears(LocalDate startDate, LocalDate endDate) {
+        try {
+            String sql = "SELECT COUNT(*) FROM SchoolYear WHERE (dateStart <= ? AND dateEnd >= ?) OR (dateStart <= ? AND dateEnd >= ?) OR (dateStart >= ? AND dateEnd <= ?)";
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setDate(1, java.sql.Date.valueOf(startDate));
+            ps.setDate(2, java.sql.Date.valueOf(endDate));
+            ps.setDate(3, java.sql.Date.valueOf(startDate));
+            ps.setDate(4, java.sql.Date.valueOf(endDate));
+            ps.setDate(5, java.sql.Date.valueOf(startDate));
+            ps.setDate(6, java.sql.Date.valueOf(endDate));
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
                 return rs.getInt(1) > 0;
             }
         } catch (SQLException ex) {
@@ -972,9 +991,9 @@ public class SchoolYearDBContext extends DBContext {
             Logger.getLogger(SchoolYearDBContext.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     //Hàm update ClassSession Only Room
-    public void updateClassSessionRoom(ClassSession cls){
+    public void updateClassSessionRoom(ClassSession cls) {
         try {
             String sql = "UPDATE [dbo].[Class_Session] SET rid = ? WHERE csid = ?";
             PreparedStatement ps = connection.prepareStatement(sql);

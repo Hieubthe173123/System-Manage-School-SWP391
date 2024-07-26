@@ -184,11 +184,24 @@
                 background-color: #0288D1;
             }
         </style>
+        <!-- Include SweetAlert CSS and JS -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script>
             function confirmDelete(sid) {
-                if (confirm("Are you sure you want to delete this session?")) {
-                    window.location.href = 'delete-session?sid=' + sid;
-                }
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#DC3545',
+                    cancelButtonColor: '#6c757d',
+                    confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = 'delete-session?sid=' + sid;
+                    }
+                })
             }
         </script>
     </head>

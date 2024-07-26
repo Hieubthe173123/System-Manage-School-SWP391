@@ -10,7 +10,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Trường Mầm Non Sakura</title>
+        <title>Sakura Preschool</title>
         <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
         <style>
@@ -104,7 +104,7 @@
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav ml-auto">
                         <li class="nav-item">
-                            <a class="nav-link" href="">Home Page</a>
+                            <a class="nav-link" href="#">Home Page</a>
                         </li>
 
                         <li class="nav-item">
@@ -125,17 +125,17 @@
 
         <header class="header text-center">
             <div class="container">
-                <h1 data-aos="fade-down">Chào Mừng Đến Trường Mầm Non Sakura</h1>
-                <p data-aos="fade-up" data-aos-delay="300">Nơi ươm mầm những tài năng tương lai</p>
+                <h1 data-aos="fade-down">Welcome to Sakura Preschool</h1>
+                <p data-aos="fade-up" data-aos-delay="300">Where Future Talents are Nurtured</p>
             </div>
         </header>
 
-        <section class="content-section bg-light" id ="section_1">
+        <section class="content-section bg-light" id="section_1">
             <div class="container">
                 <div class="row">
                     <div class="col-md-6" data-aos="fade-right">
-                        <h2>Về Chúng Tôi</h2>
-                        <p>Trường Mầm Non Sakura được thành lập với sứ mệnh mang đến môi trường học tập thân thiện, sáng tạo và phát triển toàn diện cho các em nhỏ.</p>
+                        <h2>About Us</h2>
+                        <p>Sakura Preschool was established with the mission of providing a friendly, creative, and comprehensive learning environment for young children.</p>
                     </div>
                     <div class="col-md-6" data-aos="fade-left">
                         <img src="../Image/8-1.jpg" alt="About Us" class="img-fluid">
@@ -148,8 +148,8 @@
             <div class="container">
                 <div class="row">
                     <div class="col-md-6 order-md-2" data-aos="fade-left">
-                        <h2>Chương Trình Học</h2>
-                        <p>Chương trình học của chúng tôi được thiết kế theo phương pháp giáo dục tiên tiến, giúp trẻ phát triển toàn diện về cả thể chất lẫn tinh thần.</p>
+                        <h2>Curriculum</h2>
+                        <p>Our curriculum is designed using advanced educational methods to help children develop comprehensively in both physical and mental aspects.</p>
                     </div>
                     <div class="col-md-6 order-md-1" data-aos="fade-right">
                         <img src="../Image/aHR0cHM6Ly93d3cuaXNzcC5lZHUudm4vZmlsZXMvY2h1b25nLXRyaW5oLWVhbC5qcGc_Tmw0WnV4Q1RGUkR5cGk3S2FfWXFXcFBrTzZFUVhTak8.webp" alt="Curriculum" class="img-fluid">
@@ -162,8 +162,8 @@
             <div class="container">
                 <div class="row">
                     <div class="col-md-6" data-aos="fade-right">
-                        <h2>Hoạt Động Ngoại Khóa</h2>
-                        <p>Chúng tôi tổ chức các hoạt động ngoại khóa phong phú, từ thể thao, nghệ thuật đến khoa học, giúp trẻ khám phá và phát triển sở thích cá nhân.</p>
+                        <h2>Extracurricular Activities</h2>
+                        <p>We organize a variety of extracurricular activities, from sports and arts to science, helping children explore and develop their personal interests.</p>
                     </div>
                     <div class="col-md-6" data-aos="fade-left">
                         <img src="../Image/hoat-dong-ngoai-khoa-4.jpg" alt="Activities" class="img-fluid">
@@ -176,8 +176,8 @@
             <div class="container">
                 <div class="row">
                     <div class="col-md-6 order-md-2" data-aos="zoom-in">
-                        <h2>Đội Ngũ Giáo Viên</h2>
-                        <p>Đội ngũ giáo viên của chúng tôi là những người có trình độ chuyên môn cao, yêu nghề và luôn tận tâm với từng học sinh.</p>
+                        <h2>Teaching Staff</h2>
+                        <p>Our teaching staff are highly qualified professionals who are passionate about their work and dedicated to each student.</p>
                     </div>
                     <div class="col-md-6 order-md-1" data-aos="zoom-in">
                         <img src="../Image/vlzgnx5mdmmusf6bgshp.jpg" alt="Teachers" class="img-fluid">
@@ -190,8 +190,8 @@
             <div class="container">
                 <div class="row">
                     <div class="col-md-6" data-aos="flip-left">
-                        <h2>Cơ Sở Vật Chất</h2>
-                        <p>Trường Mầm Non Sakura được trang bị cơ sở vật chất hiện đại, đáp ứng đầy đủ các nhu cầu học tập và vui chơi của trẻ.</p>
+                        <h2>Facilities</h2>
+                        <p>Sakura Preschool is equipped with modern facilities that meet all the needs for learning and play for children.</p>
                     </div>
                     <div class="col-md-6" data-aos="flip-right">
                         <img src="../Image/kham-pha-he-thong-co-so-vat-chat-giup-smisers-phat-trien-toan-dien-tai-sakura-duong-kinh-7.jpg" alt="Facilities" class="img-fluid">
@@ -200,21 +200,21 @@
             </div>
         </section>
 
-        <section class="registration-section text-center" id ="section_2">
+        <section class="registration-section text-center" id="section_2">
             <div class="container" data-aos="fade-up">
-                <h2>Đăng Ký Nhập Học</h2>
-                <p>Vui lòng điền vào mẫu dưới đây để đăng ký nhập học cho con em của bạn.</p>
+                <h2>Register for Admission</h2>
+                <p>Please fill out the form below to register your child for admission.</p>
                 <form>
                     <div class="form-group row">
-                        <label for="parentName" class="col-sm-2 col-form-label">Tên Phụ Huynh</label>
+                        <label for="parentName" class="col-sm-2 col-form-label">Parent's Name</label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" id="parentName" placeholder="Tên Phụ Huynh">
+                            <input type="text" class="form-control" id="parentName" placeholder="Parent's Name">
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label for="studentName" class="col-sm-2 col-form-label">Tên Học Sinh</label>
+                        <label for="studentName" class="col-sm-2 col-form-label">Student's Name</label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" id="studentName" placeholder="Tên Học Sinh">
+                            <input type="text" class="form-control" id="studentName" placeholder="Student's Name">
                         </div>
                     </div>
                     <div class="form-group row">
@@ -224,25 +224,25 @@
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label for="phone" class="col-sm-2 col-form-label">Số Điện Thoại</label>
+                        <label for="phone" class="col-sm-2 col-form-label">Phone Number</label>
                         <div class="col-sm-10">
-                            <input type="tel" class="form-control" id="phone" placeholder="Số Điện Thoại">
+                            <input type="tel" class="form-control" id="phone" placeholder="Phone Number">
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label for="message" class="col-sm-2 col-form-label">Tin Nhắn</label>
+                        <label for="message" class="col-sm-2 col-form-label">Message</label>
                         <div class="col-sm-10">
-                            <textarea class="form-control" id="message" rows="4" placeholder="Tin Nhắn"></textarea>
+                            <textarea class="form-control" id="message" rows="4" placeholder="Message"></textarea>
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-primary">Gửi Đăng Ký</button>
+                    <button type="submit" class="btn btn-primary">Submit Registration</button>
                 </form>
             </div>
         </section>
 
         <footer class="footer text-center">
             <div class="container">
-                <p>&copy; 2024 Trường Mầm Non Sakura. All rights reserved.</p>
+                <p>&copy; 2024 Sakura Preschool. All rights reserved.</p>
             </div>
         </footer>
 

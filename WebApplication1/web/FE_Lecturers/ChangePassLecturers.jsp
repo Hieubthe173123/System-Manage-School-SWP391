@@ -140,17 +140,17 @@
                 <form action="changepass" method="post">
                     <div class="input-group">
                         <label for="old-password">Old Password</label>
-                        <input type="password" id="old-password" name="old-password" required>
+                        <input type="password" id="old-password" name="old-password" placeholder="Enter old password" required>
                         <span class="toggle-password" onclick="togglePasswordVisibility('old-password')">&#128065;</span>
                     </div>
                     <div class="input-group">
                         <label for="new-password">New Password</label>
-                        <input type="password" id="new-password" name="new-password" required>
+                        <input type="password" id="new-password" name="new-password" placeholder="Enter new password" required>
                         <span class="toggle-password" onclick="togglePasswordVisibility('new-password')">&#128065;</span>
                     </div>
                     <div class="input-group">
                         <label for="confirm-password">Confirm New Password</label>
-                        <input type="password" id="confirm-password" name="confirm-password" required>
+                        <input type="password" id="confirm-password" name="confirm-password" placeholder="Confirm new password" required>
                         <span class="toggle-password" onclick="togglePasswordVisibility('confirm-password')">&#128065;</span>
                     </div>
 

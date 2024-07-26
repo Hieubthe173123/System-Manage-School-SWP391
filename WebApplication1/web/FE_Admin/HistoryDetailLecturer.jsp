@@ -79,7 +79,7 @@
     <body>
         <div class="container">
             <div class="text-center">
-                <button class="btn btn-back" onclick="window.location.href = 'history'">Back</button>
+                <button class="btn btn-back" onclick="window.location.href = 'history?yid=${param.yid}'">Back</button>
             </div>
             <div class="header">
                 <i class="icon fas fa-user"></i>
@@ -109,17 +109,6 @@
             <div class="info-row">
                 <div class="info-label"><h3>Email:</h3></div>
                 <div class="info-value"><h3>${lec.email}</h3></div>
-            </div>
-            <div class="info-row">
-                <div class="info-label"><h3>Status:</h3></div>
-                <div class="info-value">
-                    <h3>
-                        <c:choose>
-                            <c:when test="${lec.status != null && !lec.status.isEmpty()}">${lec.status}</c:when>
-                            <c:otherwise>Retired</c:otherwise>
-                        </c:choose>
-                    </h3>
-                </div>
             </div>
         </div>
 

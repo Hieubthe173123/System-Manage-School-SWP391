@@ -197,8 +197,6 @@
                     }
                 });
             }
-
-            
         </script>
     </head>
     <body>
@@ -209,11 +207,12 @@
             <div class="date-range">
                 <span id="dateStart">${sc.dateStart}</span> - <span id="dateEnd">${sc.dateEnd}</span>
             </div>
-            <div class="header-buttons d-flex">
-                <div class="input-group me-2">
-                    <input type="text" class="form-control" placeholder="Search">
-                    <button class="btn btn-search" onclick="search()">Search</button>
-                </div>
+            <div class="header-buttons d-flex align-items-center">
+                <form action="lecturers" method="get" class="d-flex align-items-center">
+                    <input type="text" name="nameLec" class="form-control" placeholder="Search">
+                    <button class="btn btn-search ml-2" type="submit">Search</button>
+                </form>
+                <button class="btn btn-add mx-2" onclick="window.location.href = 'lecturers'">Show All Lecturers</button>
                 <button class="btn btn-add mx-2" onclick="window.location.href = 'add-lecturer'">Add</button>
                 <button class="btn btn-history" onclick="window.location.href = 'history?yid=${sc.yid}'">History</button>
             </div>
@@ -235,36 +234,70 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <c:forEach var="lcs" items="${requestScope.list}">
-                        <tr>
-                            <td>${lcs.lid.lid}</td>
-                            <td>${lcs.lid.lname}</td>
-                            <td>
-                                <c:choose>
-                                    <c:when test="${lcs.lid.gender}">
-                                        Male
-                                    </c:when>
-                                    <c:otherwise>
-                                        Female
-                                    </c:otherwise>
-                                </c:choose>
-                            </td>
-                            <td>${lcs.lid.dob}</td>
-                            <td>${lcs.lid.phoneNumber}</td>
-                            <td>${lcs.lid.IDcard}</td>
-                            <td>${lcs.lid.address}</td>
-                            <td>${lcs.lid.email}</td>
-                            <td>${lcs.csid.classID.clname}</td>
-                            <td class="actions text-center">
-                                <div class="btn-group" role="group">
-                                    <button class="btn btn-sm btn-warning" onclick="window.location.href = 'update-lecturers?lid=${lcs.lid.lid}'">Update</button>
-                                    &nbsp&nbsp&nbsp&nbsp
-                                    <button class="btn btn-sm btn-danger" onclick="confirmDelete('${lcs.lid.lid}')">Delete</button>
-                                </div>
-                            </td>
-                        </tr>
-                    </c:forEach>
-
+                    <c:choose>
+                        <c:when test="${!empty requestScope.list1}">
+                            <c:forEach var="lcs" items="${requestScope.list1}">
+                                <tr>
+                                    <td>${lcs.lid.lid}</td>
+                                    <td>${lcs.lid.lname}</td>
+                                    <td>
+                                        <c:choose>
+                                            <c:when test="${lcs.lid.gender}">
+                                                Male
+                                            </c:when>
+                                            <c:otherwise>
+                                                Female
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </td>
+                                    <td>${lcs.lid.dob}</td>
+                                    <td>${lcs.lid.phoneNumber}</td>
+                                    <td>${lcs.lid.IDcard}</td>
+                                    <td>${lcs.lid.address}</td>
+                                    <td>${lcs.lid.email}</td>
+                                    <td>${lcs.csid.classID.clname}</td>
+                                    <td class="actions text-center">
+                                        <div class="btn-group" role="group">
+                                            <button class="btn btn-sm btn-warning" onclick="window.location.href = 'update-lecturers?lid=${lcs.lid.lid}'">Update</button>
+                                            &nbsp&nbsp&nbsp&nbsp
+                                            <button class="btn btn-sm btn-danger" onclick="confirmDelete('${lcs.lid.lid}')">Delete</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </c:forEach>
+                        </c:when>
+                        <c:otherwise>
+                            <c:forEach var="lcs" items="${requestScope.list}">
+                                <tr>
+                                    <td>${lcs.lid.lid}</td>
+                                    <td>${lcs.lid.lname}</td>
+                                    <td>
+                                        <c:choose>
+                                            <c:when test="${lcs.lid.gender}">
+                                                Male
+                                            </c:when>
+                                            <c:otherwise>
+                                                Female
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </td>
+                                    <td>${lcs.lid.dob}</td>
+                                    <td>${lcs.lid.phoneNumber}</td>
+                                    <td>${lcs.lid.IDcard}</td>
+                                    <td>${lcs.lid.address}</td>
+                                    <td>${lcs.lid.email}</td>
+                                    <td>${lcs.csid.classID.clname}</td>
+                                    <td class="actions text-center">
+                                        <div class="btn-group" role="group">
+                                            <button class="btn btn-sm btn-warning" onclick="window.location.href = 'update-lecturers?lid=${lcs.lid.lid}'">Update</button>
+                                            &nbsp&nbsp&nbsp&nbsp
+                                            <button class="btn btn-sm btn-danger" onclick="confirmDelete('${lcs.lid.lid}')">Delete</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </c:forEach>
+                        </c:otherwise>
+                    </c:choose>
                 </tbody>
             </table>
         </main>

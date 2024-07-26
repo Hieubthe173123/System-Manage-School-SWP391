@@ -160,42 +160,23 @@ public class LecturersDBContext extends DBContext {
         return null;
     }
 
-    public void deleteLecturers(String lid) {
+   public void deleteLecturers(String lid) {
         try {
-            connection.setAutoCommit(false);
 
-            // Xóa các bản ghi liên quan trong bảng Lecturers_Class_Session
-            String sql1 = "DELETE FROM Lecturers_Class_Session WHERE lid = ?";
-            PreparedStatement stm1 = connection.prepareStatement(sql1);
-            stm1.setString(1, lid);
-            stm1.executeUpdate();
+            String sql = "UPDATE [dbo].[Lecturers]\n"
+                    + "   SET [status] = null\n"
+                    + " WHERE lid = ? "
+                    + "UPDATE [dbo].[Account]\n"
+                    + "   SET [status] = '0'\n"
+                    + " WHERE lid = ?";
 
-            // Xóa các bản ghi liên quan trong bảng Account
-            String sql2 = "DELETE FROM Account WHERE lid = ?";
-            PreparedStatement stm2 = connection.prepareStatement(sql2);
-            stm2.setString(1, lid);
-            stm2.executeUpdate();
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setString(1, lid);
+            stm.setString(2, lid);
+            stm.executeUpdate();
 
-            // Xóa bản ghi trong bảng Lecturers
-            String sql3 = "DELETE FROM lecturers WHERE lid = ?";
-            PreparedStatement stm3 = connection.prepareStatement(sql3);
-            stm3.setString(1, lid);
-            stm3.executeUpdate();
-
-            connection.commit();
         } catch (SQLException ex) {
-            try {
-                connection.rollback();
-            } catch (SQLException rollbackEx) {
-                Logger.getLogger(LecturersDBContext.class.getName()).log(Level.SEVERE, null, rollbackEx);
-            }
             Logger.getLogger(LecturersDBContext.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            try {
-                connection.setAutoCommit(true);
-            } catch (SQLException ex) {
-                Logger.getLogger(LecturersDBContext.class.getName()).log(Level.SEVERE, null, ex);
-            }
         }
     }
 

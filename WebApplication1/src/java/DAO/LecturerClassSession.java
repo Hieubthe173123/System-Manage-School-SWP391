@@ -25,10 +25,10 @@ import java.util.logging.Logger;
  */
 public class LecturerClassSession extends DBContext {
 
-    public boolean isEmailExits(String email){
-        String sql="select count(*) as count from lecturers where email= ? and status is not null";
-         try (PreparedStatement stm = connection.prepareStatement(sql)) {
-            stm.setString(1,email);
+    public boolean isEmailExits(String email) {
+        String sql = "select count(*) as count from lecturers where email= ? and status is not null";
+        try (PreparedStatement stm = connection.prepareStatement(sql)) {
+            stm.setString(1, email);
             try (ResultSet rs = stm.executeQuery()) {
                 if (rs.next()) {
                     int count = rs.getInt("count");
@@ -222,6 +222,69 @@ public class LecturerClassSession extends DBContext {
         } catch (SQLException e) {
             System.out.println(e);
         }
+    }
+
+    public List<Lecturers_Class_Session> searchLecturers(String nameLec) {
+        List<Lecturers_Class_Session> list = new ArrayList<>();
+        try {
+            String sql = "  WITH RankedClasses AS (SELECT l.lid,l.lname,l.Address,l.dob,l.gender,l.IDcard,l.phoneNumber,l.Email,lcs.csid,\n"
+                    + "                    ROW_NUMBER() OVER (PARTITION BY l.lid ORDER BY lcs.lclassID DESC) AS rn\n"
+                    + "                                            FROM lecturers l\n"
+                    + "                                         LEFT JOIN lecturers_class_session lcs ON l.lid = lcs.lid\n"
+                    + "                                         LEFT JOIN Class_Session cs ON cs.csid = lcs.csid\n"
+                    + "                                            LEFT JOIN SchoolYear sy ON sy.yid = cs.yid\n"
+                    + "                                          WHERE l.status IS NOT NULL and cs.status = '1'\n"
+                    + "                                            AND sy.yid = (SELECT MAX(yid) FROM SchoolYear) and lcs.status is not null )\n"
+                    + "                                       \n"
+                    + "                                        SELECT *\n"
+                    + "                                        FROM lecturers l\n"
+                    + "                                        LEFT JOIN RankedClasses rc ON l.lid = rc.lid AND rc.rn = 1\n"
+                    + "                                        LEFT JOIN Class_Session cs ON rc.csid = cs.csid\n"
+                    + "                                       LEFT JOIN Class cl ON cs.classID = cl.classID\n"
+                    + "                                        LEFT JOIN SchoolYear sy ON cs.yid = sy.yid\n"
+                    + "                                        where l.status is not null and l.lname like ?\n"
+                    + "                                        ORDER BY l.lid ASC;";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setString(1, "%" + nameLec + "%");
+            ResultSet rs = stm.executeQuery();
+
+            AgeDBContext ageContext = new AgeDBContext();
+            while (rs.next()) {
+                Lecturers l = new Lecturers();
+                l.setLid(rs.getInt("lid"));
+                l.setLname(rs.getString("lname"));
+                l.setGender(rs.getBoolean("gender"));
+                l.setAddress(rs.getString("address"));
+                l.setDob(rs.getString("dob"));
+                l.setEmail(rs.getString("email"));
+                l.setPhoneNumber(rs.getString("phoneNumber"));
+                l.setIDcard(rs.getString("IDcard"));
+                l.setEmail(rs.getString("email"));
+
+                Class cl = new Class();
+                cl.setClassid(rs.getInt("classID"));
+                cl.setClname(rs.getString("clname"));
+
+                SchoolYear sy = new SchoolYear();
+                sy.setYid(rs.getInt("yid"));
+                sy.setDateStart(rs.getString("dateStart"));
+                sy.setDateEnd(rs.getString("dateEnd"));
+
+                ClassSession cs = new ClassSession();
+                cs.setCsid(rs.getInt("csid"));
+                cs.setYid(sy);
+                cs.setClassID(cl);
+
+                Lecturers_Class_Session lcs = new Lecturers_Class_Session();
+                lcs.setLid(l);
+                lcs.setCsid(cs);
+
+                list.add(lcs);
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return list;
     }
 
     public List<Lecturers_Class_Session> getAllLecturerInNewSchoolYear() {
@@ -439,6 +502,57 @@ public class LecturerClassSession extends DBContext {
             e.printStackTrace();
         }
         return false;
+    }
+
+    public int getTotalPhoneNumberExists(String phoneNumber,String id) {
+        try {
+            String sql = "SELECT COUNT(*) AS count FROM Lecturers WHERE phoneNumber = ? and status is not null and lid != ?";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setString(1, phoneNumber);
+            stm.setString(2,id);
+            ResultSet rs = stm.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt("count");
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return 0;
+    }
+
+    public int getIDCardExists(String IDCard,String id) {
+        try {
+            String sql = "SELECT COUNT(*) AS count FROM Lecturers WHERE IDcard = ? and status is not null and lid != ?";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setString(1, IDCard);
+            stm.setString(2,id);
+            ResultSet rs = stm.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt("count");
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return 0;
+    }
+
+    public int getEmailExists(String email,String id) {
+        try {
+            String sql = "SELECT COUNT(*) AS count FROM Lecturers WHERE Email = ? and status is not null and lid != ?";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setString(1, email);
+            stm.setString(2,id);
+            ResultSet rs = stm.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt("count");
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return 0;
     }
 
     public boolean isIDCardExists(String IDCard) {
@@ -850,8 +964,8 @@ public class LecturerClassSession extends DBContext {
 
     public static void main(String[] args) {
         LecturerClassSession lc = new LecturerClassSession();
-        List<Lecturers_Class_Session> list = lc.getLecturersBySchoolYearWithPaging("2023", "2024", 1);
-        System.out.println(list);
+        int l = lc.getTotalPhoneNumberExists("0913339709","52");
+        System.out.println(l);
 
     }
 

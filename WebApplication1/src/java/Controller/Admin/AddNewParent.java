@@ -5,7 +5,6 @@
 package Controller.Admin;
 
 import Authentication.BaseRBACController;
-import DAO.AccountDBContext;
 import DAO.Class_SessionDBContext;
 import DAO.ParentDBContext;
 import DAO.StudentClassSessionDBContext;
@@ -15,7 +14,6 @@ import Entity.Parent;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
@@ -65,8 +63,8 @@ public class AddNewParent extends BaseRBACController {
         StudentClassSessionDBContext stuDB = new StudentClassSessionDBContext();
 
         // Validate Parent Info
-        if (pname == null || pname.trim().isEmpty()) {
-            request.setAttribute("Error", "Please enter your name");
+        if (pname == null || !pname.matches("[\\p{L} ]+")) {
+            request.setAttribute("Error", "Invalid name. Please enter again !");
             processRequest(request, response, account);
             return;
         }
@@ -80,16 +78,7 @@ public class AddNewParent extends BaseRBACController {
             processRequest(request, response, account);
             return;
         }
-        if (address == null || address.trim().isEmpty()) {
-            request.setAttribute("Error", "Please enter your address.");
-            processRequest(request, response, account);
-            return;
-        }
-        if (nickname == null || nickname.trim().isEmpty()) {
-            request.setAttribute("Error", "Please enter your nickname.");
-            processRequest(request, response, account);
-            return;
-        }
+
         if (!IDcard.matches("\\d{12}")) {
             request.setAttribute("ErrorIdCard", "ID Card must be 12 digits.");
             processRequest(request, response, account);
@@ -100,17 +89,11 @@ public class AddNewParent extends BaseRBACController {
             processRequest(request, response, account);
             return;
         }
-        if (parentDB.isEmailExists(email)) {
-            request.setAttribute("ErrorEmail", "Email already exists.");
-            processRequest(request, response, account);
-            return;
-        }
+
 
         // Validate Student Info
-        if (sName == null || sName.trim().isEmpty()
-                || sDob == null || sDob.trim().isEmpty()
-                || sAddress == null || sAddress.trim().isEmpty()) {
-            request.setAttribute("Error", "Please fill out all required fields.");
+        if (sName == null || !sName.matches("[\\p{L} ]+")) {
+            request.setAttribute("ErrorNameStu", "Invalid name. Please try again !");
             processRequest(request, response, account);
             return;
         }

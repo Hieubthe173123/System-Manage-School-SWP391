@@ -83,23 +83,12 @@ public class AddStudentController extends BaseRBACController {
             return;
         }
 
-        if (sName == null || sName.trim().isEmpty()
-                || sDob == null || sDob.trim().isEmpty()
-                || sAddress == null || sAddress.trim().isEmpty()) {
-            request.setAttribute("error", "Please fill out all required fields.");
+        if (sName == null || !sName.matches("[\\p{L} ]+")) {
+            request.setAttribute("error", "Invalid name. Please try again !");
             processRequest(request, response, account);
             return;
         }
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        sdf.setLenient(false);
 
-        try {
-            sdf.parse(sDob);
-        } catch (ParseException e) {
-            request.setAttribute("error", "Invalid date format for Date of Birth. Please use yyyy-MM-dd format.");
-            processRequest(request, response, account);
-            return;
-        }
 
         int maxStuInClass = 20;
         StudentClassSessionDBContext stuDB = new StudentClassSessionDBContext();

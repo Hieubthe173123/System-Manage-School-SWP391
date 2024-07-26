@@ -106,6 +106,10 @@
                                 <label for="pname">Parent Name</label>
                                 <input type="text" class="form-control" id="pname" name="pname" value="${not empty param.pname ? param.pname : ''}" required>
                             </div>
+                            <% String Error = (String) request.getAttribute("Error");
+                            if (Error != null) { %>
+                            <p class="text-danger" id="message">${Error}</p>
+                            <% } %>
                             <div class="form-group">
                                 <label for="pgender">Gender</label>
                                 <select class="form-control" id="pgender" name="gender" required>
@@ -167,6 +171,10 @@
                                 <label for="sName">Student Name</label>
                                 <input type="text" class="form-control" id="sName" name="sName" value="${not empty param.sName ? param.sName : ''}" required>
                             </div>
+                              <% String ErrorNameStu = (String) request.getAttribute("ErrorNameStu");
+                            if (ErrorNameStu != null) { %>
+                            <p class="text-danger" id="message">${ErrorNameStu}</p>
+                            <% } %>
                             <div class="form-group">
                                 <label for="sDob">Date of Birth</label>
                                 <input type="date" class="form-control" id="sDob" name="sDob" value="${not empty param.sDob ? param.sDob : ''}" required>
@@ -182,10 +190,7 @@
                                 <label for="sAddress">Address</label>
                                 <input type="text" class="form-control" id="sAddress" name="sAddress" value="${not empty param.sAddress ? param.sAddress : ''}" required>
                             </div>
-                            <% String ErrorClass = (String) request.getAttribute("ErrorClass");
-                            if (ErrorClass != null) { %>
-                            <p class="text-danger" id="message">${ErrorClass}</p>
-                            <% } %>
+                            
                             <div class="form-group">
                                 <label for="classId">Class ID</label>
                                 <select class="form-control" id="classId" name="classId" required>
@@ -196,6 +201,10 @@
                                         </option>
                                     </c:forEach>
                                 </select>
+                                <% String ErrorClass = (String) request.getAttribute("ErrorClass");
+                            if (ErrorClass != null) { %>
+                            <p class="text-danger" id="message">${ErrorClass}</p>
+                            <% } %>
                             </div>
                         </div>
                     </div>

@@ -469,4 +469,51 @@ public class ParentDBContext extends DBContext {
             Logger.getLogger(ParentDBContext.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+     public int getTotalPhoneNumberExists(String phoneNumber, int id) {
+        try {
+            String sql = "SELECT COUNT(*) AS count FROM Parent WHERE phoneNumber = ? AND pid != ?";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setString(1, phoneNumber);
+            stm.setInt(2, id);
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("count");
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return 0;
+    }
+
+    public int getIDCardExists(String IDCard, int id) {
+        try {
+            String sql = "SELECT COUNT(*) AS count FROM Parent WHERE IDcard = ? AND pid != ?";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setString(1, IDCard);
+            stm.setInt(2, id);
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("count");
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return 0;
+    }
+
+    public int getEmailExists(String email, int id) {
+        try {
+            String sql = "SELECT COUNT(*) AS count FROM Parent WHERE email = ? AND pid != ?";
+            PreparedStatement stm = connection.prepareStatement(sql);
+            stm.setString(1, email);
+            stm.setInt(2, id);
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("count");
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return 0;
+    }
 }

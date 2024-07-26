@@ -47,7 +47,7 @@ public class UpdateProfile extends BaseRBACController {
         Account acc = (Account) session.getAttribute("account");
 
         if (acc != null) {
-            // Retrieve parameters from the request
+
             int pid = acc.getPid().getPid();
             String pname = request.getParameter("pname");
             boolean gender = Boolean.parseBoolean(request.getParameter("gender"));
@@ -58,7 +58,23 @@ public class UpdateProfile extends BaseRBACController {
             String IDcard = request.getParameter("IDcard");
             String nickname = request.getParameter("nickname");
 
-            // Create a new Parent object and set its properties
+
+            String errorMessage = null;
+            if (phoneNumber == null || !phoneNumber.matches("0\\d{9}")) {
+                errorMessage = "Invalid phone number. Please try again.";
+            } else if (pname == null || !pname.matches("[\\p{L} ]+")) {
+                errorMessage = "Invalid name. Please try again.";
+            } else if (IDcard == null || !IDcard.matches("\\d{12}")) {
+                errorMessage = "Invalid ID card number. Please try again.";
+            }
+
+            if (errorMessage != null) {
+                request.setAttribute("errorMessage", errorMessage);
+                processRequest(request, response, account);
+                return;
+            }
+
+     
             Parent parent = new Parent();
             parent.setPid(pid);
             parent.setPname(pname);
@@ -70,14 +86,32 @@ public class UpdateProfile extends BaseRBACController {
             parent.setIDcard(IDcard);
             parent.setNickname(nickname);
 
-            // Update the parent information in the database
+   
             ParentDBContext parentDB = new ParentDBContext();
-            parentDB.updateParent(parent);
 
-            // Redirect to the parent profile page after update
-            response.sendRedirect("parent-profile");
+            boolean uniquePhone = parentDB.getTotalPhoneNumberExists(phoneNumber, pid) == 0;
+            boolean uniqueEmail = parentDB.getEmailExists(email, pid) == 0;
+            boolean uniqueIDCard = parentDB.getIDCardExists(IDcard, pid) == 0;
+
+            if (uniquePhone && uniqueEmail && uniqueIDCard) {
+                parentDB.updateParent(parent);
+                request.setAttribute("successMessage", "Profile updated successfully.");
+            } else {
+                if (!uniquePhone) {
+                    request.setAttribute("errorMessage", "Phone number already exists.");
+                }
+                if (!uniqueEmail) {
+                    request.setAttribute("errorMessage", "Email already exists.");
+                }
+                if (!uniqueIDCard) {
+                    request.setAttribute("errorMessage", "ID Card already exists.");
+                }
+            }
+
+        
+            processRequest(request, response, account);
         } else {
-            // Redirect to the login page if the user is not authenticated
+            
             response.sendRedirect("login");
         }
     }

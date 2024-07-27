@@ -34,64 +34,70 @@ public class AddLecturers extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String lname = request.getParameter("lname");
-        String gender = request.getParameter("gender");
-        String dob = request.getParameter("dob");
-        String address = request.getParameter("address");
-        String phoneNumber = request.getParameter("phoneNumber");
-        String email = request.getParameter("email");
-        String IDcard = request.getParameter("IDcard");
-        String classID = request.getParameter("classID");
+        try {
+            String lname = request.getParameter("lname");
+            String gender = request.getParameter("gender");
+            String dob = request.getParameter("dob");
+            String address = request.getParameter("address");
+            String phoneNumber = request.getParameter("phoneNumber");
+            String email = request.getParameter("email");
+            String IDcard = request.getParameter("IDcard");
+            String classID = request.getParameter("classID");
 
-        LecturerClassSession lcs = new LecturerClassSession();
-        boolean isNumberPhone = lcs.isPhoneNumberExists(phoneNumber);
-        boolean isIDCard = lcs.isIDCardExists(IDcard);
-        boolean isEmail = lcs.isEmailExits(email);
+            LecturerClassSession lcs = new LecturerClassSession();
+            boolean isNumberPhone = lcs.isPhoneNumberExists(phoneNumber);
+            boolean isIDCard = lcs.isIDCardExists(IDcard);
+            boolean isEmail = lcs.isEmailExits(email);
 
-        if (isNumberPhone) {
-            request.setAttribute("errorMessage", "The phone number already exists. Please try again.");
-            processRequest(request, response);
+            if (isNumberPhone) {
+                request.setAttribute("errorMessage", "The phone number already exists. Please try again.");
+                processRequest(request, response);
+                return;
+            }
+
+            if (isIDCard) {
+                request.setAttribute("errorMessage", "The ID card number already exists. Please try again.");
+                processRequest(request, response);
+                return;
+            }
+
+            if (isEmail) {
+                request.setAttribute("errorMessage", "The email already exists. Please try again.");
+                processRequest(request, response);
+                return;
+            }
+
+            if (phoneNumber == null || !phoneNumber.matches("0\\d{9}")) {
+                request.setAttribute("errorMessage", "Invalid phone number. Please try again.");
+                processRequest(request, response);
+                return;
+            }
+
+            if (lname == null || !lname.matches("[\\p{L} ]+")) {
+                request.setAttribute("errorMessage", "Invalid name. Please try again.");
+                processRequest(request, response);
+                return;
+            }
+
+            if (IDcard == null || !IDcard.matches("\\d{12}")) {
+                request.setAttribute("errorMessage", "The ID card number must consist of exactly 12 digits.");
+                processRequest(request, response);
+                return;
+            }
+
+            int total = lcs.getTotalLecturerInClass(classID);
+            if (total < 5) {
+                lcs.addLecturer(lname, gender, dob, phoneNumber, IDcard, address, email, classID);
+                response.sendRedirect("lecturers");
+            } else {
+                request.setAttribute("errorMessage", "This class already has 4 lecturers.");
+                processRequest(request, response);
+            }
+        } catch (Exception e) {
+            request.getRequestDispatcher("/Error/404.jsp").forward(request, response);
             return;
         }
 
-        if (isIDCard) {
-            request.setAttribute("errorMessage", "The ID card number already exists. Please try again.");
-            processRequest(request, response);
-            return;
-        }
-
-        if (isEmail) {
-            request.setAttribute("errorMessage", "The email already exists. Please try again.");
-            processRequest(request, response);
-            return;
-        }
-
-        if (phoneNumber == null || !phoneNumber.matches("0\\d{9}")) {
-            request.setAttribute("errorMessage", "Invalid phone number. Please try again.");
-            processRequest(request, response);
-            return;
-        }
-
-        if (lname == null || !lname.matches("[\\p{L} ]+")) {
-            request.setAttribute("errorMessage", "Invalid name. Please try again.");
-            processRequest(request, response);
-            return;
-        }
-
-        if (IDcard == null || !IDcard.matches("\\d{12}")) {
-            request.setAttribute("errorMessage", "The ID card number must consist of exactly 12 digits.");
-            processRequest(request, response);
-            return;
-        }
-
-        int total = lcs.getTotalLecturerInClass(classID);
-        if (total < 5) {
-            lcs.addLecturer(lname, gender, dob, phoneNumber, IDcard, address, email, classID);
-            response.sendRedirect("lecturers");
-        } else {
-            request.setAttribute("errorMessage", "This class already has 4 lecturers.");
-            processRequest(request, response);
-        }
     }
 
     @Override

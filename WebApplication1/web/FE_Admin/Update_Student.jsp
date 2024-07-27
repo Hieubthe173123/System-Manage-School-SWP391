@@ -45,7 +45,7 @@
             .form-group input, .form-group select {
                 border: 2px solid #03ADD5;
                 border-radius: 10px;
-                padding: 8px;
+                padding: 5px;
                 font-size: 0.9rem;
                 background-color: #FFF7E0;
             }

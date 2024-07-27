@@ -358,7 +358,8 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Html.html to edit thi
             <h1 class="error-title">
                 Thiếu database insert thiếu chỗ này rồi này rồi đây này
             </h1>
-            <button class="glow-on-hover"><a href="../FE_Parent/Login.jsp">Về trang Login thôi</a></button>
+<!--            <button class="glow-on-hover" onclick="window.location.href = '/login';">Go back to Login</button>
+            <button class="glow-on-hover"><a  href="login" class="back-button">Go back to Login</a></button>-->
         </div>
 
     </body>

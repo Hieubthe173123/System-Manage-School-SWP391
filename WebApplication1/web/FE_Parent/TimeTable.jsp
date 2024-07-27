@@ -217,7 +217,7 @@
                     <form action="timetable" method="post">
                         <input type="hidden" name="stuid" value="${sessionScope.studenId}"/>
                         <select name="yidHistoty" onchange="this.form.submit()">
-                            <option>Select Academic Year</option>
+                            <option value="0">Select Academic Year</option>
                             <c:forEach items="${requestScope.listYidInHistory}" var="s">
                                 <option value="${s.csid.yid.yid}" ${s.csid.yid.yid == requestScope.yidH ? 'selected' : ''}>${s.csid.yid.dateStart} - ${s.csid.yid.dateEnd}</option>
                             </c:forEach>
@@ -225,7 +225,7 @@
                         <select name="schedulesID">
                             <option value="0">Select Date</option>
                             <c:forEach items="${requestScope.listSch}" var="s">
-                                <option value="${s.scheID}">${s.date}</option>
+                                <option value="${s.scheID}" ${s.scheID == requestScope.schedulesID ? 'selected' : ''}>${s.date}</option>
                             </c:forEach>
                         </select>
                         <button type="submit">Search</button>

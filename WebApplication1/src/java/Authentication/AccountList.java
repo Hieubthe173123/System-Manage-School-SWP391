@@ -76,7 +76,7 @@ public class AccountList extends BaseRBACController {
             }
         } catch (Exception e) {
             System.out.println(e);
-            response.sendRedirect("Error/404.jsp");
+            request.getRequestDispatcher("/Error/404.jsp").forward(request, response);
             return;
         }
 

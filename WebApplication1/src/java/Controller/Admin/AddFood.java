@@ -56,6 +56,7 @@ public class AddFood extends BaseRBACController {
             // Redirect to the FoodController servlet after adding the food
             response.sendRedirect(request.getContextPath() + "/admin/food");
         } catch (Exception e) {
+            request.getRequestDispatcher("/Error/404.jsp").forward(request, response);
             request.setAttribute("errorMessage", "An error occurred while adding food.");
             request.getRequestDispatcher("/admin/food").forward(request, response);
         }

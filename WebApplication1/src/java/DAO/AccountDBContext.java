@@ -534,7 +534,23 @@ public class AccountDBContext extends DBContext {
     }
 
     public int countTeachers() {
-        String sql = "SELECT COUNT(*) AS total FROM [SchoolManagement].[dbo].[Lecturers] WHERE Status = 1;";
+        String sql = "SELECT COUNT(*) AS total FROM [SchoolManagement].[dbo].[Lecturers] WHERE Status is not null;";
+        try (PreparedStatement stm = connection.prepareStatement(sql)) {
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(AccountDBContext.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return 0;
+    }
+    
+    public int countParents() {
+        String sql = """
+                      SELECT COUNT(*) AS total 
+                     FROM [SchoolManagement].[dbo].[Parent]
+                     WHERE Status = 1; """;
         try (PreparedStatement stm = connection.prepareStatement(sql)) {
             ResultSet rs = stm.executeQuery();
             if (rs.next()) {

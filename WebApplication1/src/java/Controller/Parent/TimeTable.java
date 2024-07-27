@@ -76,29 +76,32 @@ public class TimeTable extends BaseRBACController {
 //            listSch = sche.getSchedulesByCsid(listYidInHistory.get(0).getCsid().getCsid());
 //            request.setAttribute("yidH", Integer.parseInt(yidHistory));
 //        }
-        if (yidHistory != null && !yidHistory.equals("0")) {
-            stuClassSession = studen.getStudentClassSessionByStuid(stuid, Integer.parseInt(yidHistory));
-            listSch = sche.getSchedulesByCsid(stuClassSession.getCsid().getCsid());
-            request.setAttribute("yidH", Integer.parseInt(yidHistory));
-        } else if (yidHistory == null && sch != null) {
-
-            stuClassSession = studen.getStudentClassSessionByStuid(stuid, sch.getYid());
-            if (stuClassSession != null) {
+        try {
+            if (yidHistory != null && !yidHistory.equals("0")) {
+                stuClassSession = studen.getStudentClassSessionByStuid(stuid, Integer.parseInt(yidHistory));
                 listSch = sche.getSchedulesByCsid(stuClassSession.getCsid().getCsid());
+                request.setAttribute("yidH", Integer.parseInt(yidHistory));
+            } else if (yidHistory == null && sch != null) {
+
+                stuClassSession = studen.getStudentClassSessionByStuid(stuid, sch.getYid());
+                if (stuClassSession != null) {
+                    listSch = sche.getSchedulesByCsid(stuClassSession.getCsid().getCsid());
+                }
+                request.setAttribute("yidH", sch.getYid());
+            } else if (listYidInHistory != null && listYidInHistory.size() > 0) {
+                listSch = sche.getSchedulesByCsid(listYidInHistory.get(0).getCsid().getCsid());
+                request.setAttribute("yidH", Integer.parseInt(yidHistory));
             }
-            request.setAttribute("yidH", sch.getYid());
-        } else if (listYidInHistory != null && listYidInHistory.size() >0) {
-            listSch = sche.getSchedulesByCsid(listYidInHistory.get(0).getCsid().getCsid());
-            request.setAttribute("yidH", Integer.parseInt(yidHistory));
+        } catch (Exception e) {
+                request.getRequestDispatcher("/Error/500.jsp").forward(request, response);
+                return;
         }
 
         StudentClassSession studID = studen.getStudentClassSessionByStuid(stuid, sch.getYid());
-                    int role = (int) session.getAttribute("role");
-            int pid = (int) session.getAttribute("pid");
-              List<Student> listStudentByPid = students.getStudentByPid(pid);
+        int role = (int) session.getAttribute("role");
+        int pid = (int) session.getAttribute("pid");
+        List<Student> listStudentByPid = students.getStudentByPid(pid);
         if (studID != null) {
-
-          
 
             if (role == 1) {
 
@@ -121,7 +124,9 @@ public class TimeTable extends BaseRBACController {
                 Feedback f = feed.getFeedbackByIdAndate(dateF.format(date), stuid);
                 if (schedulesID != null && !schedulesID.equals("0")) {
                     Schedules sc = sche.getSchedulesBySchedulesID(Integer.parseInt(schedulesID));
+
                     menuInDay = menu.getMenuByAgeAndDate(sc.getCsid().getSid().getAge().getAgeid(), sc.getDate().toString());
+                    f = feed.getFeedbackByIdAndate(sc.getDate().toString(), stuid);
                     request.setAttribute("schID", Integer.parseInt(schedulesID));
                 } else {
                     menuInDay = menu.getMenuByAgeAndDate(clSes.getClassSessionById(classI).getSid().getAge().getAgeid(), dateF.format(date));
@@ -133,6 +138,7 @@ public class TimeTable extends BaseRBACController {
                 request.setAttribute("list", listStudentByPid);
                 request.setAttribute("listSch", listSch);
                 request.setAttribute("role", role);
+                request.setAttribute("schedulesID", schedulesID);
                 session.setAttribute("studenId", stuid);
                 request.setAttribute("listYidInHistory", listYidInHistory);
                 request.setAttribute("student", students.getStudentById(stuid));
@@ -151,25 +157,21 @@ public class TimeTable extends BaseRBACController {
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-   
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response, Account account)
             throws ServletException, IOException {
         processRequest(request, response, account);
     }
 
-   
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response, Account account)
             throws ServletException, IOException {
         processRequest(request, response, account);
     }
 
-    
     @Override
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
-
 
 }

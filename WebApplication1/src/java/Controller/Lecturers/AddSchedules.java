@@ -101,7 +101,7 @@ public class AddSchedules extends BaseRBACController {
                 }
             }
         }
-        if (csid != null && !csid.isEmpty()) {
+        if (csid != null && !csid.isEmpty() && !csid.equals("0")) {
 
             // Lấy ra những buổi đã học và chưa học củae 1 lớp trong năm học này
             List<Schedules> listSchedulesUnlearn = sb.getAllUnclassifiedSessionsDetail(Integer.parseInt(csid), classS.getSidByCsid(Integer.parseInt(csid)).getSid().getSid());

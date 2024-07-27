@@ -55,11 +55,11 @@ public class AddCuriculum extends BaseRBACController {
             HttpSession session = request.getSession();
 
             if (conflict) {
-                session.setAttribute("message", "Khung giờ học đã có.");
+                session.setAttribute("message", "The class schedule is available.");
                 session.setAttribute("messageType", "error");
             } else {
                 cur.addCuriculum(nameAct, sdid, isFix, timeStart, timeEnd);
-                session.setAttribute("message", "Thêm thành công");
+                session.setAttribute("message", "Add Successfull!");
                 session.setAttribute("messageType", "success");
             }
 
@@ -71,7 +71,8 @@ public class AddCuriculum extends BaseRBACController {
 
         } catch (Exception e) {
             e.printStackTrace();
-            request.setAttribute("errorMessage", "Đã xảy ra lỗi. Vui lòng thử lại.");
+            request.getRequestDispatcher("/Error/404.jsp").forward(request, response);
+            request.setAttribute("errorMessage", "An error occurred. Please try again.");
             request.getRequestDispatcher("/FE_Admin/AddCuriculum.jsp").forward(request, response);
         }
     }

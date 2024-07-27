@@ -635,7 +635,8 @@ public class SchoolYearDBContext extends DBContext {
     public ArrayList<Lecturers_Class_Session> getLecturersByCsid(int id) {
         ArrayList<Lecturers_Class_Session> lecturers = new ArrayList<>();
         try {
-            String sql = "SELECT [lclassID], [lid], [csid] FROM [SchoolManagement].[dbo].[Lecturers_Class_Session] WHERE csid = ?";
+            String sql = "select * from [dbo].[Lecturers_Class_Session]\n"
+                    + "WHERE csid = ? and status is not null";
             PreparedStatement stm = connection.prepareStatement(sql);
             stm.setInt(1, id);
             ResultSet rs = stm.executeQuery();

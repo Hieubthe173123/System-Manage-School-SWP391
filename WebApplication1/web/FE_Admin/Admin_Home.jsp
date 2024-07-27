@@ -218,15 +218,19 @@
             <main>
                 <h1>Home</h1>
                 <div class="cards">
-                    <div class="card blue">
+                    <div onclick="window.location.href = 'account-list';" class="card blue">
                         <h2>${totalAccounts}</h2>
                         <p>Accounts in the System</p>
                     </div>
-                    <div class="card green">
+                        <div onclick="window.location.href = 'parent';" class="card red">
+                        <h2>${totalParents}</h2>
+                        <p>Number of Parents</p>
+                    </div>
+                    <div onclick="window.location.href = 'student';" class="card green">
                         <h2>${totalStudents}</h2>
                         <p>Number of Students</p>
                     </div>
-                    <div class="card yellow">
+                    <div onclick="window.location.href = 'lecturers';" class="card yellow">
                         <h2>${totalTeachers}</h2>
                         <p>Number of Teachers</p>
                     </div>

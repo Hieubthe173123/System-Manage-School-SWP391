@@ -769,23 +769,23 @@ public class SchoolYearDBContext extends DBContext {
                 ps2.close();
 
                 // Thêm các bản ghi vào Lecturers_Class_Session cho năm học mới
-                String insertNewLcsid = "INSERT INTO Lecturers_Class_Session (lid, csid) "
-                        + "SELECT lcs.lid, new_cs.csid "
-                        + "FROM Lecturers_Class_Session lcs "
-                        + "JOIN Class_Session old_cs ON lcs.csid = old_cs.csid "
-                        + "JOIN Class_Session new_cs ON old_cs.classID = new_cs.classID AND new_cs.yid = ? "
-                        + "WHERE old_cs.yid = ? "
-                        + "AND NOT EXISTS ( "
-                        + "    SELECT 1 "
-                        + "    FROM Lecturers_Class_Session lcs2 "
-                        + "    WHERE lcs2.lid = lcs.lid "
-                        + "    AND lcs2.csid = new_cs.csid "
-                        + ");";
-                PreparedStatement ps3 = connection.prepareStatement(insertNewLcsid);
-                ps3.setInt(1, newYid);
-                ps3.setInt(2, previousYid);
-                ps3.executeUpdate();
-                ps3.close();
+//                String insertNewLcsid = "INSERT INTO Lecturers_Class_Session (lid, csid) "
+//                        + "SELECT lcs.lid, new_cs.csid "
+//                        + "FROM Lecturers_Class_Session lcs "
+//                        + "JOIN Class_Session old_cs ON lcs.csid = old_cs.csid "
+//                        + "JOIN Class_Session new_cs ON old_cs.classID = new_cs.classID AND new_cs.yid = ? "
+//                        + "WHERE old_cs.yid = ? "
+//                        + "AND NOT EXISTS ( "
+//                        + "    SELECT 1 "
+//                        + "    FROM Lecturers_Class_Session lcs2 "
+//                        + "    WHERE lcs2.lid = lcs.lid "
+//                        + "    AND lcs2.csid = new_cs.csid "
+//                        + ");";
+//                PreparedStatement ps3 = connection.prepareStatement(insertNewLcsid);
+//                ps3.setInt(1, newYid);
+//                ps3.setInt(2, previousYid);
+//                ps3.executeUpdate();
+//                ps3.close();
             }
 
             connection.commit();

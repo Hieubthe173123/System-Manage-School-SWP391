@@ -60,8 +60,13 @@ public class TimeTable extends BaseRBACController {
         Date date = new Date();
         SimpleDateFormat dateF = new SimpleDateFormat("yyyy-MM-dd");
         FeedbackDBContext feed = new FeedbackDBContext();
-
+        List<Menu> menuInDay = new ArrayList<>();
         SchoolYear sch = school.getSchoolYearByDateNow(dateF.format(date));
+        if (sch == null) {
+            sch = new SchoolYear(0, "0", "0");
+
+        }
+        Feedback f = feed.getFeedbackByIdAndate(dateF.format(date), stuid);
         // Lấy ra tất cả năm học của 1 học sinh đã học
         List<StudentClassSession> listYidInHistory = studen.getStudentClassSessionById(stuid);
 
@@ -76,25 +81,21 @@ public class TimeTable extends BaseRBACController {
 //            listSch = sche.getSchedulesByCsid(listYidInHistory.get(0).getCsid().getCsid());
 //            request.setAttribute("yidH", Integer.parseInt(yidHistory));
 //        }
-        try {
-            if (yidHistory != null && !yidHistory.equals("0")) {
-                stuClassSession = studen.getStudentClassSessionByStuid(stuid, Integer.parseInt(yidHistory));
-                listSch = sche.getSchedulesByCsid(stuClassSession.getCsid().getCsid());
-                request.setAttribute("yidH", Integer.parseInt(yidHistory));
-            } else if (yidHistory == null && sch != null) {
+        if (yidHistory != null && !yidHistory.equals("0")) {
+            stuClassSession = studen.getStudentClassSessionByStuid(stuid, Integer.parseInt(yidHistory));
+            listSch = sche.getSchedulesByCsid(stuClassSession.getCsid().getCsid());
+            request.setAttribute("yidH", Integer.parseInt(yidHistory));
+            request.setAttribute("schedulesID", Integer.parseInt(schedulesID));
+        } else if (yidHistory == null && sch != null) {
 
-                stuClassSession = studen.getStudentClassSessionByStuid(stuid, sch.getYid());
-                if (stuClassSession != null) {
-                    listSch = sche.getSchedulesByCsid(stuClassSession.getCsid().getCsid());
-                }
-                request.setAttribute("yidH", sch.getYid());
-            } else if (listYidInHistory != null && listYidInHistory.size() > 0) {
-                listSch = sche.getSchedulesByCsid(listYidInHistory.get(0).getCsid().getCsid());
-                request.setAttribute("yidH", Integer.parseInt(yidHistory));
+            stuClassSession = studen.getStudentClassSessionByStuid(stuid, sch.getYid());
+            if (stuClassSession != null) {
+                listSch = sche.getSchedulesByCsid(stuClassSession.getCsid().getCsid());
             }
-        } catch (Exception e) {
-                request.getRequestDispatcher("/Error/500.jsp").forward(request, response);
-                return;
+            request.setAttribute("yidH", sch.getYid());
+        } else if (listYidInHistory != null && listYidInHistory.size() > 0) {
+            listSch = sche.getSchedulesByCsid(listYidInHistory.get(0).getCsid().getCsid());
+            request.setAttribute("yidH", Integer.parseInt(yidHistory));
         }
 
         StudentClassSession studID = studen.getStudentClassSessionByStuid(stuid, sch.getYid());
@@ -102,53 +103,54 @@ public class TimeTable extends BaseRBACController {
         int pid = (int) session.getAttribute("pid");
         List<Student> listStudentByPid = students.getStudentByPid(pid);
         if (studID != null) {
+            int classI = studID.getCsid().getCsid();
+            // Lấy ra ngày hiện tại và lớp học
 
-            if (role == 1) {
+            Schedules schedules = sche.getSchedulesByCsIdAndDate(classI, dateF.format(date));
+            if (schedules != null) {
+                curi = curiculum.getCuriculumById(schedules.getSdid().getSdid());
+            }
 
-                int classI = studID.getCsid().getCsid();
-                // Lấy ra ngày hiện tại và lớp học
-
-                Schedules schedules = sche.getSchedulesByCsIdAndDate(classI, dateF.format(date));
-                try {
-                    if (schedulesID != null && !schedulesID.equals("0")) {
-                        Schedules sc = sche.getSchedulesBySchedulesID(Integer.parseInt(schedulesID));
-                        curi = curiculum.getCuriculumById(sc.getSdid().getSdid());
-                        request.setAttribute("schID", Integer.parseInt(schedulesID));
-                    } else {
-                        curi = curiculum.getCuriculumById(schedules.getSdid().getSdid());
-                    }
-
-                } catch (Exception e) {
-                }
-                List<Menu> menuInDay = new ArrayList<>();
-                Feedback f = feed.getFeedbackByIdAndate(dateF.format(date), stuid);
-                if (schedulesID != null && !schedulesID.equals("0")) {
-                    Schedules sc = sche.getSchedulesBySchedulesID(Integer.parseInt(schedulesID));
-
+            menuInDay = menu.getMenuByAgeAndDate(clSes.getClassSessionById(classI).getSid().getAge().getAgeid(), dateF.format(date));
+            if (schedulesID != null) {
+                Schedules sc = sche.getSchedulesBySchedulesID(Integer.parseInt(schedulesID));
+                if (sc != null) {
                     menuInDay = menu.getMenuByAgeAndDate(sc.getCsid().getSid().getAge().getAgeid(), sc.getDate().toString());
                     f = feed.getFeedbackByIdAndate(sc.getDate().toString(), stuid);
-                    request.setAttribute("schID", Integer.parseInt(schedulesID));
-                } else {
-                    menuInDay = menu.getMenuByAgeAndDate(clSes.getClassSessionById(classI).getSid().getAge().getAgeid(), dateF.format(date));
+                    curi = curiculum.getCuriculumById(sc.getSdid().getSdid());
                 }
-                request.setAttribute("curiculum", curi);
-                request.setAttribute("feedback", f);
-                request.setAttribute("pid", pid);
-                request.setAttribute("menu", menuInDay);
-                request.setAttribute("list", listStudentByPid);
-                request.setAttribute("listSch", listSch);
-                request.setAttribute("role", role);
-                request.setAttribute("schedulesID", schedulesID);
-                session.setAttribute("studenId", stuid);
-                request.setAttribute("listYidInHistory", listYidInHistory);
-                request.setAttribute("student", students.getStudentById(stuid));
-                request.getRequestDispatcher("/FE_Parent/TimeTable.jsp").forward(request, response);
+
+                request.setAttribute("schID", Integer.parseInt(schedulesID));
             }
-        } else {
+
+            request.setAttribute("curiculum", curi);
+            request.setAttribute("feedback", f);
+            request.setAttribute("pid", pid);
+            request.setAttribute("menu", menuInDay);
+            request.setAttribute("list", listStudentByPid);
             request.setAttribute("listSch", listSch);
+            request.setAttribute("role", role);
+            session.setAttribute("studenId", stuid);
+            request.setAttribute("listYidInHistory", listYidInHistory);
+            request.setAttribute("schedulesID", schedulesID);
+            request.setAttribute("student", students.getStudentById(stuid));
+            request.getRequestDispatcher("/FE_Parent/TimeTable.jsp").forward(request, response);
+
+        } else {
+            if (schedulesID != null && !schedulesID.equals("0")) {
+                Schedules sc = sche.getSchedulesBySchedulesID(Integer.parseInt(schedulesID));
+                menuInDay = menu.getMenuByAgeAndDate(sc.getCsid().getSid().getAge().getAgeid(), sc.getDate().toString());
+                f = feed.getFeedbackByIdAndate(sc.getDate().toString(), stuid);
+                curi = curiculum.getCuriculumById(sc.getSdid().getSdid());
+                request.setAttribute("schID", Integer.parseInt(schedulesID));
+            }
+            request.setAttribute("menu", menuInDay);
+            request.setAttribute("listSch", listSch);
+            request.setAttribute("curiculum", curi);
             request.setAttribute("listYidInHistory", listYidInHistory);
             request.setAttribute("role", role);
             session.setAttribute("studenId", stuid);
+            request.setAttribute("feedback", f);
             request.setAttribute("pid", pid);
             request.setAttribute("list", listStudentByPid);
             request.setAttribute("student", students.getStudentById(stuid));

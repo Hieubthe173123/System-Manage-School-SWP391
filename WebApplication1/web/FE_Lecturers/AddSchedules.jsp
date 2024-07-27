@@ -205,6 +205,9 @@
             </table>
         </c:if>
         <c:if test="${sessionScope.csid == null || sessionScope.csid == 0}">
+            <div class="button-container">
+                <a href="timeTableLecturer?lid=${sessionScope.lid}" class="return-button">Back To TimeTable</a>
+            </div>
             <h3>The lecturer has not been assigned a teaching schedule for this academic year.</h3>
         </c:if>
     </body>

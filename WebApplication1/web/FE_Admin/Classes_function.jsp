@@ -145,8 +145,8 @@
                                             <td>
                                                 <c:choose>
                                                     <c:when test="${not empty requestScope.lecClassSessionbyCsid2}">
-                                                        <c:forEach var="lec" items="${requestScope.lecClassSessionbyCsid2}">
-                                                            ${lec.lid.lname}<br/>
+                                                        <c:forEach var="lec" items="${requestScope.lecClassSessionbyCsid2}" varStatus="status">
+                                                            ${lec.lid.lname}<c:if test="${!status.last}">,</c:if><br/>
                                                         </c:forEach>
                                                     </c:when>
                                                     <c:otherwise>

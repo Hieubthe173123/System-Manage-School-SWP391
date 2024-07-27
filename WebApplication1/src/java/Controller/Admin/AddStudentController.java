@@ -32,7 +32,7 @@ public class AddStudentController extends BaseRBACController {
 //        List<Entity.Class> clList = clDB.getAllClasses();
 //        request.setAttribute("clasList", clList);
         Class_SessionDBContext cl = new Class_SessionDBContext();
-        List<ClassSession> classIDs = cl.getAllClass();
+        List<ClassSession> classIDs = cl.getAllClass2();
         request.setAttribute("classIDs", classIDs);
         request.getRequestDispatcher("/FE_Admin/AddNewStudent.jsp").forward(request, response);
     }

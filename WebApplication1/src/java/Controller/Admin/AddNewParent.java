@@ -29,7 +29,7 @@ public class AddNewParent extends BaseRBACController {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         Class_SessionDBContext cl = new Class_SessionDBContext();
-        List<ClassSession> classIDs = cl.getAllClass();
+        List<ClassSession> classIDs = cl.getAllClass2();
         request.setAttribute("classIDs", classIDs);
 
         request.getRequestDispatcher("/FE_Admin/AddNewParent.jsp").forward(request, response);

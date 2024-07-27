@@ -29,7 +29,7 @@ public class UpdateStudentClass extends  BaseRBACController {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response, Account account)
     throws ServletException, IOException {
     Class_SessionDBContext cl = new Class_SessionDBContext();
-          List<ClassSession> classIDs = cl.getAllClass();
+          List<ClassSession> classIDs = cl.getAllClass2();
         request.setAttribute("classIDs", classIDs);
         request.getRequestDispatcher("/FE_Admin/UpdateStudentClass.jsp").forward(request, response);
   

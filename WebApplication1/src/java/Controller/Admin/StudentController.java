@@ -51,7 +51,7 @@ public class StudentController extends BaseRBACController {
         int index = Integer.parseInt(indexPage);
 
         //List<Class> classList = cdb.getAllClasses();
-        List<ClassSession> classIDs = cl.getAllClass();
+        List<ClassSession> classIDs = cl.getAllClass2();
         request.setAttribute("classIDs", classIDs);
 
         if (classId != null && !classId.isEmpty()) {
